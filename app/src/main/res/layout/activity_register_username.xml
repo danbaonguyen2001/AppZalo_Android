@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.LoginActivity">
-
+    tools:context=".Activities.RegisterUsernameActivity">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -16,7 +15,7 @@
         app:layout_constraintHeight_percent="0.1"
         android:background="#237EE9"
         app:layout_constraintVertical_bias="0"
-        android:text="Đăng nhập"
+        android:text="Tạo tài khoản"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="28dp"
@@ -37,20 +36,18 @@
         app:layout_constraintHorizontal_bias="0.04"
         />
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_percent="0.088"
-        android:background="#F6EDED"
-        app:layout_constraintVertical_bias="0.12"
-        android:text="Vui lòng nhập số điện thoại và mật khẩu để đăng nhập"
+        android:text="Tên người dùng"
+        android:textSize="26dp"
+        android:textStyle="bold"
         android:textColor="@color/black"
-        android:textSize="16dp"
-        android:textAlignment="center"
-        android:paddingTop="16dp"
+        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintHorizontal_bias="0.11"
         />
     <EditText
         android:layout_width="0dp"
@@ -59,26 +56,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:hint="Số điện thoại"
+        android:hint="Gồm 2-40 kí tự"
         app:layout_constraintWidth_percent="0.9"
         app:layout_constraintHeight_percent="0.1"
         android:inputType="textPersonName"
         android:textSize="26dp"
-        app:layout_constraintVertical_bias="0.3"
-        />
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:hint="Mật khẩu"
-        app:layout_constraintWidth_percent="0.9"
-        app:layout_constraintHeight_percent="0.1"
-        android:inputType="textPassword"
-        android:textSize="26dp"
-        app:layout_constraintVertical_bias="0.42"
+        app:layout_constraintVertical_bias="0.25"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -87,55 +70,45 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Hiện"
-        android:textSize="26dp"
-        app:layout_constraintVertical_bias="0.42"
-        app:layout_constraintHorizontal_bias="0.9"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Lấy lại mật khẩu"
-        android:textSize="26dp"
-        android:textStyle="bold"
-        android:textColor="#237EE9"
-        app:layout_constraintVertical_bias="0.55"
-        app:layout_constraintHorizontal_bias="0.13"
-        />
-
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/custom_button_arrow_foward"
-        android:foreground="@drawable/ic_baseline_arrow_forward_white_55"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_percent="0.1"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
-
-        app:layout_constraintWidth_percent="0.15" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.925"
-        app:layout_constraintHorizontal_bias="0.13"
-        android:text="Câu hỏi thường gặp >"
-        android:textSize="20dp"
+        app:layout_constraintVertical_bias="0.35"
+        app:layout_constraintHorizontal_bias="0.11"
+        android:text="Lưu ý khi đặt tên:"
+        android:textSize="22dp"
         android:textColor="@color/black"
         />
-
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.42"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:text="Không vi phạm qui định của Zalo"
+        android:textSize="22dp"
+        android:textColor="@color/black"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.52"
+        android:paddingLeft="45dp"
+        android:text="Nên sử dụng tên thật để bạn bè dễ nhận ra bạn"
+        android:textSize="22dp"
+        android:textColor="@color/black"
+        />
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
