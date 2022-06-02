@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#CFCFCF"
-    tools:context=".ChatboxActivity">
+    tools:context=".Activities.ChatboxActivity">
 
     <View
         android:id="@+id/chatbox_header"
