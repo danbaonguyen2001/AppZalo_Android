@@ -9,6 +9,7 @@
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/custom_receiver_chat.xml" value="0.19" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/custom_sender_chat.xml" value="0.19" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_account_circle_white_24.xml" value="0.19" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_add_white_24.xml" value="0.19" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_apps_white_24.xml" value="0.19" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_arrow_back_white_24.xml" value="0.199" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_arrow_forward_white_24.xml" value="0.19" />
@@ -22,6 +23,8 @@
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_insert_emoticon_white_24.xml" value="0.199" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_list_white_24.xml" value="0.199" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_perm_contact_calendar_white_24.xml" value="0.19" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_qr_code_scanner__white_24.xml" value="0.19" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_search_white_24.xml" value="0.19" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_videocam_white_24.xml" value="0.199" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_launcher_background.xml" value="0.19" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_chatbox.xml" value="0.2" />
@@ -30,9 +33,11 @@
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_register_username.xml" value="0.2203125" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_splash.xml" value="0.18072916666666666" />
-        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_chats.xml" value="0.1" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_chats.xml" value="0.2" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_main_tab_chat.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_receiver_chat.xml" value="0.20572916666666666" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_sender_chat.xml" value="0.264" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_main_tab_chat_item.xml" value="0.22826086956521738" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/menu/main_menu_navigation.xml" value="0.25416666666666665" />
       </map>
     </option>
