@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHeight_percent="0.08"
         app:layout_constraintWidth_percent="1"
         >
         <TextView
@@ -27,9 +27,9 @@
             android:text="Nhập mã kích hoạt"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:textSize="28dp"
+            android:textSize="22dp"
             android:paddingLeft="80dp"
-            android:paddingTop="8dp"
+            android:paddingTop="10dp"
             />
         <ImageView
             android:layout_width="0dp"
@@ -39,8 +39,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:src="@drawable/ic_baseline_arrow_back_white_24"
-            app:layout_constraintHeight_percent="1"
-            app:layout_constraintWidth_percent="0.1"
+            app:layout_constraintHeight_percent="0.8"
+            app:layout_constraintWidth_percent="0.08"
             app:layout_constraintHorizontal_bias="0.05"
 
             />
@@ -53,8 +53,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_percent="0.08"
-        app:layout_constraintVertical_bias="0.1"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintVertical_bias="0.08"
         android:background="#F6EDED"
         android:text="Vui lòng không chia sẻ mã xác thực để tránh mất tài khoản"
         android:textColor="@color/black"
@@ -71,7 +71,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHeight_percent="0.08"
-        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintVertical_bias="0.22"
         android:text="Điền mã xác thực đã nhận vào bên dưới"
         android:textColor="@color/black"
         android:textStyle="bold"
@@ -89,9 +89,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:hint="Nhập mã xác thực"
         app:layout_constraintWidth_percent="0.9"
-        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHeight_percent="0.08"
         android:inputType="textPersonName"
-        android:textSize="24dp"
+        android:textSize="22dp"
         app:layout_constraintVertical_bias="0.35"
         />
     <Button
@@ -99,6 +99,7 @@
         android:layout_height="0dp"
         android:text="Xác nhận"
         app:cornerRadius="8dp"
+        android:backgroundTint="#237EE9"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHeight_percent="0.07"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -115,7 +116,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="Gửi lại mã"
-        android:textSize="22dp"
+        android:textSize="20dp"
         android:textColor="#237EE9"
         app:layout_constraintVertical_bias="0.58"
         app:layout_constraintHorizontal_bias="0.08"
