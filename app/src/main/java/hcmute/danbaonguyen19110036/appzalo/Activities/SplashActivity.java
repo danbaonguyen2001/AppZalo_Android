@@ -49,7 +49,7 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else {
-                    startActivity(new Intent(SplashActivity.this,RegisterInputInforActivity.class));
+                    startActivity(new Intent(SplashActivity.this,MainActivity.class));
                 }
             }
         },2000);
