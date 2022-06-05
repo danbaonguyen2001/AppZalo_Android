@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import hcmute.danbaonguyen19110036.appzalo.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -22,7 +24,16 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this,HomeActivity.class));
+                if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+                {
+                    System.out.println(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    Intent intent=new Intent(SplashActivity.this,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+                else {
+                    startActivity(new Intent(SplashActivity.this,HomeActivity.class));
+                }
             }
         },2000);
     }
