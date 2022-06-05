@@ -25,6 +25,7 @@
         />
 
     <Button
+        android:id="@+id/btnLogin"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:cornerRadius="40dp"
@@ -41,6 +42,7 @@
         android:backgroundTint="#237EE9"
         />
     <Button
+        android:id="@+id/btnRegister"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:cornerRadius="40dp"
@@ -52,6 +54,7 @@
         app:layout_constraintWidth_percent="0.6"
         app:layout_constraintVertical_bias="0.75"
         android:text="Đăng ký"
+        android:onClick="OnClickRegister"
         android:textStyle="bold"
         android:textSize="20dp"
         android:textColor="@color/black"
