@@ -102,6 +102,7 @@
         android:text="Đăng ký"
         android:onClick="OnClickSendOTP"
         app:cornerRadius="8dp"
+        android:backgroundTint="#237EE9"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHeight_percent="0.07"
         app:layout_constraintLeft_toLeftOf="parent"
