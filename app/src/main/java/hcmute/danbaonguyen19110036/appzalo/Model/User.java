@@ -6,7 +6,7 @@ public class User {
     private String id;
     private String phoneNumber;
     private String userName;
-    private Date birthDay;
+    private String birthDay;
     private String img;
     private String gender;
     private String address;
@@ -14,7 +14,7 @@ public class User {
 
     }
 
-    public User(String id, String phoneNumber, String userName, Date birthDay, String img, String gender, String address) {
+    public User(String id, String phoneNumber, String userName, String birthDay, String img, String gender, String address) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.userName = userName;
@@ -48,11 +48,11 @@ public class User {
         this.userName = userName;
     }
 
-    public Date getBirthDay() {
+    public String getBirthDay() {
         return birthDay;
     }
 
-    public void setBirthDay(Date birthDay) {
+    public void setBirthDay(String birthDay) {
         this.birthDay = birthDay;
     }
 

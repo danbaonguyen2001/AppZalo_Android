@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.concurrent.TimeUnit;
 
@@ -56,6 +57,7 @@ public class RegisterUsernameActivity extends AppCompatActivity {
                 codeSend = s;
                 Intent intent = new Intent(RegisterUsernameActivity.this,AuthenticationPhoneNumberActivity.class);
                 intent.putExtra("otp",codeSend);
+                intent.putExtra("Activity","Register");
                 startActivity(intent);
             }
         };
