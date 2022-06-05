@@ -7,8 +7,9 @@
     tools:context=".Activities.SplashActivity"
     >
     <ImageView
-        android:layout_width="500dp"
-        android:layout_height="730dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
