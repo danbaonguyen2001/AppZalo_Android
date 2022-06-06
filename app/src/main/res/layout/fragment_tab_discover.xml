@@ -111,6 +111,10 @@
                 app:layout_constraintHeight_percent="0.71"
                 app:layout_constraintWidth_percent="0.5"
                 app:layout_constraintVertical_bias="0.9"
+<<<<<<< HEAD
+=======
+
+>>>>>>> dc343f7e73a8c07e6cca87d11baf15f9b4097ac8
                 app:layout_constraintHorizontal_bias="0.03"
                 android:src="@drawable/shipper2"
                 android:scaleX="1.15"
@@ -168,7 +172,13 @@
                 android:scaleY="1.5"
                 app:layout_constraintVertical_bias="0.4"
                 app:layout_constraintHorizontal_bias="0.65"
+<<<<<<< HEAD
                 android:src="@drawable/family"
+=======
+                android:src="@drawable/family"             
+                
+
+>>>>>>> dc343f7e73a8c07e6cca87d11baf15f9b4097ac8
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
