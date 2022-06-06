@@ -1,5 +1,6 @@
 package hcmute.danbaonguyen19110036.appzalo.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import hcmute.danbaonguyen19110036.appzalo.Activities.ChatboxActivity;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ListUserAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
@@ -61,7 +63,11 @@ public class TabChatFragment extends Fragment {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        Toast.makeText(getActivity(),userList.get(i).getUserName(),Toast.LENGTH_SHORT).show();
+                        // Lưu giá trị vào intent để sang ChatboxAcitivy ta có thể lấy những giá trị này ra
+                        Intent intent=new Intent(getActivity(), ChatboxActivity.class);
+                        intent.putExtra("username",userList.get(i).getUserName());
+                        intent.putExtra("receiverId",userList.get(i).getId());
+                        startActivity(intent);
                     }
                 });
             }
@@ -73,6 +79,7 @@ public class TabChatFragment extends Fragment {
         return view;
     }
     public void initData(View view){
+        // Khơi tạo các khai báo ban đầu
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         listView= view.findViewById(R.id.listview_listuser);

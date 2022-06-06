@@ -6,36 +6,35 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="12dp"
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/img_user"
+            android:id="@+id/img_user_add"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/family"
-            />
+            android:src="@drawable/family" />
 
         <TextView
+            android:id="@+id/txt_username_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="90dp"
             android:text="Tên người dùng"
-            android:textSize="20dp"
-            android:textStyle="bold"
             android:textColor="@color/black"
-            />
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <Button
+            android:id="@+id/btn_addfr"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="300dp"
             android:text="Kết bạn"
             android:textSize="10dp"
-            app:cornerRadius="20dp"
-             />
+            app:cornerRadius="20dp" />
 
     </RelativeLayout>
 
