@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,6 +40,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
 public class RegisterInputInforActivity extends AppCompatActivity {
@@ -46,6 +49,7 @@ public class RegisterInputInforActivity extends AppCompatActivity {
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private FirebaseFirestore firebaseFirestore;
+    private FirebaseDatabase firebaseDatabase;
     private CardView cardView;
     private ImageView imgProfile;
     private Uri imagepath;
@@ -104,6 +108,7 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference=firebaseStorage.getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
         cardView = findViewById(R.id.cardView);
         imgProfile = findViewById(R.id.img_profile);
         edtuserName = findViewById(R.id.edt_username);
@@ -114,6 +119,8 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         radioGroup = findViewById(R.id.radio_group);
     }
     private void sendImageToStore(){
+        System.out.println("123");
+        System.out.println(firebaseAuth.getCurrentUser().getUid());
         StorageReference imgref = storageReference.child("Images").child(firebaseAuth.getUid()).child("Profile Pic");;
         Bitmap bitmap=null;
         if(imagepath==null){
@@ -139,7 +146,7 @@ public class RegisterInputInforActivity extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         imageToken=uri.toString();
                         Toast.makeText(getApplicationContext(),"URI get sucess",Toast.LENGTH_SHORT).show();
-                        sendDataTocloudFirestore();
+                        sendDataToDatabase();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -157,22 +164,23 @@ public class RegisterInputInforActivity extends AppCompatActivity {
             }
         });
     }
-    private void sendDataTocloudFirestore(){
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        Map<String,Object> userdata = new HashMap<>();
-        userdata.put("image",imageToken);
-        userdata.put("uid",firebaseAuth.getUid());
-        userdata.put("status","Online");
-        documentReference.set(userdata).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(getApplicationContext(),"Data on Cloud Firestore send success",Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void sendDataToDatabase(){
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
+        String id = firebaseAuth.getUid();
+        String phoneNumber = firebaseAuth.getCurrentUser().getPhoneNumber();
+        Map<String,Object> user = new HashMap<>();
+        user.put("id",id);
+        user.put("img",imageToken);
+        user.put("phoneNumber",phoneNumber);
+        user.put("gender",genDer);
+        user.put("userName",userName);
+        user.put("address","BinhDuong");
+        user.put("birthDay",birthDay);
+        databaseReference.setValue(user);
     }
     public void OnClickSaveProfile(View view){
         userName = edtuserName.getText().toString();
-        birthDay = edtuserName.getText().toString();
+        birthDay = edtbirthDay.getText().toString();
         if(userName.isEmpty()){
             Toast.makeText(RegisterInputInforActivity.this,"Vụi lòng nhập tên của bạn",Toast.LENGTH_SHORT).show();
             return;
@@ -186,15 +194,18 @@ public class RegisterInputInforActivity extends AppCompatActivity {
             return;
         }
         sendImageToStore();
+        startActivity(new Intent(this,MainActivity.class));
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
         if(requestCode==PICK_IMAGE && resultCode==RESULT_OK)
         {
             imagepath=data.getData();
             imgProfile.setImageURI(imagepath);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    public void OnClickBackHome(View view){
+        startActivity(new Intent(this,HomeActivity.class));
     }
 }

@@ -111,6 +111,7 @@
                 app:layout_constraintHeight_percent="0.71"
                 app:layout_constraintWidth_percent="0.5"
                 app:layout_constraintVertical_bias="0.9"
+
                 app:layout_constraintHorizontal_bias="0.03"
                 android:src="@drawable/shipper2"
                 android:scaleX="1.15"
@@ -168,7 +169,9 @@
                 android:scaleY="1.5"
                 app:layout_constraintVertical_bias="0.4"
                 app:layout_constraintHorizontal_bias="0.65"
-                android:src="@drawable/family"
+                android:src="@drawable/family"             
+                
+
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
