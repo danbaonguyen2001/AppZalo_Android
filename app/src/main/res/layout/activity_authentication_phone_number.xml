@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.AuthenticationPhoneNumberActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintWidth_percent="1"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="1"
+            android:background="#237EE9"
+            android:text="Nhập mã kích hoạt"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:paddingLeft="80dp"
+            android:paddingTop="10dp"
+            />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/ic_baseline_arrow_back_white_24"
+            app:layout_constraintHeight_percent="0.8"
+            app:layout_constraintWidth_percent="0.08"
+            app:layout_constraintHorizontal_bias="0.05"
+
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintVertical_bias="0.08"
+        android:background="#F6EDED"
+        android:text="Vui lòng không chia sẻ mã xác thực để tránh mất tài khoản"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14dp"
+        android:textAlignment="center"
+        android:paddingTop="14dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintVertical_bias="0.22"
+        android:text="Điền mã xác thực đã nhận vào bên dưới"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:paddingTop="18dp"
+        />
+    <EditText
+        android:id="@+id/edt_otp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:hint="Nhập mã xác thực"
+        app:layout_constraintWidth_percent="0.9"
+        app:layout_constraintHeight_percent="0.08"
+        android:inputType="textPersonName"
+        android:textSize="22dp"
+        app:layout_constraintVertical_bias="0.35"
+        />
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Xác nhận"
+        app:cornerRadius="8dp"
+        android:backgroundTint="#237EE9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="OnClickVerifyOTP"
+        app:layout_constraintVertical_bias="0.48"
+        app:layout_constraintWidth_percent="0.9" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Gửi lại mã"
+        android:textSize="20dp"
+        android:textColor="#237EE9"
+        app:layout_constraintVertical_bias="0.58"
+        app:layout_constraintHorizontal_bias="0.08"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

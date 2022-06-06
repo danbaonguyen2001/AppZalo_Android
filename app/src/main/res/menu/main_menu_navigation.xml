@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/main_menu_tab_chat" android:title="Tin nhắn"
+        android:icon="@drawable/ic_baseline_chat_white_24"/>
+    <item android:id="@+id/main_menu_tab_contact" android:title="Danh bạ"
+        android:icon="@drawable/ic_baseline_perm_contact_calendar_white_24"/>
+    <item android:id="@+id/main_menu_tab_discover" android:title="Khám phá"
+        android:icon="@drawable/ic_baseline_apps_white_24"/>
+    <item android:id="@+id/main_menu_tab_story" android:title="Nhật ký"
+        android:icon="@drawable/ic_baseline_history_white_24"/>
+    <item android:id="@+id/main_menu_tab_user" android:title="Cá nhân"
+        android:icon="@drawable/ic_baseline_account_circle_white_24"/>
+</menu>
