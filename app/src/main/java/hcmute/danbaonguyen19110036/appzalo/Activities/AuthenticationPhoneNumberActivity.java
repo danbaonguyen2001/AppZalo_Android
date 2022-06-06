@@ -31,7 +31,6 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
     private EditText edtCode;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
-    private boolean KT=false;
     public String activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +62,16 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
-                    createUser();
-                    if(KT==true){
-                        Intent intent=new Intent(AuthenticationPhoneNumberActivity.this,HomeActivity.class);
-                        startActivity(intent);
+                    Intent intent;
+                    if(activity.equals("Register")) {
+                        createUser();
+                        intent=new Intent(AuthenticationPhoneNumberActivity.this,RegisterInputInforActivity.class);
                     }
-                    else {
-                        Toast.makeText(getApplicationContext(),"Login success",Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(AuthenticationPhoneNumberActivity.this,MainActivity.class);
-                        startActivity(intent);
+                    else
+                    {
+                        intent=new Intent(AuthenticationPhoneNumberActivity.this,MainActivity.class);
                     }
+                    startActivity(intent);
                     finish();
                 }
                 else
@@ -86,30 +85,10 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
         });
     }
     private void createUser(){
-        if(activity.equals("Register")){
-            DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot dsp : snapshot.getChildren()) {
-                        User user = dsp.getValue(User.class);
-                        if(user.getId().equals(firebaseAuth.getCurrentUser().getUid())){
-                            Toast.makeText(AuthenticationPhoneNumberActivity.this,"Tài khoản đã tồn tại",Toast.LENGTH_SHORT).show();
-                            KT=true;
-                            return;
-                        }
-                    }
-                    String id = firebaseAuth.getCurrentUser().getUid();
-                    String phoneNumber = firebaseAuth.getCurrentUser().getPhoneNumber();
-                    User user = new User(id,phoneNumber,"","","","","");
-                    databaseReference.child(firebaseAuth.getCurrentUser().getUid()).setValue(user);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
+        String id = firebaseAuth.getCurrentUser().getUid();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(id);
+        String phoneNumber = firebaseAuth.getCurrentUser().getPhoneNumber();
+        User user = new User(id,phoneNumber,"","",null,"","");
+        databaseReference.child(firebaseAuth.getCurrentUser().getUid()).setValue(user);
     }
 }

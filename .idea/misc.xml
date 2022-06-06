@@ -44,6 +44,7 @@
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_home.xml" value="0.12360688956433637" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_login.xml" value="0.12360688956433637" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_phone_book.xml" value="0.2" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_register_input_infor.xml" value="0.1" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_register_username.xml" value="0.2" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_splash.xml" value="0.1" />
@@ -57,7 +58,8 @@
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/fragment_tab_discover.xml" value="0.14427083333333332" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/fragment_tab_phone_book.xml" value="0.25416666666666665" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/fragment_tab_user.xml" value="0.1160081053698075" />
-        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_main_tab_chat_item.xml" value="0.19895833333333332" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_main_tab_chat_item.xml" value="0.1" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_tab_phonebook_user_item.xml" value="0.13020833333333334" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_item.xml" value="0.4" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/menu/main_menu_navigation.xml" value="0.25416666666666665" />
       </map>

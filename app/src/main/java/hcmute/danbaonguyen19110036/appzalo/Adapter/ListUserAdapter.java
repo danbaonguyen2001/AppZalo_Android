@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -39,8 +42,8 @@ public class ListUserAdapter extends BaseAdapter {
     }
 
     public class ViewHolder{
-        private TextView emailuser,newMessage;
-
+        private TextView username,newMessage;
+        private ImageView avatar;
     }
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
@@ -49,15 +52,18 @@ public class ListUserAdapter extends BaseAdapter {
             holder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layout,null);
-//            holder.emailuser= (TextView) view.findViewById(R.id.emailuser);
-//            holder.newMessage = (TextView) view.findViewById(R.id.newMessage);
+            holder.username= (TextView) view.findViewById(R.id.txt_chat_username);
+            holder.newMessage = (TextView) view.findViewById(R.id.txt_chat_newmessage);
+            holder.avatar =(ImageView) view.findViewById(R.id.img_avataruser);
             view.setTag(holder);
         }
         else {
             holder = (ViewHolder) view.getTag();
         }
         User user = userList.get(i);
-        holder.emailuser.setText(user.getUserName());
+        holder.username.setText(user.getUserName());
+        holder.newMessage.setText("Pending");
+        Picasso.get().load(user.getImg()).into(holder.avatar);
         return view;
     }
 }
