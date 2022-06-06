@@ -55,8 +55,9 @@ public class LoginActivity extends AppCompatActivity {
                 super.onCodeSent(s, forceResendingToken);
                 Toast.makeText(getApplicationContext(),"OTP is send",Toast.LENGTH_SHORT).show();
                 codeSend = s;
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this,AuthenticationPhoneNumberActivity.class);
                 intent.putExtra("otp",codeSend);
+                intent.putExtra("Activity","Login");
                 startActivity(intent);
             }
         };
@@ -82,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void OnClickSendOTP(View view){
         String phoneNumber="+84344329446";
+        System.out.println("123");
         PhoneAuthOptions options=PhoneAuthOptions.newBuilder(firebaseAuth)
                 .setPhoneNumber(phoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)

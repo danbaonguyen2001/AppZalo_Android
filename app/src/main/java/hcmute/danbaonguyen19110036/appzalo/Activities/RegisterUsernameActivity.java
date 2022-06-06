@@ -20,15 +20,23 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
+import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
 public class RegisterUsernameActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String codeSend;
+    private FirebaseDatabase firebaseDatabase;
+    private boolean KT=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +44,7 @@ public class RegisterUsernameActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_register_username);
-        firebaseAuth = FirebaseAuth.getInstance();
+        initData();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
@@ -56,9 +64,14 @@ public class RegisterUsernameActivity extends AppCompatActivity {
                 codeSend = s;
                 Intent intent = new Intent(RegisterUsernameActivity.this,AuthenticationPhoneNumberActivity.class);
                 intent.putExtra("otp",codeSend);
+                intent.putExtra("Activity","Register");
                 startActivity(intent);
             }
         };
+    }
+    private void initData(){
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
     }
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         firebaseAuth.signInWithCredential(credential)
@@ -79,13 +92,35 @@ public class RegisterUsernameActivity extends AppCompatActivity {
     }
     public void OnClickSendOTP(View view){
         String phoneNumber="+84344329446";
-        PhoneAuthOptions options=PhoneAuthOptions.newBuilder(firebaseAuth)
-                .setPhoneNumber(phoneNumber)
-                .setTimeout(60L, TimeUnit.SECONDS)
-                .setActivity(RegisterUsernameActivity.this)
-                .setCallbacks(mCallbacks)
-                .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dsp : snapshot.getChildren()) {
+                    User user = dsp.getValue(User.class);
+                    if(user.getPhoneNumber().equals(phoneNumber)){
+                        KT=true;
+                    }
+                }
+                if(KT==true){
+                    Toast.makeText(RegisterUsernameActivity.this,"Tài khoản đã tồn tại",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                PhoneAuthOptions options=PhoneAuthOptions.newBuilder(firebaseAuth)
+                        .setPhoneNumber(phoneNumber)
+                        .setTimeout(60L, TimeUnit.SECONDS)
+                        .setActivity(RegisterUsernameActivity.this)
+                        .setCallbacks(mCallbacks)
+                        .build();
+                PhoneAuthProvider.verifyPhoneNumber(options);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
     public void OnClickBackHome(View view){
         startActivity(new Intent(RegisterUsernameActivity.this,HomeActivity.class));
