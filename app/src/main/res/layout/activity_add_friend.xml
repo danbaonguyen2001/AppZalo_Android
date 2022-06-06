@@ -87,8 +87,10 @@
         android:textColor="@color/black"
         android:textSize="16dp"
         android:textStyle="bold"
-        android:padding="18dp"
-        android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_black_24"
+        android:paddingLeft="20dp"
+        android:gravity="center||start"
+        android:paddingRight="20dp"
+        android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_black_24"
 
         />
 
