@@ -3,6 +3,7 @@ package hcmute.danbaonguyen19110036.appzalo.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -11,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import hcmute.danbaonguyen19110036.appzalo.Activities.AddFriendActivity;
+import hcmute.danbaonguyen19110036.appzalo.Activities.FriendRequestActivity;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
 public class TabPhoneBookFragment extends Fragment {
     // lấy ra các view trong fragment
     private ImageView addfractivity;
+    private ConstraintLayout cstFriendRequest;
     public TabPhoneBookFragment() {
         // Required empty public constructor
     }
@@ -37,9 +40,16 @@ public class TabPhoneBookFragment extends Fragment {
                 startActivity(new Intent(getActivity(), AddFriendActivity.class));
             }
         });
+        cstFriendRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), FriendRequestActivity.class));
+            }
+        });
         return view;
     }
     public void initData(View view){
         addfractivity = view.findViewById(R.id.addfractivity);
+        cstFriendRequest = view.findViewById(R.id.friendrequest);
     }
 }
