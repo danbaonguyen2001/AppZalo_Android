@@ -13,8 +13,11 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import hcmute.danbaonguyen19110036.appzalo.Fragments.TabChatFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
@@ -44,7 +47,7 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else {
-                    startActivity(new Intent(SplashActivity.this,HomeActivity.class));
+                    startActivity(new Intent(SplashActivity.this, FriendPageActivity.class));
                 }
             }
         },2000);

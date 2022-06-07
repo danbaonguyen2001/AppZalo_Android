@@ -14,8 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppZalo">
         <activity
+            android:name=".Activities.FriendPageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.PersonalPageActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.SplashActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,10 +37,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activities.AddFriendActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +48,7 @@
         </activity>
         <activity
             android:name=".Activities.MainActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
