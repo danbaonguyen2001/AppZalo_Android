@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import hcmute.danbaonguyen19110036.appzalo.Activities.ChatboxActivity;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ListUserAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class TabChatFragment extends Fragment {
     public List<User> userList;
@@ -48,16 +50,19 @@ public class TabChatFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_tab_chat, container, false);
         initData(view);
+        List<String> listFriend = Util.currentUser.getListFriend();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userList.clear();
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     User user = dsp.getValue(User.class);
-                    if(!user.getId().equals(firebaseAuth.getCurrentUser().getUid())){
+                    if(listFriend.contains(user.getId())==true){
                         userList.add(user);
                     }
                 }
+
                 listUserAdapter = new ListUserAdapter(userList,getActivity(),R.layout.layout_main_tab_chat_item);
                 listView.setAdapter(listUserAdapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
