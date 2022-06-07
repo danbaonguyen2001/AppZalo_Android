@@ -36,8 +36,10 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
@@ -119,8 +121,6 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         radioGroup = findViewById(R.id.radio_group);
     }
     private void sendImageToStore(){
-        System.out.println("123");
-        System.out.println(firebaseAuth.getCurrentUser().getUid());
         StorageReference imgref = storageReference.child("Images").child(firebaseAuth.getUid()).child("Profile Pic");;
         Bitmap bitmap=null;
         if(imagepath==null){

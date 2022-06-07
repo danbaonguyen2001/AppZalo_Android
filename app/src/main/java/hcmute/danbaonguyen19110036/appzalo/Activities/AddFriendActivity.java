@@ -49,13 +49,14 @@ public class AddFriendActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userList.clear();
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     User user = dsp.getValue(User.class);
                     if(!user.getId().equals(firebaseAuth.getCurrentUser().getUid())){
                         userList.add(user);
                     }
                 }
-                addFriendAdapter = new AddFriendAdapter(AddFriendActivity.this,userList,R.layout.layout_user_pending_request);
+                addFriendAdapter = new AddFriendAdapter(AddFriendActivity.this,userList,R.layout.layout_user_add_request);
                 listView.setAdapter(addFriendAdapter);
             }
 

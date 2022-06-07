@@ -10,18 +10,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class ListAcceptPendingAdapter extends BaseAdapter {
     private Context context;
     private int layout;
     private List<User> userList;
-
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseAuth firebaseAuth;
     public ListAcceptPendingAdapter(Context context, int layout, List<User> userList) {
         this.context = context;
         this.layout = layout;
@@ -50,6 +55,7 @@ public class ListAcceptPendingAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
+        initData();
         if(view==null){
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -66,6 +72,27 @@ public class ListAcceptPendingAdapter extends BaseAdapter {
         User user = userList.get(i);
         viewHolder.username.setText(user.getUserName());
         Picasso.get().load(user.getImg()).into(viewHolder.avatar);
+        viewHolder.btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
+                Util.currentUser.getListPendingAccept().remove(user.getId());
+                Util.currentUser.getListFriend().add(user.getId());
+                databaseReference.child("listPendingAccept").setValue(Util.currentUser.getListPendingAccept());
+                databaseReference.child("listFriend").setValue(Util.currentUser.getListFriend());
+                databaseReference = firebaseDatabase.getReference("Users").child(user.getId());
+                user.getListRequest().remove(Util.currentUser.getId());
+                user.getListFriend().add(Util.currentUser.getId());
+                databaseReference.child("listRequest").setValue(user.getListRequest());
+                databaseReference.child("listFriend").setValue(user.getListFriend());
+                userList.remove(i);
+                notifyDataSetChanged();
+            }
+        });
         return view;
+    }
+    public void initData(){
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
     }
 }
