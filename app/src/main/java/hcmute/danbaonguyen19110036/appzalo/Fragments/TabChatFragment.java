@@ -34,7 +34,7 @@ public class TabChatFragment extends Fragment {
     public List<User> userList;
     private FirebaseAuth firebaseAuth;
     private ListView listView;
-    FirebaseDatabase firebaseDatabase;
+    private FirebaseDatabase firebaseDatabase;
     private ListUserAdapter listUserAdapter;
     private EditText edtSearch;
     @Override

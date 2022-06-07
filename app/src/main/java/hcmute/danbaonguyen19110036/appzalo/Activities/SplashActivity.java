@@ -2,16 +2,21 @@ package hcmute.danbaonguyen19110036.appzalo.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
 public class SplashActivity extends AppCompatActivity {
-
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,5 +40,4 @@ public class SplashActivity extends AppCompatActivity {
             }
         },2000);
     }
-
 }

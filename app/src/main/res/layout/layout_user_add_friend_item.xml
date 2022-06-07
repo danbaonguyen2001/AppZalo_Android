@@ -32,6 +32,8 @@
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="300dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:text="Kết bạn"
             android:textSize="10dp"
             app:cornerRadius="20dp" />
