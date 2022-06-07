@@ -20,11 +20,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="90dp"
+            android:layout_marginStart="75dp"
+            android:maxLines="2"
             android:text="Tên người dùng"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:textStyle="bold" />
+
+        <Button
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="210dp"
+            android:text="Chấp nhận"
+            android:textSize="8dp"
+            app:cornerRadius="20dp" />
+        <Button
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="310dp"
+            android:text="Từ chối"
+            android:textSize="8dp"
+            android:backgroundTint="#D9D9D9D9"
+            android:textColor="@color/black"
+            />
 
         <Button
             android:id="@+id/btn_addfr"
@@ -32,8 +52,10 @@
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="300dp"
-            android:text="Kết bạn"
-            android:textSize="10dp"
+            android:backgroundTint="#D9D9D9"
+            android:text="Đồng ý"
+            android:textColor="@color/black"
+            android:textSize="8dp"
             app:cornerRadius="20dp" />
 
     </RelativeLayout>
