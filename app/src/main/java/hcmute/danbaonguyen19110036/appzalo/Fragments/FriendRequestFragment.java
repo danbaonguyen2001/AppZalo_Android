@@ -51,13 +51,15 @@ public class FriendRequestFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend_request, container, false);
         initData(view);
+        List<String> listUserRequest = Util.currentUser.getListRequest();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userList.clear();
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     User user = dsp.getValue(User.class);
-                    if(!user.getId().equals(firebaseAuth.getCurrentUser().getUid())){
+                    if(listUserRequest.contains(user.getId())==true){
                         userList.add(user);
                     }
                 }

@@ -17,10 +17,10 @@ public class FriendRequestAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if(position==0){
-            return new FriendRequestFragment();
+            return new FriendPendingAcceptFragment();
         }
         else {
-            return new FriendPendingAcceptFragment();
+            return new FriendRequestFragment();
         }
     }
 

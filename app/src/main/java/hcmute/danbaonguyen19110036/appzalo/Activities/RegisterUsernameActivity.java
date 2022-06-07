@@ -91,7 +91,7 @@ public class RegisterUsernameActivity extends AppCompatActivity {
                 });
     }
     public void OnClickSendOTP(View view){
-        String phoneNumber="+84828674940";
+        String phoneNumber="+84344329446";
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -102,7 +102,6 @@ public class RegisterUsernameActivity extends AppCompatActivity {
                         KT=true;
                     }
                 }
-                System.out.println("123");
                 if(KT==true){
                     Toast.makeText(RegisterUsernameActivity.this,"Tài khoản đã tồn tại",Toast.LENGTH_SHORT).show();
                     return;

@@ -27,6 +27,7 @@ import hcmute.danbaonguyen19110036.appzalo.Adapter.ListAcceptPendingAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ListRequestAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class FriendPendingAcceptFragment extends Fragment {
     // Lấy ra các view để xử lý sự kiện
@@ -48,14 +49,15 @@ public class FriendPendingAcceptFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend_pending_accept, container, false);
         initData(view);
-        initData(view);
+        List<String> listUserAcceptPending = Util.currentUser.getListPendingAccept();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userList.clear();
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     User user = dsp.getValue(User.class);
-                    if(!user.getId().equals(firebaseAuth.getCurrentUser().getUid())){
+                    if(listUserAcceptPending.contains(user.getId())==true){
                         userList.add(user);
                     }
                 }

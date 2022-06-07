@@ -29,7 +29,7 @@
             />
 
         <Button
-            android:id="@+id/btn_addfr"
+            android:id="@+id/btn_addfr_add"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
