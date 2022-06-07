@@ -90,7 +90,7 @@
             app:layout_constraintWidth_percent="0.75"
             app:layout_constraintHeight_percent="1"
             android:inputType="textPersonName"
-            android:textSize="24dp"
+            android:textSize="23dp"
 
 
             />
