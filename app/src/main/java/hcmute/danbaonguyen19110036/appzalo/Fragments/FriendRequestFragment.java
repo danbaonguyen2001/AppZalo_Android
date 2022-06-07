@@ -61,6 +61,7 @@ public class FriendRequestFragment extends Fragment {
                         userList.add(user);
                     }
                 }
+                listRequestAdapter = new ListRequestAdapter(getActivity(),userList,R.layout.layout_user_cancel_request_add_friend);
                 lvfriendrq.setAdapter(listRequestAdapter);
                 lvfriendrq.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

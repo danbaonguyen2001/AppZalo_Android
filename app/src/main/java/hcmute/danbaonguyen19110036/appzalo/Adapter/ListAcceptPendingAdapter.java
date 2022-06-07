@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -16,20 +17,20 @@ import java.util.List;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
-public class ListRequestAdapter extends BaseAdapter {
+public class ListAcceptPendingAdapter extends BaseAdapter {
     private Context context;
     private int layout;
     private List<User> userList;
 
-    public ListRequestAdapter(Context context,List<User> userList,int layout) {
+    public ListAcceptPendingAdapter(Context context, int layout, List<User> userList) {
         this.context = context;
         this.layout = layout;
         this.userList = userList;
     }
-    private class ViewHolder{
+    public class ViewHolder{
+        private Button btnAccept,btnDenied;
         private ImageView avatar;
         private TextView username;
-        private Button btnRecall;
     }
     @Override
     public int getCount() {
@@ -53,9 +54,10 @@ public class ListRequestAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layout,null);
-            viewHolder.avatar=view.findViewById(R.id.img_avatar_recall);
-            viewHolder.username = view.findViewById(R.id.txt_username_recall);
-            viewHolder.btnRecall = view.findViewById(R.id.btn_recall);
+            viewHolder.avatar=view.findViewById(R.id.img_avatar_pending);
+            viewHolder.username = view.findViewById(R.id.txt_username_pending);
+            viewHolder.btnAccept = view.findViewById(R.id.btn_accept_fr);
+            viewHolder.btnDenied = view.findViewById(R.id.btn_denied_fr);
             view.setTag(viewHolder);
         }
         else {

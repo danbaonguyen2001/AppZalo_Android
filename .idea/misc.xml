@@ -70,8 +70,11 @@
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_main_tab_chat_item.xml" value="0.1" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_tab_phonebook_user_item.xml" value="0.13020833333333334" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_add_friend_exsit_item.xml" value="0.264" />
-        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_add_friend_item.xml" value="0.1" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_add_friend_item.xml" value="0.264" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_add_request.xml" value="0.11367753623188406" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_cancel_request_add_friend.xml" value="0.1" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_item.xml" value="0.4" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_pending_request.xml" value="0.264" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/menu/main_menu_navigation.xml" value="0.25416666666666665" />
       </map>
     </option>

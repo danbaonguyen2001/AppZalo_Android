@@ -1,15 +1,9 @@
 package hcmute.danbaonguyen19110036.appzalo.Adapter;
-
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
-import java.util.List;
-
 import hcmute.danbaonguyen19110036.appzalo.Fragments.FriendPendingAcceptFragment;
 import hcmute.danbaonguyen19110036.appzalo.Fragments.FriendRequestFragment;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
