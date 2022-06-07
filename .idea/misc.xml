@@ -28,26 +28,25 @@
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_videocam_white_24.xml" value="0.199" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_videogame_asset_blue_40.xml" value="0.19" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_launcher_background.xml" value="0.19" />
-        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_add_friend.xml" value="0.22826086956521738" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_authentication_phone_number.xml" value="0.151268115942029" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_chatbox.xml" value="0.2" />
-        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_friend_request.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_home.xml" value="0.22826086956521738" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_login.xml" value="0.2265625" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_main.xml" value="0.264" />
-        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_phone_book.xml" value="0.151268115942029" />
-        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_register_input_infor.xml" value="0.151268115942029" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_register_username.xml" value="0.2203125" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_splash.xml" value="0.18072916666666666" />
+<<<<<<< HEAD
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_test.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_view_information_user.xml" value="0.151268115942029" />
+=======
+>>>>>>> 917698173d2c3f07f1bf49818383f60fb0112385
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_chats.xml" value="0.2" />
-        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_friend_request.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_main_tab_chat.xml" value="0.264" />
-        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_main_tab_phonebook.xml" value="0.264" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_main_tab_phonebook.xml" value="0.151268115942029" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_receiver_chat.xml" value="0.20572916666666666" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_sender_chat.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_tab_diary.xml" value="0.264" />
+<<<<<<< HEAD
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_tab_discover.xml" value="0.151268115942029" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_tab_phone_book.xml" value="0.1046875" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_tab_user.xml" value="0.2" />
@@ -57,9 +56,15 @@
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_user_add_friend_exsit_item.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_user_add_friend_item.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_user_cancel_request_add_friend.xml" value="0.264" />
+=======
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_main_tab_chat_item.xml" value="0.22826086956521738" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_search_freind.xml" value="0.264" />
+>>>>>>> 917698173d2c3f07f1bf49818383f60fb0112385
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/menu/main_menu_navigation.xml" value="0.25416666666666665" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_add_friend.xml" value="0.264" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_authentication_phone_number.xml" value="0.176" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_chatbox.xml" value="0.176" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_friend_request.xml" value="0.12395833333333334" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_home.xml" value="0.12360688956433637" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_login.xml" value="0.12360688956433637" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_main.xml" value="0.1" />
@@ -68,6 +73,7 @@
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_register_username.xml" value="0.2" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_splash.xml" value="0.1" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/activity_view_information_user.xml" value="0.15172101449275363" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/fragment_friend_request.xml" value="0.12395833333333334" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/fragment_main_tab_chat.xml" value="0.1" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/fragment_main_tab_personal.xml" value="0.1" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/fragment_main_tab_phonebook.xml" value="0.264" />
@@ -79,6 +85,8 @@
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/fragment_tab_user.xml" value="0.1160081053698075" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_main_tab_chat_item.xml" value="0.1" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_tab_phonebook_user_item.xml" value="0.13020833333333334" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_add_friend_exsit_item.xml" value="0.264" />
+        <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_add_friend_item.xml" value="0.2" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/layout/layout_user_item.xml" value="0.4" />
         <entry key="..\:/Deadline/Android/AppZalo_Android/app/src/main/res/menu/main_menu_navigation.xml" value="0.25416666666666665" />
       </map>
