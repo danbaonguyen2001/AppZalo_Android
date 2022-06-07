@@ -10,14 +10,14 @@
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/img_avatar_recall"
+            android:id="@+id/img_user_add"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:src="@drawable/family"
             />
 
         <TextView
-            android:id="@+id/txt_username_recall"
+            android:id="@+id/txt_username_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -29,14 +29,13 @@
             />
 
         <Button
-            android:id="@+id/btn_recall"
+            android:id="@+id/btn_addfr"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="300dp"
-            android:backgroundTint="#D9D9D9D9"
-            android:text="Thu hồi"
-            android:textColor="@color/black"
+            android:text="Kết bạn"
+            android:textColor="@color/white"
             android:textSize="10dp"
             app:cornerRadius="20dp" />
 

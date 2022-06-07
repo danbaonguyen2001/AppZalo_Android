@@ -55,7 +55,7 @@ public class AddFriendActivity extends AppCompatActivity {
                         userList.add(user);
                     }
                 }
-                addFriendAdapter = new AddFriendAdapter(AddFriendActivity.this,userList,R.layout.layout_user_add_friend_item);
+                addFriendAdapter = new AddFriendAdapter(AddFriendActivity.this,userList,R.layout.layout_user_pending_request);
                 listView.setAdapter(addFriendAdapter);
             }
 

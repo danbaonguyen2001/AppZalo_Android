@@ -2,18 +2,15 @@ package hcmute.danbaonguyen19110036.appzalo.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,27 +23,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hcmute.danbaonguyen19110036.appzalo.Activities.ChatboxActivity;
-import hcmute.danbaonguyen19110036.appzalo.Adapter.ListUserAdapter;
+import hcmute.danbaonguyen19110036.appzalo.Adapter.ListAcceptPendingAdapter;
+import hcmute.danbaonguyen19110036.appzalo.Adapter.ListRequestAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
-public class TabChatFragment extends Fragment {
-    public List<User> userList;
-    private FirebaseAuth firebaseAuth;
-    private ListView listView;
+public class FriendPendingAcceptFragment extends Fragment {
+    // Lấy ra các view để xử lý sự kiện
+    private ListView lvfriendpd;
+    // Khai báo các biến Firebase
     private FirebaseDatabase firebaseDatabase;
-    private ListUserAdapter listUserAdapter;
-    private EditText edtSearch;
+    private FirebaseAuth firebaseAuth;
+    //
+    private ListAcceptPendingAdapter listAcceptPendingAdapter;
+    private List<User> userList;
+    private ListView listViewpd;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main_tab_chat, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_friend_pending_accept, container, false);
+        initData(view);
         initData(view);
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -58,9 +59,9 @@ public class TabChatFragment extends Fragment {
                         userList.add(user);
                     }
                 }
-                listUserAdapter = new ListUserAdapter(userList,getActivity(),R.layout.layout_main_tab_chat_item);
-                listView.setAdapter(listUserAdapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                listAcceptPendingAdapter = new ListAcceptPendingAdapter(getActivity(),R.layout.layout_user_pending_request,userList);
+                listViewpd.setAdapter(listAcceptPendingAdapter);
+                listViewpd.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         // Lưu giá trị vào intent để sang ChatboxAcitivy ta có thể lấy những giá trị này ra
@@ -80,10 +81,9 @@ public class TabChatFragment extends Fragment {
     }
     public void initData(View view){
         // Khơi tạo các khai báo ban đầu
+        listViewpd = view.findViewById(R.id.lv_pending_accept);
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        listView= view.findViewById(R.id.listview_listuser);
-        edtSearch = view.findViewById(R.id.edt_search);
         userList = new ArrayList<>();
     }
 }
