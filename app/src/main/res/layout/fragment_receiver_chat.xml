@@ -1,34 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="5dp">
 
-    android:padding="2dp">
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="50dp"
-        android:backgroundTint="@color/black"
-        android:id="@+id/layoutformessage">
+        android:background="@drawable/receive_drawable"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/image_message"
+            android:layout_width="200dp"
+            android:layout_height="130dp"
+            android:layout_margin="5dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:srcCompat="@drawable/avatar" />
+
+<!--        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView-->
+<!--            android:id="@+id/voicePlayerView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:enableVisualizer="true"-->
+<!--            app:playPauseBackgroundColor="@color/colorPrimary"-->
+<!--            app:playPauseCornerRadius="100"-->
+<!--            app:playProgressbarColor="@color/colorPrimary"-->
+<!--            app:progressTimeColor="@color/black"-->
+<!--            app:seekBarProgressColor="#000"-->
+<!--            app:seekBarThumbColor="@color/colorPrimary"-->
+<!--            app:shareCornerRadius="100"-->
+<!--            app:showShareButton="false"-->
+<!--            app:showTiming="true"-->
+<!--            android:visibility="gone"-->
+<!--            app:viewBackground="@color/edittextColor"-->
+<!--            app:viewCornerRadius="10"-->
+<!--            app:visualizationNotPlayedColor="@color/colorPrimary"-->
+<!--            app:visualizationPlayedColor="@color/colorPrimary" />-->
 
         <TextView
             android:id="@+id/sendermessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/custom_receiver_chat"
-            android:paddingLeft="7dp"
-            android:paddingTop="7dp"
-            android:paddingRight="40dp"
-            android:paddingBottom="7dp"
-            android:text="Sender Message Display Here "
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:cornerRadius="12dp">
+            android:maxWidth="250dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="TextView"
+            android:textSize="13sp" />
+    </LinearLayout>
 
-        </TextView>
-
-    </RelativeLayout>
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/feeling"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout2"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout2"
+        app:srcCompat="@drawable/ic_fb_love" />
+</androidx.constraintlayout.widget.ConstraintLayout>

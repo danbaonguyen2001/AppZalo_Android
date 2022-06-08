@@ -5,15 +5,19 @@ public class Message {
     private String groupId;
     private String senderId;
     private String message;
+    private String type;
+    private String imgUrl;
     public Message(){
 
     }
 
-    public Message(String id, String groupId, String senderId, String message) {
+    public Message(String id, String groupId, String senderId, String message, String type, String imgUrl) {
         this.id = id;
         this.groupId = groupId;
         this.senderId = senderId;
         this.message = message;
+        this.type = type;
+        this.imgUrl = imgUrl;
     }
 
     public String getId() {
@@ -46,5 +50,21 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }

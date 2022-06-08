@@ -44,7 +44,6 @@ public class TabChatFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_tab_chat, container, false);
         initData(view);
         List<GroupUser> groupUserList = Util.currentUser.getGroupUserList();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         listUserAdapter = new ListUserAdapter(getActivity(),groupUserList,R.layout.layout_main_tab_chat_item);
         listView.setAdapter(listUserAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
