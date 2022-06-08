@@ -58,6 +58,7 @@
         app:layout_constraintVertical_bias="0.08"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -91,18 +92,51 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:backgroundTint="#D9D9D9D9"
+            android:text="Tất cả 12"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            app:cornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.45"
+            app:layout_constraintHorizontal_bias="0.05"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_percent="0.25"
-            app:layout_constraintHeight_percent="0.5"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1"
-            app:layout_constraintHorizontal_bias="0.05"
-            android:text="Tất cả 12"
-            android:textSize="12dp"
+            app:layout_constraintWidth_percent="0.25" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:backgroundTint="#D9D9D9D9"
+            android:text="Chưa là bạn 11"
             android:textColor="@color/black"
+            android:textSize="12dp"
+            app:cornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.45"
+            app:layout_constraintHorizontal_bias="0.55"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintWidth_percent="0.35" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/search"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintWidth_percent="0.95"
+        >
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

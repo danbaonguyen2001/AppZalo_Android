@@ -102,12 +102,11 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHeight_percent="0.71"
+                app:layout_constraintHeight_percent="0.69"
                 app:layout_constraintWidth_percent="0.5"
                 app:layout_constraintVertical_bias="0.9"
-                app:layout_constraintHorizontal_bias="0.03"
+                app:layout_constraintHorizontal_bias="0.02"
                 android:src="@drawable/shipper2"
-                android:scaleX="1.15"
                 />
             <ImageView
                 android:layout_width="0dp"

@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.List;
 import hcmute.danbaonguyen19110036.appzalo.Model.Message;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public List<Message> messageList;
@@ -59,7 +60,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public int getItemViewType(int position) {
         Message messages=messageList.get(position);
-        if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(messages.getSenderId()))
+        if(Util.currentUser.getId().equals(messages.getSenderId()))
         {
             return ITEM_SEND;
         }

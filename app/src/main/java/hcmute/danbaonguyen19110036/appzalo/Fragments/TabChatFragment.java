@@ -54,6 +54,7 @@ public class TabChatFragment extends Fragment {
                 Intent intent=new Intent(getActivity(), ChatboxActivity.class);
                 intent.putExtra("username",Util.currentUser.getUserName());
                 intent.putExtra("receiverId",groupUserList.get(i).getUserId());
+                intent.putExtra("roomId",groupUserList.get(i).groupId);
                 startActivity(intent);
             }
         });
