@@ -88,7 +88,7 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
         String id = firebaseAuth.getCurrentUser().getUid();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(id);
         String phoneNumber = firebaseAuth.getCurrentUser().getPhoneNumber();
-        User user = new User(id,phoneNumber,"","",null,"","",null,null,null);
+        User user = new User(id,phoneNumber,"","",null,"","");
         databaseReference.setValue(user);
     }
 }

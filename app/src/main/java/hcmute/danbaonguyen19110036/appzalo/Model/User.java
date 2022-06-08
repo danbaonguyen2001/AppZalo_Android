@@ -17,11 +17,12 @@ public class User {
     private List<String> listFriend;
     private List<String> listRequest;
     private List<String> listPendingAccept;
+    private List<GroupUser> groupUserList;
     public User(){
 
     }
 
-    public User(String id, String phoneNumber, String userName, String birthDay, String img, String gender, String address, List<String> listFriend, List<String> listRequest, List<String> listPendingAccept) {
+    public User(String id, String phoneNumber, String userName, String birthDay, String img, String gender, String address) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.userName = userName;
@@ -29,9 +30,6 @@ public class User {
         this.img = img;
         this.gender = gender;
         this.address = address;
-        this.listFriend = listFriend;
-        this.listRequest = listRequest;
-        this.listPendingAccept = listPendingAccept;
     }
 
     public String getId() {
@@ -121,5 +119,16 @@ public class User {
 
     public void setListPendingAccept(List<String> listPendingAccept) {
         this.listPendingAccept = listPendingAccept;
+    }
+
+    public List<GroupUser> getGroupUserList() {
+        if(groupUserList==null){
+            groupUserList = new ArrayList<>();
+        }
+        return groupUserList;
+    }
+
+    public void setGroupUserList(List<GroupUser> groupUserList) {
+        this.groupUserList = groupUserList;
     }
 }
