@@ -29,12 +29,13 @@
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_baseline_videogame_asset_blue_40.xml" value="0.19" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/drawable/ic_launcher_background.xml" value="0.19" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_authentication_phone_number.xml" value="0.151268115942029" />
-        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_chatbox.xml" value="0.2" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_chatbox.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_friend_page.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_home.xml" value="0.22826086956521738" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_login.xml" value="0.2265625" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_personal_page.xml" value="0.264" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_phone_book.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_register_username.xml" value="0.2203125" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/activity_splash.xml" value="0.18072916666666666" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/fragment_chats.xml" value="0.2" />
@@ -47,7 +48,7 @@
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_main_tab_chat_item.xml" value="0.22826086956521738" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_search_freind.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_tab_phonebook_user_item.xml" value="0.151268115942029" />
-        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_user_add_friend_exsit_item.xml" value="0.151268115942029" />
+        <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_user_add_friend_exsit_item.xml" value="0.264" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_user_add_request.xml" value="0.25416666666666665" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_user_cancel_request_add_friend.xml" value="0.151268115942029" />
         <entry key="..\:/DOCUMENTATION OF SUBJECTS/HK6/Mobile Programing/AppZalo/app/src/main/res/layout/layout_user_pending_request.xml" value="0.264" />
