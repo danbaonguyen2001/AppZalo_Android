@@ -175,6 +175,13 @@ public class ChatboxActivity extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         imageToken=uri.toString();
                         Toast.makeText(getApplicationContext(),"URI get sucess",Toast.LENGTH_SHORT).show();
+                        DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
+                        String key = databaseReference.push().getKey();
+                        String senderId = firebaseAuth.getCurrentUser().getUid();
+                        Message message = new Message(key,groupId,senderId,"","image",imageToken);
+                        databaseReference.child(key).setValue(message);
+                        messageList.add(message);
+                        chatAdapter.notifyDataSetChanged();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -191,12 +198,6 @@ public class ChatboxActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Image Not UPdloaded",Toast.LENGTH_SHORT).show();
             }
         });
-        DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
-        String key = databaseReference.push().getKey();
-        String senderId = firebaseAuth.getCurrentUser().getUid();
-        Message message = new Message(key,groupId,senderId,"","image",imageToken);
-        databaseReference.child(key).setValue(message);
-        messageList.add(message);
-        chatAdapter.notifyDataSetChanged();
+
     }
 }
