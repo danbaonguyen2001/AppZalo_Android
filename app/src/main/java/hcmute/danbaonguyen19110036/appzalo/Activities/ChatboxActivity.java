@@ -3,23 +3,37 @@ package hcmute.danbaonguyen19110036.appzalo.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devlomi.record_view.OnRecordListener;
+import com.devlomi.record_view.RecordButton;
+import com.devlomi.record_view.RecordView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,20 +49,22 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ChatAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.Message;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class ChatboxActivity extends AppCompatActivity {
     // Khai báo cáo View để xử lý sự kiện
     private TextView username;
-    private ImageView btnBack,selectImg;
+    private ImageView btnBack,selectImg,sendBtn;
     private RecyclerView recyclerView;
     private EditText enterMessage;
+    private ConstraintLayout containerChatbox;
     // firebaseAuth dùng để lấy ra những thông tin của user hiện tại
     private FirebaseAuth firebaseAuth;
     // firebaseDatabase dùng để lấy ra data trong database
@@ -62,6 +78,11 @@ public class ChatboxActivity extends AppCompatActivity {
     private FirebaseStorage firebaseStorage;
     private FirebaseFirestore firebaseFirestore;
     private String imageToken;
+    private RecordButton micro;
+    private RecordView recordView;
+    private MediaRecorder mediaRecorder;
+    private String audioPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +129,118 @@ public class ChatboxActivity extends AppCompatActivity {
                 startActivityForResult(intent,PICK_IMAGE);
             }
         });
+        micro.setOnClickListener(view-> {
+            if (Util.recordingOk(ChatboxActivity.this))
+            {
+                if (Util.isStorageOk(ChatboxActivity.this))
+                {
+                    micro.setListenForRecord(true);
+                }
+                Util.requestStorage(ChatboxActivity.this);
+            }
+            else
+            {
+                Util.requestRecording(ChatboxActivity.this);
+            }
+            if(!Util.isPermissionGranted(ChatboxActivity.this)){
+                new AlertDialog.Builder(this)
+                        .setTitle("Allfilepermission")
+                        .setMessage("Android 11")
+                        .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                takePermission();
+                            }
+                        })
+                        .setNegativeButton("Deny", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }).setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+            else {
+                Toast.makeText(this,"Permission already granted",Toast.LENGTH_SHORT).show();
+            }
+        });
+        recordView.setOnRecordListener(new OnRecordListener() {
+            @Override
+            public void onStart() {
+                //Start Recording..
+                setUpRecording();
+                try {
+                    mediaRecorder.prepare();
+                    mediaRecorder.start();
+                } catch (IOException e) {
+                    System.out.println("Running Here");
+                    e.printStackTrace();
+                }
+//                containerChatbox.setVisibility(View.GONE);
+                enterMessage.setVisibility(View.GONE);
+                recordView.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onCancel() {
+                //On Swipe To Cancel
+                mediaRecorder.reset();
+                mediaRecorder.release();
+                File file = new File(audioPath);
+                if (file.exists())
+                    file.delete();
+                recordView.setVisibility(View.GONE);
+                enterMessage.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish(long recordTime) {
+                try {
+                    mediaRecorder.stop();
+                    mediaRecorder.release();
+                } catch (RuntimeException stopException) {
+                    System.out.println("123");
+                    stopException.printStackTrace();
+                }
+
+                recordView.setVisibility(View.GONE);
+                enterMessage.setVisibility(View.VISIBLE);
+
+//                sendRecordingMessage(audioPath);
+            }
+
+
+            @Override
+            public void onLessThanSecond() {
+                //When the record time is less than One Second
+                mediaRecorder.reset();
+                mediaRecorder.release();
+                recordView.setVisibility(View.GONE);
+
+            }
+        });
+        enterMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                micro.setVisibility(View.GONE);
+                sendBtn.setVisibility(View.VISIBLE);
+                if(enterMessage.getText().toString().trim().equals("")){
+                    sendBtn.setVisibility(View.GONE);
+                    micro.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
     // Khởi tạo các giá trị ban đầu
     private void initData(){
@@ -121,6 +254,12 @@ public class ChatboxActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.chatbox_recycler_chat);
         enterMessage = findViewById(R.id.enterMessage);
         selectImg = findViewById(R.id.select_img);
+        micro = findViewById(R.id.micro);
+        recordView = findViewById(R.id.recordView);
+        sendBtn = findViewById(R.id.sendBtn);
+//        containerChatbox = findViewById(R.id.chatbox_message);
+        micro.setRecordView(recordView);
+        micro.setListenForRecord(false);
         messageList = new ArrayList<>();
     }
     public void SendMessage(View view){
@@ -182,6 +321,7 @@ public class ChatboxActivity extends AppCompatActivity {
                         databaseReference.child(key).setValue(message);
                         messageList.add(message);
                         chatAdapter.notifyDataSetChanged();
+                        recyclerView.scrollToPosition(messageList.size()-1);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -198,6 +338,68 @@ public class ChatboxActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Image Not UPdloaded",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    public void takePermission(){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R){
+            try {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                Uri uri = Uri.fromParts("package",getPackageName(),null);
+                intent.setData(uri);
+                startActivityForResult(intent,101);
+            }
+            catch (Exception e){
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent,101);
+            }
+        }
+        else {
+            ActivityCompat.requestPermissions(this,new String[]{
+                    Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE
+            },101);
+        }
+    }
+    public void setUpRecording(){
+        mediaRecorder = new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "ChatsApp/Media/Recording");
+        if (!file.exists())
+            file.mkdirs();
+        audioPath = file.getAbsolutePath() + File.separator + System.currentTimeMillis() + ".3gp";
+        mediaRecorder.setOutputFile(audioPath);
+    }
+    public void sendRecordingMessage(String audioPath){
+        StorageReference storageReference = firebaseStorage.getReference(  "Media/Recording/" + Util.currentUser.getId() + "/" + System.currentTimeMillis());
+        Uri audioFile = Uri.fromFile(new File(audioPath));
+        storageReference.putFile(audioFile).addOnSuccessListener(success->{
+            Task<Uri> audioUrl = success.getStorage().getDownloadUrl();
+            audioUrl.addOnCompleteListener(path->{
+                if(path.isSuccessful()){
+                    String url = path.getResult().toString();
+                    DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
+                    String key = databaseReference.push().getKey();
+                    Message message = new Message(key,groupId,Util.currentUser.getId(), url,"audio","");
+                    databaseReference.child(key).setValue(message);
+                    messageList.add(message);
+                    chatAdapter.notifyDataSetChanged();
+                }
+            });
+        });
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults.length>0){
+            if(requestCode==101){
+                boolean readExt = grantResults[0]== PackageManager.PERMISSION_GRANTED;
+                if(!readExt){
+                    takePermission();
+                }
+            }
+        }
     }
 }

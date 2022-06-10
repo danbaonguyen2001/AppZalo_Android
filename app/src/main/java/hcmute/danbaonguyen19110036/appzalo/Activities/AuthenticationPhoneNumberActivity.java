@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
     private EditText edtCode;
@@ -51,7 +52,6 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
         else {
             String codereciever =getIntent().getStringExtra("otp");
             activity = getIntent().getStringExtra("Activity");
-            System.out.println(activity);
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codereciever,enteredotp);
             signInWithPhoneAuthCredential(credential);
         }
@@ -62,17 +62,30 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
-                    Intent intent;
                     if(activity.equals("Register")) {
                         createUser();
-                        intent=new Intent(AuthenticationPhoneNumberActivity.this,RegisterInputInforActivity.class);
+                        Intent intent=new Intent(AuthenticationPhoneNumberActivity.this,RegisterInputInforActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                     else
                     {
-                        intent=new Intent(AuthenticationPhoneNumberActivity.this,MainActivity.class);
+                        DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
+                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Util.currentUser = snapshot.getValue(User.class);
+                                Intent intent=new Intent(AuthenticationPhoneNumberActivity.this,MainActivity.class);
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
-                    startActivity(intent);
-                    finish();
+
                 }
                 else
                 {
