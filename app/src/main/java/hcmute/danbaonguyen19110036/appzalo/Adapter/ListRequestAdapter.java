@@ -9,18 +9,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class ListRequestAdapter extends BaseAdapter {
     private Context context;
     private int layout;
     private List<User> userList;
-
+    private FirebaseDatabase firebaseDatabase;
     public ListRequestAdapter(Context context,List<User> userList,int layout) {
         this.context = context;
         this.layout = layout;
@@ -49,6 +52,7 @@ public class ListRequestAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
+        initData();
         if(view==null){
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -61,9 +65,33 @@ public class ListRequestAdapter extends BaseAdapter {
         else {
             viewHolder = (ViewHolder) view.getTag();
         }
+        // Lấy ra dữ liệu mà đã được click trên ListView
         User user = userList.get(i);
         viewHolder.username.setText(user.getUserName());
         Picasso.get().load(user.getImg()).into(viewHolder.avatar);
+        viewHolder.btnRecall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // lấy ra hàng dữ liệu có id user là user đang sử dụng app
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(Util.currentUser.getId());
+                // Thu hồi lời mời kết bạn bằng cách xóa userid trong listrequest
+                 Util.currentUser.getListRequest().remove(user.getId());
+                // Cập nhật lại dữ liệu trên firebase với hàng dữ liệu được lấy ra
+                databaseReference.child("listRequest").setValue(Util.currentUser.getListRequest());
+                // lấy ra hàng dữ liệu có id user là user được chọn trên listview
+                databaseReference = firebaseDatabase.getReference("Users").child(Util.currentUser.getId());
+                // Xóa userid trong listacceptpending trong user đã được chọn
+                user.getListPendingAccept().remove(Util.currentUser.getId());
+                // Cập nhật lại dữ liệu trên firebase với hàng dữ liệu được lấy ra
+                databaseReference.child("listPendingAccept").setValue(Util.currentUser.getListRequest());
+                // Cập nhật lại ListView
+                userList.remove(i);
+                notifyDataSetChanged();
+            }
+        });
         return view;
+    }
+    public void initData(){
+        firebaseDatabase = FirebaseDatabase.getInstance();
     }
 }

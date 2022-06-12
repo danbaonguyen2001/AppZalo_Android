@@ -1,40 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:layout_marginLeft="50dp"
-    android:padding="2dp">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/layoutformessage">
+        android:background="@drawable/sent_drawable"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/image_message"
+            android:layout_width="200dp"
+            android:layout_height="130dp"
+            android:layout_margin="5dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:srcCompat="@drawable/avatar" />
 
         <TextView
             android:id="@+id/sendermessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/custom_sender_chat"
-            android:paddingLeft="7dp"
-            android:paddingTop="7dp"
-            android:paddingRight="40dp"
-            android:paddingBottom="7dp"
-            android:text="Sender Message Display Here "
             android:textColor="@color/white"
-            android:textSize="18sp">
+            android:maxWidth="250dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="TextView"
+            android:textSize="13sp" />
 
-        </TextView>
+<!--        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView-->
+<!--            android:id="@+id/voicePlayerView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone"-->
+<!--            app:enableVisualizer="true"-->
+<!--            app:playPauseBackgroundColor="@color/colorPrimary"-->
+<!--            app:playPauseCornerRadius="100"-->
+<!--            app:playProgressbarColor="@color/colorPrimary"-->
+<!--            app:progressTimeColor="@color/black"-->
+<!--            app:seekBarProgressColor="#000"-->
+<!--            app:seekBarThumbColor="@color/colorPrimary"-->
+<!--            app:shareCornerRadius="100"-->
+<!--            app:showShareButton="false"-->
+<!--            app:showTiming="true"-->
+<!--            app:viewBackground="@color/edittextColor"-->
+<!--            app:viewCornerRadius="10"-->
+<!--            app:visualizationNotPlayedColor="@color/colorPrimary"-->
+<!--            app:visualizationPlayedColor="@color/colorPrimary" />-->
+    </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/timeofmessage"
-            android:textSize="10sp"
-            android:layout_toRightOf="@id/sendermessage"
-            android:layout_marginLeft="-40dp"
-            android:layout_alignBottom="@id/sendermessage"
-            android:text="20:09"
-            android:padding="7dp"
-            android:textColor="@color/white" />
-    </RelativeLayout>
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/feeling"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout"
+        app:srcCompat="@drawable/ic_fb_love" />
+</androidx.constraintlayout.widget.ConstraintLayout>

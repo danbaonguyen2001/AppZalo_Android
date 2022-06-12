@@ -106,9 +106,7 @@
                 app:layout_constraintWidth_percent="0.5"
                 app:layout_constraintVertical_bias="0.9"
                 app:layout_constraintHorizontal_bias="0.02"
-                android:src="@drawable/shipper2"
-
-                />
+                android:src="@drawable/shipper2"/>
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="0dp"

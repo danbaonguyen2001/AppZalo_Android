@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -40,6 +41,7 @@ public class TabPhoneBookFragment extends Fragment {
     private ListView listView;
     private List<User> userList;
     private ListFriendAdapter listFriendAdapter;
+    private Button btnTotal;
     public TabPhoneBookFragment() {
         // Required empty public constructor
     }
@@ -80,6 +82,8 @@ public class TabPhoneBookFragment extends Fragment {
                         userList.add(user);
                     }
                 }
+                String total = "Tất cả "+String.valueOf(userList.size());
+                btnTotal.setText(total);
                 listFriendAdapter = new ListFriendAdapter(getActivity(),userList,R.layout.layout_tab_phonebook_user_item);
                 listView.setAdapter(listFriendAdapter);
             }
@@ -91,6 +95,7 @@ public class TabPhoneBookFragment extends Fragment {
         return view;
     }
     public void initData(View view){
+        btnTotal = view.findViewById(R.id.btnTotalFriend);
         addfractivity = view.findViewById(R.id.addfractivity);
         cstFriendRequest = view.findViewById(R.id.friendrequest);
         listView = view.findViewById(R.id.lv_listfriend_phonebook);

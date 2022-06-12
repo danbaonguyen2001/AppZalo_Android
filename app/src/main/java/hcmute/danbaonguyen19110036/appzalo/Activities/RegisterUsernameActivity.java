@@ -91,35 +91,14 @@ public class RegisterUsernameActivity extends AppCompatActivity {
                 });
     }
     public void OnClickSendOTP(View view){
-        String phoneNumber="+84344329446";
-        DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dsp : snapshot.getChildren()) {
-                    User user = dsp.getValue(User.class);
-                    if(user.getPhoneNumber().equals(phoneNumber)){
-                        KT=true;
-                    }
-                }
-                if(KT==true){
-                    Toast.makeText(RegisterUsernameActivity.this,"Tài khoản đã tồn tại",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                PhoneAuthOptions options=PhoneAuthOptions.newBuilder(firebaseAuth)
-                        .setPhoneNumber(phoneNumber)
-                        .setTimeout(60L, TimeUnit.SECONDS)
-                        .setActivity(RegisterUsernameActivity.this)
-                        .setCallbacks(mCallbacks)
-                        .build();
-                PhoneAuthProvider.verifyPhoneNumber(options);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        String phoneNumber="+84828674940";
+        PhoneAuthOptions options=PhoneAuthOptions.newBuilder(firebaseAuth)
+                .setPhoneNumber(phoneNumber)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(RegisterUsernameActivity.this)
+                .setCallbacks(mCallbacks)
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
 
     }
     public void OnClickBackHome(View view){
