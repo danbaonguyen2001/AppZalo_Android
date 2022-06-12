@@ -91,6 +91,7 @@ public class RegisterUsernameActivity extends AppCompatActivity {
                 });
     }
     public void OnClickSendOTP(View view){
+
         String phoneNumber="+84988621047";
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -120,6 +121,7 @@ public class RegisterUsernameActivity extends AppCompatActivity {
 
             }
         });
+
 
     }
     public void OnClickBackHome(View view){

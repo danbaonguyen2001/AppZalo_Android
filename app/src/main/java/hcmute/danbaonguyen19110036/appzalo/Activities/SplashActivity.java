@@ -32,7 +32,9 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 startActivity(new Intent(SplashActivity.this,HomeActivity.class));
+
                 if(FirebaseAuth.getInstance().getCurrentUser()!=null)
                 {
                     DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
