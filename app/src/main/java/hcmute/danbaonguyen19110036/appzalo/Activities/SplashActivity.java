@@ -2,28 +2,17 @@ package hcmute.danbaonguyen19110036.appzalo.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
-
-import hcmute.danbaonguyen19110036.appzalo.Fragments.TabChatFragment;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
@@ -43,8 +32,9 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                startActivity(new Intent(SplashActivity.this,HomeActi
-//                vity.class));
+
+                startActivity(new Intent(SplashActivity.this,HomeActivity.class));
+
                 if(FirebaseAuth.getInstance().getCurrentUser()!=null)
                 {
                     DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
@@ -67,6 +57,7 @@ public class SplashActivity extends AppCompatActivity {
                 else {
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                 }
+
             }
         },2000);
     }

@@ -37,25 +37,25 @@
             android:text="TextView"
             android:textSize="13sp" />
 
-<!--        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView-->
-<!--            android:id="@+id/voicePlayerView"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:visibility="gone"-->
-<!--            app:enableVisualizer="true"-->
-<!--            app:playPauseBackgroundColor="@color/colorPrimary"-->
-<!--            app:playPauseCornerRadius="100"-->
-<!--            app:playProgressbarColor="@color/colorPrimary"-->
-<!--            app:progressTimeColor="@color/black"-->
-<!--            app:seekBarProgressColor="#000"-->
-<!--            app:seekBarThumbColor="@color/colorPrimary"-->
-<!--            app:shareCornerRadius="100"-->
-<!--            app:showShareButton="false"-->
-<!--            app:showTiming="true"-->
-<!--            app:viewBackground="@color/edittextColor"-->
-<!--            app:viewCornerRadius="10"-->
-<!--            app:visualizationNotPlayedColor="@color/colorPrimary"-->
-<!--            app:visualizationPlayedColor="@color/colorPrimary" />-->
+        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+            android:id="@+id/voicePlayerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:enableVisualizer="true"
+            app:playPauseBackgroundColor="@color/colorPrimary"
+            app:playPauseCornerRadius="100"
+            app:playProgressbarColor="@color/colorPrimary"
+            app:progressTimeColor="@color/black"
+            app:seekBarProgressColor="#000"
+            app:seekBarThumbColor="@color/colorPrimary"
+            app:shareCornerRadius="100"
+            app:showShareButton="false"
+            app:showTiming="true"
+            app:viewBackground="@color/edittextColor"
+            app:viewCornerRadius="10"
+            app:visualizationNotPlayedColor="@color/colorPrimary"
+            app:visualizationPlayedColor="@color/colorPrimary" />
     </LinearLayout>
 
     <ImageView

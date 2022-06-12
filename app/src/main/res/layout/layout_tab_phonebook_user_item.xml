@@ -33,16 +33,16 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="300dp"
+            android:layout_marginStart="280dp"
             android:src="@drawable/ic_baseline_call_24" />
+
         <ImageView
             android:id="@+id/btn_video_lf"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_baseline_videocam_24"
             android:layout_centerVertical="true"
-            android:layout_marginStart="350dp"
-            />
+            android:layout_marginStart="330dp"
+            android:src="@drawable/ic_baseline_videocam_24" />
     </RelativeLayout>
 
 

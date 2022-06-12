@@ -42,7 +42,7 @@ public class AddFriendAdapter extends BaseAdapter {
     public class ViewHolder{
         public ImageView avatar;
         public TextView username;
-        public Button btnAdd;
+        public Button btnAdd,btnRequested;
     }
     @Override
     public int getCount() {
@@ -70,12 +70,17 @@ public class AddFriendAdapter extends BaseAdapter {
             viewHolder.avatar=view.findViewById(R.id.img_user_add);
             viewHolder.username = view.findViewById(R.id.txt_username_add);
             viewHolder.btnAdd = view.findViewById(R.id.btn_addfr_add);
+            viewHolder.btnRequested=view.findViewById(R.id.btn_requested_addfr);
             view.setTag(viewHolder);
         }
         else {
             viewHolder = (ViewHolder) view.getTag();
         }
         User user = userList.get(i);
+        if(Util.currentUser.getListRequest().contains(user.getId())){
+            viewHolder.btnAdd.setVisibility(View.GONE);
+            viewHolder.btnRequested.setVisibility(View.VISIBLE);
+        }
         viewHolder.username.setText(user.getUserName());
         Picasso.get().load(user.getImg()).into(viewHolder.avatar);
         viewHolder.btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +92,8 @@ public class AddFriendAdapter extends BaseAdapter {
                 databaseReference = firebaseDatabase.getReference("Users").child(user.getId());
                 user.getListPendingAccept().add(Util.currentUser.getId());
                 databaseReference.child("listPendingAccept").setValue(user.getListPendingAccept());
+                viewHolder.btnAdd.setVisibility(View.GONE);
+                viewHolder.btnRequested.setVisibility(View.VISIBLE);
             }
         });
         return view;

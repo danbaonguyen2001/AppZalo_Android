@@ -108,6 +108,7 @@ public class ChatboxActivity extends AppCompatActivity {
                     messageList.add(message);
                     chatAdapter.notifyDataSetChanged();
                 }
+                recyclerView.scrollToPosition(messageList.size()-1);
             }
 
             @Override
@@ -207,7 +208,7 @@ public class ChatboxActivity extends AppCompatActivity {
                 recordView.setVisibility(View.GONE);
                 enterMessage.setVisibility(View.VISIBLE);
 
-//                sendRecordingMessage(audioPath);
+                sendRecordingMessage(audioPath);
             }
 
 
@@ -274,6 +275,7 @@ public class ChatboxActivity extends AppCompatActivity {
         Message message = new Message(key,groupId,senderId,text,"text","");
         databaseReference.child(key).setValue(message);
         messageList.add(message);
+        recyclerView.scrollToPosition(messageList.size()-1);
         enterMessage.setText("");
         chatAdapter.notifyDataSetChanged();
     }

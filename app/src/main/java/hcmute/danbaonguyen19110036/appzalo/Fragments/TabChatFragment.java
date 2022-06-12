@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import hcmute.danbaonguyen19110036.appzalo.Activities.ChatboxActivity;
+import hcmute.danbaonguyen19110036.appzalo.Activities.GroupActivity;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ListUserAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
@@ -32,6 +34,7 @@ public class TabChatFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     private ListUserAdapter listUserAdapter;
     private EditText edtSearch;
+    private ImageView newGroup;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +60,12 @@ public class TabChatFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        newGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), GroupActivity.class));
+            }
+        });
         return view;
     }
     public void initData(View view){
@@ -65,5 +74,6 @@ public class TabChatFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         listView= view.findViewById(R.id.listview_listuser);
         edtSearch = view.findViewById(R.id.edt_search);
+        newGroup = view.findViewById(R.id.new_group);
     }
 }
