@@ -77,7 +77,7 @@ public class ListUserAdapter extends BaseAdapter {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 user = snapshot.getValue(User.class);
                 holder.username.setText(user.getUserName());
-                holder.newMessage.setText("Pending");
+                holder.newMessage.setText("Hello anh em");
                 Picasso.get().load(user.getImg()).into(holder.avatar);
             }
 

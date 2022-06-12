@@ -27,6 +27,7 @@ import java.util.List;
 import hcmute.danbaonguyen19110036.appzalo.Activities.AddFriendActivity;
 import hcmute.danbaonguyen19110036.appzalo.Activities.ChatboxActivity;
 import hcmute.danbaonguyen19110036.appzalo.Activities.FriendRequestActivity;
+import hcmute.danbaonguyen19110036.appzalo.Activities.PhoneBook;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ListFriendAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ListRequestAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
@@ -36,7 +37,7 @@ import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 public class TabPhoneBookFragment extends Fragment {
     // lấy ra các view trong fragment
     private ImageView addfractivity;
-    private ConstraintLayout cstFriendRequest;
+    private ConstraintLayout cstFriendRequest,cstPhonebook;
     private FirebaseDatabase firebaseDatabase;
     private ListView listView;
     private List<User> userList;
@@ -69,7 +70,12 @@ public class TabPhoneBookFragment extends Fragment {
                 startActivity(new Intent(getActivity(), FriendRequestActivity.class));
             }
         });
-
+        cstPhonebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), PhoneBook.class));
+            }
+        });
         // lấy ra danh sách bạn bè đã được có id trong mảng ListFriend hiển thị trên listview
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -101,5 +107,6 @@ public class TabPhoneBookFragment extends Fragment {
         listView = view.findViewById(R.id.lv_listfriend_phonebook);
         firebaseDatabase = FirebaseDatabase.getInstance();
         userList = new ArrayList<>();
+        cstPhonebook = view.findViewById(R.id.cst_phonebook);
     }
 }

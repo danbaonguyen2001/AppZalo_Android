@@ -23,6 +23,12 @@ import hcmute.danbaonguyen19110036.appzalo.Model.User;
 public class Util {
     public static int TITLE_REQUEST;
     public static User currentUser;
+    public static String convertToPhoneNumber(String phoneNumber){
+        phoneNumber=phoneNumber.substring(0,0)+phoneNumber.substring(1);
+        String phoneConvert = "+84";
+        phoneConvert = phoneConvert.concat(phoneNumber);
+        return phoneConvert;
+    }
     public static void requestStorage(Activity activity) {
         ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, AllConstants.STORAGE_REQUEST_CODE);
     }
@@ -46,4 +52,5 @@ public class Util {
             return readExStorage==PackageManager.PERMISSION_GRANTED;
         }
     }
+
 }

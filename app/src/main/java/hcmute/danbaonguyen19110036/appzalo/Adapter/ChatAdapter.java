@@ -16,6 +16,7 @@ import java.util.List;
 import hcmute.danbaonguyen19110036.appzalo.Model.Message;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
+import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public List<Message> messageList;
@@ -50,13 +51,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 viewHolder.textViewmessaage.setVisibility(View.VISIBLE);
                 viewHolder.textViewmessaage.setText(messages.getMessage());
             }
-            else {
+            else if(messages.getType().equals("image")) {
                 viewHolder.imagemessage.setVisibility(View.VISIBLE);
                 viewHolder.textViewmessaage.setVisibility(View.GONE);
                 Glide.with(context).load(messages.getImgUrl())
                         .placeholder(R.drawable.avatar)
                         .into(viewHolder.imagemessage);
 
+            }
+            else {
+                viewHolder.voicePlayerView.setVisibility(View.VISIBLE);
+                viewHolder.voicePlayerView.setAudio(messages.getMessage());
+                viewHolder.textViewmessaage.setVisibility(View.GONE);
             }
         }
         else{
@@ -66,13 +72,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 viewHolder.textViewmessaage.setVisibility(View.VISIBLE);
                 viewHolder.textViewmessaage.setText(messages.getMessage());
             }
-            else {
+            else if(messages.getType().equals("image")) {
                 viewHolder.imagemessage.setVisibility(View.VISIBLE);
                 viewHolder.textViewmessaage.setVisibility(View.GONE);
                 Glide.with(context).load(messages.getImgUrl())
                         .placeholder(R.drawable.avatar)
                         .into(viewHolder.imagemessage);
 
+            }
+            else {
+                viewHolder.voicePlayerView.setVisibility(View.VISIBLE);
+                viewHolder.voicePlayerView.setAudio(messages.getMessage());
+                viewHolder.textViewmessaage.setVisibility(View.GONE);
             }
         }
 
@@ -101,10 +112,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     {
         TextView textViewmessaage;
         ImageView imagemessage;
+        VoicePlayerView voicePlayerView;
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewmessaage=itemView.findViewById(R.id.sendermessage);
             imagemessage = itemView.findViewById(R.id.image_message);
+            voicePlayerView = itemView.findViewById(R.id.voicePlayerView);
         }
     }
 
@@ -112,10 +125,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     {
         TextView textViewmessaage;
         ImageView imagemessage;
+        VoicePlayerView voicePlayerView;
         public RecieverViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewmessaage=itemView.findViewById(R.id.sendermessage);
             imagemessage = itemView.findViewById(R.id.image_message);
+            voicePlayerView = itemView.findViewById(R.id.voicePlayerView);
         }
     }
 }

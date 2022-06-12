@@ -30,10 +30,10 @@
 
         <Button
             android:id="@+id/btn_recall"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="300dp"
+            android:layout_marginStart="280dp"
             android:backgroundTint="#D9D9D9D9"
             android:text="Thu hồi"
             android:textColor="@color/black"
