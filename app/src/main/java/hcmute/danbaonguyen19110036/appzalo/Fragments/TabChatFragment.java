@@ -67,13 +67,12 @@ public class TabChatFragment extends Fragment {
                         intent.putExtra("roomId",groupUserList.get(i).groupId);
                         startActivity(intent);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {}
                 });
-
             }
         });
+        listUserAdapter.notifyDataSetChanged();
         newGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,5 +88,16 @@ public class TabChatFragment extends Fragment {
         listView= view.findViewById(R.id.listview_listuser);
         edtSearch = view.findViewById(R.id.edt_search);
         newGroup = view.findViewById(R.id.new_group);
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        listUserAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        listUserAdapter.notifyDataSetChanged();
     }
 }

@@ -56,7 +56,9 @@ import java.util.ArrayList;
 import java.util.List;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ChatAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.Group;
+import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
 import hcmute.danbaonguyen19110036.appzalo.Model.Message;
+import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
@@ -78,12 +80,13 @@ public class ChatboxActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
     private FirebaseFirestore firebaseFirestore;
-    private String imageToken;
+    private String imageToken,receiverId;
     private RecordButton micro;
     private RecordView recordView;
     private MediaRecorder mediaRecorder;
     private String audioPath;
     private Group group;
+    private User receiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +97,8 @@ public class ChatboxActivity extends AppCompatActivity {
         initData();
         // lấy giá trị trong intent lưu vào TextView
         setInformation();
+        receiverId =getIntent().getStringExtra("receiverId");
+        System.out.println(receiverId);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(ChatboxActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(messageList,ChatboxActivity.this);
@@ -172,12 +177,9 @@ public class ChatboxActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                containerChatbox.setVisibility(View.GONE);
                 enterMessage.setVisibility(View.GONE);
                 recordView.setVisibility(View.VISIBLE);
-
             }
-
             @Override
             public void onCancel() {
                 //On Swipe To Cancel
@@ -189,7 +191,6 @@ public class ChatboxActivity extends AppCompatActivity {
                 recordView.setVisibility(View.GONE);
                 enterMessage.setVisibility(View.VISIBLE);
             }
-
             @Override
             public void onFinish(long recordTime) {
                 try {
@@ -203,15 +204,12 @@ public class ChatboxActivity extends AppCompatActivity {
                 enterMessage.setVisibility(View.VISIBLE);
                 sendRecordingMessage(audioPath);
             }
-
-
             @Override
             public void onLessThanSecond() {
                 //When the record time is less than One Second
                 mediaRecorder.reset();
                 mediaRecorder.release();
                 recordView.setVisibility(View.GONE);
-
             }
         });
         enterMessage.addTextChangedListener(new TextWatcher() {
@@ -271,6 +269,40 @@ public class ChatboxActivity extends AppCompatActivity {
         recyclerView.scrollToPosition(messageList.size()-1);
         enterMessage.setText("");
         chatAdapter.notifyDataSetChanged();
+        databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
+        databaseReference.setValue(message);
+        arrangeGroupList(Util.currentUser);
+        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                receiver = snapshot.getValue(User.class);
+                arrangeGroupList(receiver);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public void arrangeGroupList(User user){
+        user.getGroupUserList().add(new GroupUser());
+        GroupUser groupUser = new GroupUser();
+        for(int i=0;i<user.getGroupUserList().size();i++){
+            if(user.getGroupUserList().get(i).getGroupId().equals(groupId)){
+                groupUser = user.getGroupUserList().get(i);
+                break;
+            }
+        }
+        user.getGroupUserList().remove(groupUser);
+        for (int i =user.getGroupUserList().size()-1;i>0;i--) {
+            user.getGroupUserList().set(i, user.getGroupUserList().get(i-1));
+        };
+        user.getGroupUserList().set(0,groupUser);
+        user.setGroupUserList(user.getGroupUserList());
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(user.getId());
+        databaseReference.child("groupUserList").setValue(user.getGroupUserList());
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -314,6 +346,8 @@ public class ChatboxActivity extends AppCompatActivity {
                         String senderId = firebaseAuth.getCurrentUser().getUid();
                         Message message = new Message(key,groupId,senderId,"","image",imageToken);
                         databaseReference.child(key).setValue(message);
+                        databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
+                        databaseReference.setValue(message);
                         messageList.add(message);
                         chatAdapter.notifyDataSetChanged();
                         recyclerView.scrollToPosition(messageList.size()-1);
@@ -378,6 +412,8 @@ public class ChatboxActivity extends AppCompatActivity {
                     String key = databaseReference.push().getKey();
                     Message message = new Message(key,groupId,Util.currentUser.getId(), url,"audio","");
                     databaseReference.child(key).setValue(message);
+                    databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
+                    databaseReference.setValue(message);
                     messageList.add(message);
                     chatAdapter.notifyDataSetChanged();
                 }
@@ -404,6 +440,7 @@ public class ChatboxActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -416,4 +453,5 @@ public class ChatboxActivity extends AppCompatActivity {
             }
         }
     }
+
 }
