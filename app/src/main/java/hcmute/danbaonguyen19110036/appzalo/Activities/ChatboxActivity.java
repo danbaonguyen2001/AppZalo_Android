@@ -38,6 +38,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,9 +50,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import org.jitsi.meet.sdk.JitsiMeetActivity;
+import org.jitsi.meet.sdk.JitsiMeetActivityInterface;
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ChatAdapter;
@@ -66,6 +73,13 @@ public class ChatboxActivity extends AppCompatActivity {
     private ImageView btnBack,selectImg,sendBtn,avatar;
     private RecyclerView recyclerView;
     private EditText enterMessage;
+
+    private ConstraintLayout containerChatbox;
+    //Các biến thực thi chức năng call video
+    private ImageView imageViewVideoCall;
+    private String receiver_name,receiver_uid,sender_uid,url,usertoken;
+    Uri uri;
+
     // firebaseAuth dùng để lấy ra những thông tin của user hiện tại
     private FirebaseAuth firebaseAuth;
     // firebaseDatabase dùng để lấy ra data trong database
@@ -114,6 +128,49 @@ public class ChatboxActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
+
+        //Video call giữa 2 user
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null){
+            url=bundle.getString("u");
+            receiver_name=bundle.getString("n");
+            receiver_uid=bundle.getString("uid");
+        }else{
+            Toast.makeText(this, "user missing,", Toast.LENGTH_SHORT).show();
+        }
+
+        FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
+        sender_uid=user.getUid();
+
+        imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                Intent intent= new Intent(ChatboxActivity.this,VideoCallOutComingActivity.class);
+                intent.putExtra("uid",receiver_uid);
+
+                startActivity(intent);
+
+//                try {
+//                    JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
+//                            .setServerURL(new URL("https://meet.jit.si"))
+//                            .setRoom("test")
+//                            .setAudioMuted(false)
+//                            .setVideoMuted(false)
+//                            .setAudioOnly(false)
+//                            .build();
+//
+//                    JitsiMeetActivity.launch(ChatboxActivity.this,options);
+//                } catch (MalformedURLException e) {
+//                    e.printStackTrace();
+//                }
+
+            }
+        });
+
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -238,6 +295,7 @@ public class ChatboxActivity extends AppCompatActivity {
     }
     // Khởi tạo các giá trị ban đầu
     private void initData(){
+        imageViewVideoCall=findViewById(R.id.img_video_call);
         username = findViewById(R.id.chatbox_username);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
