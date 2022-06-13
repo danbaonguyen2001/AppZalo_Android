@@ -61,6 +61,7 @@
             />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_username_tab_user"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/white"
@@ -73,7 +74,8 @@
         app:layout_constraintVertical_bias="0.123"
         app:layout_constraintWidth_percent="1">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar_tab_user"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/ic_baseline_image_orange_24"
@@ -86,6 +88,7 @@
             app:layout_constraintWidth_percent="0.2" />
 
         <TextView
+            android:id="@+id/username_tab_user"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="Tên người dùng"
@@ -117,6 +120,7 @@
             app:layout_constraintWidth_percent="0.6" />
 
         <ImageView
+            android:id="@+id/btnLogout"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_baseline_transfer_within_a_station_black_24"

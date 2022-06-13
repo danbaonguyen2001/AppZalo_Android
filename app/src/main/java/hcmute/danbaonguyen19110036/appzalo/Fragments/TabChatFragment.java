@@ -35,6 +35,7 @@ public class TabChatFragment extends Fragment {
     private ListUserAdapter listUserAdapter;
     private EditText edtSearch;
     private ImageView newGroup;
+    public User user;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +54,24 @@ public class TabChatFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // Lưu giá trị vào intent để sang ChatboxAcitivy ta có thể lấy những giá trị này ra
-                Intent intent=new Intent(getActivity(), ChatboxActivity.class);
-                intent.putExtra("username",Util.currentUser.getUserName());
-                intent.putExtra("receiverId",groupUserList.get(i).getUserId());
-                intent.putExtra("roomId",groupUserList.get(i).groupId);
-                startActivity(intent);
+                String userId = groupUserList.get(i).getUserId();
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(userId);
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        user = snapshot.getValue(User.class);
+                        Intent intent=new Intent(getActivity(), ChatboxActivity.class);
+                        intent.putExtra("username",user.getUserName());
+                        intent.putExtra("imageUrl",user.getImg());
+                        intent.putExtra("receiverId",groupUserList.get(i).getUserId());
+                        intent.putExtra("roomId",groupUserList.get(i).groupId);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {}
+                });
+
             }
         });
         newGroup.setOnClickListener(new View.OnClickListener() {

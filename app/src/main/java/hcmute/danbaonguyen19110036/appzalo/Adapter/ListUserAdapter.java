@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import hcmute.danbaonguyen19110036.appzalo.Model.Group;
 import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
@@ -29,6 +30,7 @@ public class ListUserAdapter extends BaseAdapter {
     private int layout;
     private FirebaseDatabase firebaseDatabase;
     private User user;
+    public Group group;
 
     public ListUserAdapter(Context context, List<GroupUser> groupUserList, int layout) {
         this.context = context;
@@ -71,14 +73,32 @@ public class ListUserAdapter extends BaseAdapter {
         else {
             holder = (ViewHolder) view.getTag();
         }
-        DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(groupUserList.get(i).getUserId());
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Group").child(groupUserList.get(i).groupId);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                user = snapshot.getValue(User.class);
-                holder.username.setText(user.getUserName());
-                holder.newMessage.setText("Hello anh em");
-                Picasso.get().load(user.getImg()).into(holder.avatar);
+                group = snapshot.getValue(Group.class);
+                if(group.getTypeGroup().equals("private")){
+                    DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(groupUserList.get(i).getUserId());
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            user = snapshot.getValue(User.class);
+                            holder.username.setText(user.getUserName());
+                            holder.newMessage.setText("Hello anh em");
+                            Picasso.get().load(user.getImg()).into(holder.avatar);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+                else {
+                    holder.username.setText(group.getGroupName());
+                    holder.newMessage.setText("Hello anh em");
+                    Picasso.get().load(group.getImgUrl()).into(holder.avatar);
+                }
             }
 
             @Override

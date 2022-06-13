@@ -47,6 +47,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -54,6 +55,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ChatAdapter;
+import hcmute.danbaonguyen19110036.appzalo.Model.Group;
 import hcmute.danbaonguyen19110036.appzalo.Model.Message;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
@@ -61,10 +63,9 @@ import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 public class ChatboxActivity extends AppCompatActivity {
     // Khai báo cáo View để xử lý sự kiện
     private TextView username;
-    private ImageView btnBack,selectImg,sendBtn;
+    private ImageView btnBack,selectImg,sendBtn,avatar;
     private RecyclerView recyclerView;
     private EditText enterMessage;
-    private ConstraintLayout containerChatbox;
     // firebaseAuth dùng để lấy ra những thông tin của user hiện tại
     private FirebaseAuth firebaseAuth;
     // firebaseDatabase dùng để lấy ra data trong database
@@ -82,7 +83,7 @@ public class ChatboxActivity extends AppCompatActivity {
     private RecordView recordView;
     private MediaRecorder mediaRecorder;
     private String audioPath;
-
+    private Group group;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,8 +93,7 @@ public class ChatboxActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chatbox);
         initData();
         // lấy giá trị trong intent lưu vào TextView
-        groupId= getIntent().getStringExtra("roomId");
-        username.setText(getIntent().getStringExtra("username"));
+        setInformation();
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(ChatboxActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(messageList,ChatboxActivity.this);
@@ -112,15 +112,13 @@ public class ChatboxActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // set sự kiện quay lại TabChat
-                startActivity(new Intent(ChatboxActivity.this,MainActivity.class));
+                finish();
             }
         });
         selectImg.setOnClickListener(new View.OnClickListener() {
@@ -155,9 +153,7 @@ public class ChatboxActivity extends AppCompatActivity {
                         })
                         .setNegativeButton("Deny", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
+                            public void onClick(DialogInterface dialogInterface, int i) {}
                         }).setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
             }
@@ -174,7 +170,6 @@ public class ChatboxActivity extends AppCompatActivity {
                     mediaRecorder.prepare();
                     mediaRecorder.start();
                 } catch (IOException e) {
-                    System.out.println("Running Here");
                     e.printStackTrace();
                 }
 //                containerChatbox.setVisibility(View.GONE);
@@ -204,10 +199,8 @@ public class ChatboxActivity extends AppCompatActivity {
                     System.out.println("123");
                     stopException.printStackTrace();
                 }
-
                 recordView.setVisibility(View.GONE);
                 enterMessage.setVisibility(View.VISIBLE);
-
                 sendRecordingMessage(audioPath);
             }
 
@@ -258,7 +251,7 @@ public class ChatboxActivity extends AppCompatActivity {
         micro = findViewById(R.id.micro);
         recordView = findViewById(R.id.recordView);
         sendBtn = findViewById(R.id.sendBtn);
-//        containerChatbox = findViewById(R.id.chatbox_message);
+        avatar = findViewById(R.id.profile);
         micro.setRecordView(recordView);
         micro.setListenForRecord(false);
         messageList = new ArrayList<>();
@@ -391,7 +384,26 @@ public class ChatboxActivity extends AppCompatActivity {
             });
         });
     }
-
+    public void setInformation(){
+        groupId= getIntent().getStringExtra("roomId");
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Group").child(groupId);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                group = snapshot.getValue(Group.class);
+                if(group.getTypeGroup().equals("group")){
+                    username.setText(group.getGroupName());
+                    Picasso.get().load(group.getImgUrl()).into(avatar);
+                }
+                else {
+                    username.setText(getIntent().getStringExtra("username"));
+                    Picasso.get().load(getIntent().getStringExtra("imageUrl")).into(avatar);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

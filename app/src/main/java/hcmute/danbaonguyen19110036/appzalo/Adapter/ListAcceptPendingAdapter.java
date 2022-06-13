@@ -81,8 +81,8 @@ public class ListAcceptPendingAdapter extends BaseAdapter {
                 DatabaseReference databaseReference = firebaseDatabase.getReference("Group");
                 // tạo 1 key ngẫu nhiên làm groupId
                 String key = databaseReference.push().getKey();
-                Group group = new Group(key);
-                databaseReference.setValue(group);
+                Group group = new Group(key,"private");
+                databaseReference.child(key).setValue(group);
 
                 // Cho 2 user join vào Group
                 databaseReference = firebaseDatabase.getReference("GroupUser");

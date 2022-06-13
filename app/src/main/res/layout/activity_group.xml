@@ -80,7 +80,12 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
-
+        <ListView
+            android:id="@+id/list_item_group"
+            android:layout_below="@+id/card"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
