@@ -23,6 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppZalo">
         <activity
+            android:name=".Activities.VideoCallOutComingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.VideoCallInComingActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.GroupActivity"
             android:exported="false" />
         <activity

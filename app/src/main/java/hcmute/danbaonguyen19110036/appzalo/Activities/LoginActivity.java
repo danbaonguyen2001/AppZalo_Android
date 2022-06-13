@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
     public void OnClickSendOTP(View view){
-        String phoneNumber="+84344329446";
+        String phoneNumber="+84988621047";
         PhoneAuthOptions options=PhoneAuthOptions.newBuilder(firebaseAuth)
                 .setPhoneNumber(phoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)
