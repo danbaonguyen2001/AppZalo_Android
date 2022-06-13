@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_user_add_gr"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/family" />
+
+        <TextView
+            android:id="@+id/txt_username_add_gr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="90dp"
+            android:text="Tên người dùng"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:maxLines="1"/>
+
+        <Button
+            android:id="@+id/btn_addfr_add_gr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="280dp"
+            android:backgroundTint="#237EE9"
+            android:text="Thêm"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            app:cornerRadius="20dp" />
+        <Button
+            android:id="@+id/btn_requested_addfr_gr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="280dp"
+            android:backgroundTint="#D9D9D9"
+            android:visibility="gone"
+            android:text="Đã thêm"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            app:cornerRadius="20dp" />
+
+    </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

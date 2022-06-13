@@ -18,11 +18,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 
 public class Util {
     public static int TITLE_REQUEST;
     public static User currentUser;
+    public static List<User> groupListUser;
+    public static List<User> getListGroupUser(){
+        if(groupListUser==null){
+            groupListUser = new ArrayList<>();
+        }
+        return groupListUser;
+    }
     public static String convertToPhoneNumber(String phoneNumber){
         phoneNumber=phoneNumber.substring(0,0)+phoneNumber.substring(1);
         String phoneConvert = "+84";
