@@ -330,19 +330,19 @@ public class ChatboxActivity extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
         databaseReference.setValue(message);
         arrangeGroupList(Util.currentUser);
-        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                receiver = snapshot.getValue(User.class);
-                arrangeGroupList(receiver);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+//        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                receiver = snapshot.getValue(User.class);
+//                arrangeGroupList(receiver);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
     }
     public void arrangeGroupList(User user){
         user.getGroupUserList().add(new GroupUser());
