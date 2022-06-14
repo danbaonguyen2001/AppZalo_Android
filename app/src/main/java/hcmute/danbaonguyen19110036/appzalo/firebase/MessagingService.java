@@ -34,14 +34,9 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
     @Override
-
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-//        RemoteMessage.Notification notification = remoteMessage.getNotification();
-//        sendNotification(notification.getTitle(),notification.getBody());
-
         String type = remoteMessage.getData().get("type");
-        System.out.println(type);
         if(type!=null){
             if(type.equals("invitation")){
                 Intent intent = new Intent(getApplicationContext(),VideoCallInComingActivity.class);
@@ -51,6 +46,11 @@ public class MessagingService extends FirebaseMessagingService {
                 startActivity(intent);
             }
         }
+        else {
+            String title = remoteMessage.getData().get("title");
+            String body = remoteMessage.getData().get("body");
+            sendNotification(title,body);
+        }
     }
 
     private void sendNotification(String title, String messageBody) {
@@ -58,7 +58,6 @@ public class MessagingService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
-
         String channelId = "1";
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
@@ -69,7 +68,6 @@ public class MessagingService extends FirebaseMessagingService {
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
-
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -79,9 +77,7 @@ public class MessagingService extends FirebaseMessagingService {
                     "Channel human readable title",
                     NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
-
         }
-
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 }

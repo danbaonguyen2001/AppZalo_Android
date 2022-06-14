@@ -42,7 +42,6 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
     private String receiver_url,receiver_token,receiver_uid,type,inviter_token;
     private FloatingActionButton btnEndCall;
     private DatabaseReference reference;
-    private User user;
 
     private String meetingType="video";
 
