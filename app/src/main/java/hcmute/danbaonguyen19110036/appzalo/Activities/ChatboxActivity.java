@@ -84,11 +84,9 @@ public class ChatboxActivity extends AppCompatActivity {
     private ImageView btnBack,selectImg,sendBtn,avatar,camera;
     private RecyclerView recyclerView;
     private EditText enterMessage;
-
     private ConstraintLayout containerChatbox;
     //Các biến thực thi chức năng call video
     private ImageView imageViewVideoCall;
-    private String receiver_name,receiver_uid,sender_uid,url,usertoken;
     Uri uri;
 
     // firebaseAuth dùng để lấy ra những thông tin của user hiện tại
@@ -143,38 +141,11 @@ public class ChatboxActivity extends AppCompatActivity {
         });
 
         //Video call giữa 2 user
-
-        Bundle bundle = getIntent().getExtras();
-        if(bundle!=null){
-            url=bundle.getString("u");
-            receiver_name=bundle.getString("n");
-            receiver_uid=bundle.getString("uid");
-        }else{
-            Toast.makeText(this, "user missing,", Toast.LENGTH_SHORT).show();
-        }
-        FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
-        sender_uid=user.getUid();
         imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(ChatboxActivity.this, test.class);
-                intent.putExtra("uid",receiver_uid);
                 startActivity(intent);
-
-//                try {
-//                    JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
-//                            .setServerURL(new URL("https://meet.jit.si"))
-//                            .setRoom("test")
-//                            .setAudioMuted(false)
-//                            .setVideoMuted(false)
-//                            .setAudioOnly(false)
-//                            .build();
-//
-//                    JitsiMeetActivity.launch(ChatboxActivity.this,options);
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                }
-
             }
         });
         //Chụp ảnh và gửi đi
