@@ -24,6 +24,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 import com.devlomi.record_view.OnRecordListener;
 import com.devlomi.record_view.RecordButton;
 import com.devlomi.record_view.RecordView;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -45,7 +47,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceIdReceiver;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -63,11 +69,16 @@ import java.util.ArrayList;
 import java.util.List;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ChatAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.Group;
+import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
 import hcmute.danbaonguyen19110036.appzalo.Model.Message;
+import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.AllConstants;
+import hcmute.danbaonguyen19110036.appzalo.Utils.PreferenceManager;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
+import hcmute.danbaonguyen19110036.appzalo.listeners.UsersListener;
 
-public class ChatboxActivity extends AppCompatActivity {
+public class ChatboxActivity extends AppCompatActivity implements UsersListener {
     // Khai báo cáo View để xử lý sự kiện
     private TextView username;
     private ImageView btnBack,selectImg,sendBtn,avatar,camera;
@@ -78,6 +89,7 @@ public class ChatboxActivity extends AppCompatActivity {
     //Các biến thực thi chức năng call video
     private ImageView imageViewVideoCall;
     private String receiver_name,receiver_uid,sender_uid,url,usertoken;
+    private PreferenceManager preferenceManager;
     Uri uri;
 
     // firebaseAuth dùng để lấy ra những thông tin của user hiện tại
@@ -92,14 +104,13 @@ public class ChatboxActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
     private FirebaseFirestore firebaseFirestore;
-    private String imageToken;
+    private String imageToken,receiverId;
     private RecordButton micro;
     private RecordView recordView;
     private MediaRecorder mediaRecorder;
     private String audioPath;
     private Group group;
-
-
+    private User receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +120,11 @@ public class ChatboxActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_chatbox);
         initData();
+        preferenceManager=new PreferenceManager(getApplicationContext());
         // lấy giá trị trong intent lưu vào TextView
         setInformation();
+        receiverId =getIntent().getStringExtra("receiverId");
+        System.out.println(receiverId);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(ChatboxActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(messageList,ChatboxActivity.this);
@@ -133,6 +147,22 @@ public class ChatboxActivity extends AppCompatActivity {
         });
 
         //Video call giữa 2 user
+        String token1="d3Dg2VliTuKa8q2kwyhtWa:APA91bEFaJoubpmqsMA8XXwMfSCa7zHhprYpLdFqTcmj05ZFFwhMmL7tFaq3M9gTmVbqwKDh8yrxEIFeoHXv0TBCmsZiYtPnlNKbfJPeFiuQcSmS6-IH6oyoNYcX5miZfcRp32O5F1CI";
+        String token2="dNx9ak7SRNuXa_Jqip6BaG:APA91bG9SUHikYKEiMwb8guSCa3af95D-FmuXy29SXartRKVugTijWnPdoTCOSUuTwna7LvQTj4PoE-CwOOOXHGGuAP0iZZNXnIKCD0pSV-P3Hkoit6wZof82tx5u3bx_jp7EJaGyN_M";
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if(!task.isSuccessful()){
+                    System.out.println("Fetching ");
+                    return;
+                }
+                String token=task.getResult();
+                //sendFCMTokenToDatabase(token2);
+                System.out.println("Token:"+token);
+
+            }
+        });
 
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null){
@@ -143,33 +173,11 @@ public class ChatboxActivity extends AppCompatActivity {
             Toast.makeText(this, "user missing,", Toast.LENGTH_SHORT).show();
         }
 
-        FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
-        sender_uid=user.getUid();
-
         imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-
-                Intent intent= new Intent(ChatboxActivity.this, test.class);
-                intent.putExtra("uid",receiver_uid);
-
+                Intent intent = new Intent(getApplicationContext(),VideoCallOutGoingActivity.class);
                 startActivity(intent);
-
-//                try {
-//                    JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
-//                            .setServerURL(new URL("https://meet.jit.si"))
-//                            .setRoom("test")
-//                            .setAudioMuted(false)
-//                            .setVideoMuted(false)
-//                            .setAudioOnly(false)
-//                            .build();
-//
-//                    JitsiMeetActivity.launch(ChatboxActivity.this,options);
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                }
-
             }
         });
 
@@ -252,12 +260,9 @@ public class ChatboxActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                containerChatbox.setVisibility(View.GONE);
                 enterMessage.setVisibility(View.GONE);
                 recordView.setVisibility(View.VISIBLE);
-
             }
-
             @Override
             public void onCancel() {
                 //On Swipe To Cancel
@@ -269,7 +274,6 @@ public class ChatboxActivity extends AppCompatActivity {
                 recordView.setVisibility(View.GONE);
                 enterMessage.setVisibility(View.VISIBLE);
             }
-
             @Override
             public void onFinish(long recordTime) {
                 try {
@@ -283,15 +287,12 @@ public class ChatboxActivity extends AppCompatActivity {
                 enterMessage.setVisibility(View.VISIBLE);
                 sendRecordingMessage(audioPath);
             }
-
-
             @Override
             public void onLessThanSecond() {
                 //When the record time is less than One Second
                 mediaRecorder.reset();
                 mediaRecorder.release();
                 recordView.setVisibility(View.GONE);
-
             }
         });
         enterMessage.addTextChangedListener(new TextWatcher() {
@@ -339,12 +340,39 @@ public class ChatboxActivity extends AppCompatActivity {
         messageList = new ArrayList<>();
     }
 
+    //Video call
+
+    public void sendFCMTokenToDatabase(String token){
+        FirebaseFirestore database=FirebaseFirestore.getInstance();
+        DocumentReference documentReference =
+                database.collection(AllConstants.KEY_FCM_TOKEN).document(
+                    preferenceManager.getString(AllConstants.KEY_USER_ID)
+                );
+        documentReference.update(AllConstants.KEY_FCM_TOKEN,token)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(ChatboxActivity.this, "Token Updated", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ChatboxActivity.this, "Unable to send Token ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
     //Chụp ảnh
     @Override
     public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
         super.startActivityForResult(intent, requestCode, options);
         if(requestCode==100){
-            Toast.makeText(this, "Take photo complete", Toast.LENGTH_SHORT).show();
+            imagepath=intent.getData();
+            System.out.println(123);
+            System.out.println(imagepath);
+            //sendImageMessage(imagepath);
         }
     }
 
@@ -363,6 +391,40 @@ public class ChatboxActivity extends AppCompatActivity {
         recyclerView.scrollToPosition(messageList.size()-1);
         enterMessage.setText("");
         chatAdapter.notifyDataSetChanged();
+        databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
+        databaseReference.setValue(message);
+        arrangeGroupList(Util.currentUser);
+//        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                receiver = snapshot.getValue(User.class);
+//                arrangeGroupList(receiver);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+    }
+    public void arrangeGroupList(User user){
+        user.getGroupUserList().add(new GroupUser());
+        GroupUser groupUser = new GroupUser();
+        for(int i=0;i<user.getGroupUserList().size();i++){
+            if(user.getGroupUserList().get(i).getGroupId().equals(groupId)){
+                groupUser = user.getGroupUserList().get(i);
+                break;
+            }
+        }
+        user.getGroupUserList().remove(groupUser);
+        for (int i =user.getGroupUserList().size()-1;i>0;i--) {
+            user.getGroupUserList().set(i, user.getGroupUserList().get(i-1));
+        };
+        user.getGroupUserList().set(0,groupUser);
+        user.setGroupUserList(user.getGroupUserList());
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(user.getId());
+        databaseReference.child("groupUserList").setValue(user.getGroupUserList());
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -406,6 +468,8 @@ public class ChatboxActivity extends AppCompatActivity {
                         String senderId = firebaseAuth.getCurrentUser().getUid();
                         Message message = new Message(key,groupId,senderId,"","image",imageToken);
                         databaseReference.child(key).setValue(message);
+                        databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
+                        databaseReference.setValue(message);
                         messageList.add(message);
                         chatAdapter.notifyDataSetChanged();
                         recyclerView.scrollToPosition(messageList.size()-1);
@@ -470,6 +534,8 @@ public class ChatboxActivity extends AppCompatActivity {
                     String key = databaseReference.push().getKey();
                     Message message = new Message(key,groupId,Util.currentUser.getId(), url,"audio","");
                     databaseReference.child(key).setValue(message);
+                    databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
+                    databaseReference.setValue(message);
                     messageList.add(message);
                     chatAdapter.notifyDataSetChanged();
                 }
@@ -496,6 +562,7 @@ public class ChatboxActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -507,5 +574,16 @@ public class ChatboxActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void initiateVideoMeeting(User user) {
+        Intent intent = new Intent(getApplicationContext(),VideoCallOutGoingActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void initiateAudioMeeting(User user) {
+
     }
 }

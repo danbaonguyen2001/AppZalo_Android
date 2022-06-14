@@ -39,24 +39,24 @@ public class SplashActivity extends AppCompatActivity {
         initData();
 
         //test
-        FirebaseFirestore database=FirebaseFirestore.getInstance();
-        HashMap<String,Object> nguoidung=new HashMap<>();
-        nguoidung.put("name","Nguyen");
-        nguoidung.put("img","img");
-        database.collection("nguoidungs")
-                .add(nguoidung)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
+//        FirebaseFirestore database=FirebaseFirestore.getInstance();
+//        HashMap<String,Object> nguoidung=new HashMap<>();
+//        nguoidung.put("name","Nguyen");
+//        nguoidung.put("img","img");
+//        database.collection("nguoidungs")
+//                .add(nguoidung)
+//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                    @Override
+//                    public void onSuccess(DocumentReference documentReference) {
+//
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//
+//                    }
+//                });
         //test
 
         new Handler().postDelayed(new Runnable() {
@@ -68,12 +68,11 @@ public class SplashActivity extends AppCompatActivity {
                     databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Util.currentUser   = snapshot.getValue(User.class);
+                            Util.currentUser = snapshot.getValue(User.class);
                             Intent intent=new Intent(SplashActivity.this,MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
 

@@ -23,6 +23,8 @@ import hcmute.danbaonguyen19110036.appzalo.Model.Group;
 import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
+import hcmute.danbaonguyen19110036.appzalo.listeners.UsersListener;
 
 public class ListUserAdapter extends BaseAdapter {
     private Context context;
@@ -31,6 +33,9 @@ public class ListUserAdapter extends BaseAdapter {
     private FirebaseDatabase firebaseDatabase;
     private User user;
     public Group group;
+    private String lastMessage="Hello there !",senderId="",typeMessage="",typeGroup="private",groupName="";
+
+
 
     public ListUserAdapter(Context context, List<GroupUser> groupUserList, int layout) {
         this.context = context;
@@ -78,27 +83,36 @@ public class ListUserAdapter extends BaseAdapter {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 group = snapshot.getValue(Group.class);
-                if(group.getTypeGroup().equals("private")){
-                    DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(groupUserList.get(i).getUserId());
-                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            user = snapshot.getValue(User.class);
+                // lưu lại các giá trị của Message vào các biến
+                if(group.getMessage()!=null){
+                    lastMessage = group.getMessage().getMessage();
+                    typeMessage = group.getMessage().getType();
+                    senderId = group.getMessage().getSenderId();
+                    typeGroup = group.getTypeGroup();
+                    groupName = group.getGroupName();
+                }
+                // Lấy ra thông tin receiver trong room chat
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(groupUserList.get(i).getUserId());
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        user = snapshot.getValue(User.class);
+                        if(typeGroup.equals("private")){
                             holder.username.setText(user.getUserName());
-                            holder.newMessage.setText("Hello anh em");
+                            setLastMessage(holder,user.getUserName());
                             Picasso.get().load(user.getImg()).into(holder.avatar);
                         }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
+                        else {
+                            holder.username.setText(groupName);
+                            setLastMessage(holder,"");
+                            Picasso.get().load(group.getImgUrl()).into(holder.avatar);
                         }
-                    });
-                }
-                else {
-                    holder.username.setText(group.getGroupName());
-                    holder.newMessage.setText("Hello anh em");
-                    Picasso.get().load(group.getImgUrl()).into(holder.avatar);
-                }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -108,6 +122,41 @@ public class ListUserAdapter extends BaseAdapter {
         });
 
         return view;
+    }
+    public void setLastMessage(ViewHolder holder,String receiverName) {
+        // Lấy ra tin nhắn cuối cùng được lưu trong group
+        if (senderId.equals(Util.currentUser.getId())){
+            // Nếu message là hình ảnh thì set cho 1 chuỗi cố định
+            if (typeMessage.equals("image")) {
+                lastMessage = "Bạn đã gửi một hình ảnh";
+            }
+            //  Nếu message là audio thì set cho 1 chuỗi cố định
+            else if (typeMessage.equals("audio")){
+                lastMessage = "Bạn đã gửi một voice chat";
+            }
+            // Nếu message là text thì lấy đoạn tin nhắn đó ra và lưu vào View
+            else {
+                lastMessage = "Bạn: "+lastMessage;
+            }
+        }
+        else {
+            // Nếu message là hình ảnh thì set cho 1 chuỗi cố định
+            if (typeMessage.equals("image")) {
+                lastMessage = receiverName+" đã gửi một hình ảnh";
+            }
+            //  Nếu message là audio thì set cho 1 chuỗi cố định
+            else if (typeMessage.equals("audio")){
+                lastMessage = receiverName+" đã gửi một voice chat";
+            }
+            // Nếu message là text thì lấy đoạn tin nhắn đó ra và lưu vào View
+            else {
+                lastMessage = lastMessage;
+//                if(typeGroup.equals("group")){
+//                    lastMessage = receiverName+": "+lastMessage;
+//                }
+            }
+        }
+        holder.newMessage.setText(lastMessage);
     }
     public void initData(){
         firebaseDatabase = FirebaseDatabase.getInstance();
