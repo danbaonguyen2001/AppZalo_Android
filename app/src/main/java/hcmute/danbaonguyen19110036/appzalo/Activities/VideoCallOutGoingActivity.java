@@ -163,20 +163,42 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
 
     private void cancelInvitation(String receiverToken){
         try {
-            JSONArray tokens=new JSONArray();
+            meetingRoom=Util.currentUser.getUserName()+"_"+Util.currentUser.getBirthDay();
+            RequestQueue queue = Volley.newRequestQueue(this);
+            JSONObject data = new JSONObject();
+            JSONArray tokens= new JSONArray();
             tokens.put(receiverToken);
-            JSONObject data= new JSONObject();
-            JSONObject body= new JSONObject();
+            tokens.put(receiverToken);
             data.put(AllConstants.REMOTE_MSG_TYPE,AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
             data.put(AllConstants.REMOTE_MSG_INVITATION_RESPONSE,AllConstants.REMOTE_MSG_INVITATION_CANCELLED);
-            body.put(AllConstants.REMOTE_MSG_DATA,data);
-            body.put(AllConstants.REMOTE_MSG_REGISTRATION_IDS,tokens);
-
-            sendRemoteMessage(body.toString(),AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
-
-        }
-        catch (Exception e){
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            data.put(AllConstants.REMOTE_MSG_MEETING_ROOM,meetingRoom);
+            JSONObject notificationData = new JSONObject();
+            notificationData.put(AllConstants.REMOTE_MSG_DATA,data);
+            notificationData.put(AllConstants.REMOTE_MSG_REGISTRATION_IDS,tokens);
+            JsonObjectRequest request = new JsonObjectRequest(AllConstants.NOTIFICATION_URL, notificationData,
+                    new com.android.volley.Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(VideoCallOutGoingActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new com.android.volley.Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(VideoCallOutGoingActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "key=" + AllConstants.SERVER_KEY);
+                    map.put("Content-Type", "application/json");
+                    return map;
+                }
+            };
+            queue.add(request);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
