@@ -89,15 +89,13 @@ public class ChatboxActivity extends AppCompatActivity {
     private ConstraintLayout containerChatbox;
     //Các biến thực thi chức năng call video
     private ImageView imageViewVideoCall;
-    Uri uri;
-
     // firebaseAuth dùng để lấy ra những thông tin của user hiện tại
     private FirebaseAuth firebaseAuth;
     // firebaseDatabase dùng để lấy ra data trong database
     private FirebaseDatabase firebaseDatabase;
     private List<Message> messageList;
     private ChatAdapter chatAdapter;
-    private String groupId;
+    private String groupId,audioPath;
     private static int PICK_IMAGE=123;
     private Uri imagepath;
     private StorageReference storageReference;
@@ -107,9 +105,7 @@ public class ChatboxActivity extends AppCompatActivity {
     private RecordButton micro;
     private RecordView recordView;
     private MediaRecorder mediaRecorder;
-    private String audioPath;
     private Group group;
-    private User receiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -245,7 +241,6 @@ public class ChatboxActivity extends AppCompatActivity {
                     mediaRecorder.stop();
                     mediaRecorder.release();
                 } catch (RuntimeException stopException) {
-                    System.out.println("123");
                     stopException.printStackTrace();
                 }
                 recordView.setVisibility(View.GONE);
@@ -262,15 +257,9 @@ public class ChatboxActivity extends AppCompatActivity {
         });
         enterMessage.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
             @Override
             public void afterTextChanged(Editable editable) {
                 micro.setVisibility(View.GONE);
@@ -281,9 +270,7 @@ public class ChatboxActivity extends AppCompatActivity {
                 }
             }
         });
-
         //Call video
-
         imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -292,8 +279,6 @@ public class ChatboxActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
     // Khởi tạo các giá trị ban đầu
     private void initData(){
@@ -337,7 +322,7 @@ public class ChatboxActivity extends AppCompatActivity {
         databaseReference.setValue(message);
         arrangeGroupList(Util.currentUser);
         // Vì nhóm em chưa làm kịp nên chỉ làm thông báo đến các Group private
-        if(message.getType().equals("private")){
+        if(group.getTypeGroup().equals("private")){
             sendNotification(text,receiverToken);
         }
 //        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
@@ -379,12 +364,13 @@ public class ChatboxActivity extends AppCompatActivity {
             data.put("title", Util.currentUser.getUserName());
             data.put("body", message);
             JSONObject notificationData = new JSONObject();
-            notificationData.put("notification", data);
+            notificationData.put("data", data);
             notificationData.put("to", token);
             JsonObjectRequest request = new JsonObjectRequest(AllConstants.NOTIFICATION_URL, notificationData,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            System.out.println(notificationData);
                             Toast.makeText(ChatboxActivity.this, "Success", Toast.LENGTH_SHORT).show();
                         }
                     },

@@ -52,7 +52,7 @@ public class SplashActivity extends AppCompatActivity {
                             return;
                         }
                         Util.token=task.getResult();
-                        System.out.println("Token:"+Util.token);
+                        System.out.println("Token:"+task.getResult());
                     }
                 });
 

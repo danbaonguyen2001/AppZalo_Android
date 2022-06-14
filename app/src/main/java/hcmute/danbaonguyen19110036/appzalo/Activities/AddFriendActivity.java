@@ -53,12 +53,14 @@ public class AddFriendActivity extends AppCompatActivity {
                 userList.clear();
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     User user = dsp.getValue(User.class);
-                    // Chỉ lấy các user không trong listfriend
+                    // Chỉ lấy các user không trong listfriend (chưa kết bạn)
                     if(Util.currentUser.getListFriend().contains(user.getId())==false&&!Util.currentUser.getId().equals(user.getId())){
                         userList.add(user);
                     }
                 }
+                // khởi tạo adapter
                 addFriendAdapter = new AddFriendAdapter(AddFriendActivity.this,userList,R.layout.layout_user_add_request);
+                // set adapter vào list view
                 listView.setAdapter(addFriendAdapter);
             }
 

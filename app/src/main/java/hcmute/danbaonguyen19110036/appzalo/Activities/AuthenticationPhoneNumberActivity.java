@@ -61,10 +61,14 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
             String codereciever =getIntent().getStringExtra("otp");
             // Lấy ra xem user đến từ login đến từ login hay register activity
             activity = getIntent().getStringExtra("Activity");
+            //Sau khi người dùng nhập mã xác minh mà Firebase đã gửi đến điện thoại của user
+            // tạo một đối tượng PhoneAuthCredential , sử dụng verification code
+            // Để tạo đối tượng PhoneAuthCredential, ta gọi PhoneAuthProvider.getCredential:
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codereciever,enteredotp);
             signInWithPhoneAuthCredential(credential);
         }
     }
+    //Sau khi bạn nhận được Object PhoneAuthCredential hoàn tất quy trình đăng nhập bằng cách chuyển đối tượng PhoneAuthCredential tới FirebaseAuth.signInWithCredential
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -86,6 +90,7 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
                         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                // Lưu lại giá trị vào biến static currentuser để sau này lấy dữ liệu
                                 Util.currentUser = snapshot.getValue(User.class);
                                 Intent intent=new Intent(AuthenticationPhoneNumberActivity.this,MainActivity.class);
                                 startActivity(intent);

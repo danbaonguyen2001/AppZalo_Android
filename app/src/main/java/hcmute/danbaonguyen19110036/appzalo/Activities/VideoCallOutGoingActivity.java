@@ -11,6 +11,8 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +52,6 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
     private String receiver_url,receiver_token,receiver_uid,type,inviter_token;
     private FloatingActionButton btnEndCall;
     private DatabaseReference reference;
-    private User user;
 
     private String meetingType="video";
     private String meetingRoom=null;
@@ -60,6 +61,9 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_video_call_out_going);
 
         preferenceManager =new PreferenceManager(getApplicationContext());
