@@ -21,6 +21,7 @@ import hcmute.danbaonguyen19110036.appzalo.Activities.MainActivity;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
 import hcmute.danbaonguyen19110036.appzalo.Activities.VideoCallInComingActivity;
+import hcmute.danbaonguyen19110036.appzalo.Utils.AllConstants;
 
 public class MessagingService extends FirebaseMessagingService {
     public static final String TAG = MessagingService.class.getName();
@@ -38,6 +39,17 @@ public class MessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         sendNotification(notification.getTitle(),notification.getBody());
+
+        String type = remoteMessage.getData().get("type");
+        if(type!=null){
+            if(type=="invitation"){
+                Intent intent = new Intent(getApplicationContext(),VideoCallInComingActivity.class);
+                intent.putExtra("meetingType",remoteMessage.getData().get("meetinType"));
+                intent.putExtra("receiverName",remoteMessage.getData().get("receiverName"));
+                intent.addFlags(Integer.parseInt("10000000"));
+                startActivity(intent);
+            }
+        }
     }
 
     private void sendNotification(String title, String messageBody) {
