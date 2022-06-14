@@ -43,18 +43,13 @@ public class SplashActivity extends AppCompatActivity {
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
-
                         @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
+                        public void onCancelled(@NonNull DatabaseError error) {}
                     });
-
                 }
                 else {
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                 }
-
             }
         },2000);
     }
