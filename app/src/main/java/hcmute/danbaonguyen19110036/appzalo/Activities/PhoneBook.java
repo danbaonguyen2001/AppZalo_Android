@@ -34,7 +34,8 @@ import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
-public class PhoneBook extends AppCompatActivity {
+public class
+PhoneBook extends AppCompatActivity {
     private ListView listView;
     private FirebaseDatabase firebaseDatabase;
     private List<String> listContact;
