@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,9 +35,12 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    // Tạo một biến để lưu lại code khi Firebase gửi tin nhắn đến điện thoại
     private String codeSend;
     private FirebaseDatabase firebaseDatabase;
+    // Dùng để kiểm tra xem số điện thoại đã tồn tại hay chưa
     private boolean KT=false;
+    private EditText phoneNumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,18 +64,23 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
-                Toast.makeText(getApplicationContext(),"OTP is send",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"OTP đã được gửi",Toast.LENGTH_SHORT).show();
+                // Lưu lại giá trị code
                 codeSend = s;
                 Intent intent = new Intent(RegisterActivity.this,AuthenticationPhoneNumberActivity.class);
+                // Lưu lại otp đã gửi để đi tới ActivityAuthentication check lại code
                 intent.putExtra("otp",codeSend);
+                // đánh dấu là từ trang Register đi tới trang authentication
                 intent.putExtra("Activity","Register");
                 startActivity(intent);
             }
         };
     }
+    // Khơi tạo các giá trị View và Firebase
     private void initData(){
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        phoneNumber = findViewById(R.id.input_phone_rg);
     }
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         firebaseAuth.signInWithCredential(credential)
@@ -91,15 +100,21 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
     public void OnClickSendOTP(View view){
-        String phoneNumber="+84977412456";
+        // Kiểm tra xem người dùng đã nhập số điện thoại hay chưa
+        if(phoneNumber.getText().toString().isEmpty()){
+            Toast.makeText(RegisterActivity.this,"Vui lòng nhập số điện thoại",Toast.LENGTH_SHORT).show();
+            return;
+        }
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     User user = dsp.getValue(User.class);
+                    // Nếu số điên thoại đã tồn tài rồi thì thông báo cho người dùng
                     if(user.getPhoneNumber().equals(phoneNumber)){
                         KT=true;
+                        break;
                     }
                 }
                 if(KT==true){
@@ -107,12 +122,12 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 PhoneAuthOptions options=PhoneAuthOptions.newBuilder(firebaseAuth)
-                        .setPhoneNumber(phoneNumber)
-                        .setTimeout(60L, TimeUnit.SECONDS)
-                        .setActivity(RegisterActivity.this)
-                        .setCallbacks(mCallbacks)
+                        .setPhoneNumber(phoneNumber.getText().toString())//Số điện thoại để xác minh
+                        .setTimeout(60L, TimeUnit.SECONDS)//Thời gian chờ
+                        .setActivity(RegisterActivity.this)//Activity
+                        .setCallbacks(mCallbacks)// xác minh trạng thái
                         .build();
-                PhoneAuthProvider.verifyPhoneNumber(options);
+                PhoneAuthProvider.verifyPhoneNumber(options);// verifyPhoneNumber sẽ gửi SMS tới số điện thoại đã set
             }
 
             @Override

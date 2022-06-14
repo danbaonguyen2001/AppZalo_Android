@@ -39,17 +39,27 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_authentication_phone_number);
+        initData();
+
+    }
+    // Khởi tạo các giá trị View và Firebase
+    private void initData() {
         edtCode = findViewById(R.id.edt_otp);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
     }
+
     public void OnClickVerifyOTP(View view){
         String enteredotp = edtCode.getText().toString();
+        // Kiểm tra xem user đã nhập OTP hay chưa
         if(enteredotp.isEmpty()){
-            Toast.makeText(getApplicationContext(),"Please Enter OTP",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Vui lòng nhập OTP",Toast.LENGTH_SHORT).show();
+            return;
         }
         else {
+            // Lấy ra code đã lưu ở activity trước đó
             String codereciever =getIntent().getStringExtra("otp");
+            // Lấy ra xem user đến từ login đến từ login hay register activity
             activity = getIntent().getStringExtra("Activity");
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codereciever,enteredotp);
             signInWithPhoneAuthCredential(credential);
@@ -62,6 +72,7 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
                     if(activity.equals("Register")) {
+                        // Nếu là từ Activity Register thì ta tạo tài khoản cho User
                         createUser();
                         Intent intent=new Intent(AuthenticationPhoneNumberActivity.this,RegisterInputInforActivity.class);
                         startActivity(intent);
@@ -69,6 +80,8 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
                     }
                     else
                     {
+                        // Nếu từ Activity Login thì ta lưu lại giá trị của User
+                        // Lấy ra User với AuthId đã login
                         DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
                         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -90,7 +103,7 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
                 {
                     if(task.getException() instanceof FirebaseAuthInvalidCredentialsException)
                     {
-                        Toast.makeText(getApplicationContext(),"Login Failed",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Đăng nhập thất bại",Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -100,11 +113,16 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
         finish();
     }
     private void createUser(){
+        // Tạo tài khoản cho user
+        //Lấy ra id của user hiện tại
         String id = firebaseAuth.getCurrentUser().getUid();
+        // Lấy ra user với id tương ứng
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(id);
         String phoneNumber = firebaseAuth.getCurrentUser().getPhoneNumber();
+        // Tạo tài khoản cho User chỉ với những thông tin như id,phonenumber,token của thiết bị
         User user = new User(id,phoneNumber,"","",null,"","",Util.token);
         Util.currentUser = user;
         databaseReference.setValue(user);
+        // Lưu giá trị lên Firebase
     }
 }

@@ -86,7 +86,6 @@ public class ChatboxActivity extends AppCompatActivity {
     private ImageView btnBack,selectImg,sendBtn,avatar,camera;
     private RecyclerView recyclerView;
     private EditText enterMessage;
-
     private ConstraintLayout containerChatbox;
     //Các biến thực thi chức năng call video
     private ImageView imageViewVideoCall;
@@ -148,23 +147,7 @@ public class ChatboxActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(ChatboxActivity.this, test.class);
-
                 startActivity(intent);
-
-//                try {
-//                    JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
-//                            .setServerURL(new URL("https://meet.jit.si"))
-//                            .setRoom("test")
-//                            .setAudioMuted(false)
-//                            .setVideoMuted(false)
-//                            .setAudioOnly(false)
-//                            .build();
-//
-//                    JitsiMeetActivity.launch(ChatboxActivity.this,options);
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                }
-
             }
         });
         //Chụp ảnh và gửi đi
@@ -353,7 +336,10 @@ public class ChatboxActivity extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
         databaseReference.setValue(message);
         arrangeGroupList(Util.currentUser);
-        sendNotification(text,receiverToken);
+        // Vì nhóm em chưa làm kịp nên chỉ làm thông báo đến các Group private
+        if(message.getType().equals("private")){
+            sendNotification(text,receiverToken);
+        }
 //        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
 //        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
@@ -418,7 +404,7 @@ public class ChatboxActivity extends AppCompatActivity {
             };
             queue.add(request);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
     }
     @Override
@@ -427,7 +413,6 @@ public class ChatboxActivity extends AppCompatActivity {
         if(requestCode==PICK_IMAGE && resultCode==RESULT_OK)
         {
             imagepath=data.getData();
-            System.out.println(imagepath);
             sendImageMessage(imagepath);
         }
         if(requestCode==100){
@@ -584,7 +569,4 @@ public class ChatboxActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
 }

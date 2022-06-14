@@ -89,10 +89,10 @@ public class TabChatFragment extends Fragment {
         edtSearch = view.findViewById(R.id.edt_search);
         newGroup = view.findViewById(R.id.new_group);
     }
-    @Override
-    public void onStart() {
-        super.onStart();
-        listUserAdapter.notifyDataSetChanged();
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        listUserAdapter.notifyDataSetChanged();
+//    }
 
 }

@@ -15,6 +15,8 @@ import android.os.Build;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import hcmute.danbaonguyen19110036.appzalo.Activities.MainActivity;
@@ -37,18 +39,27 @@ public class MessagingService extends FirebaseMessagingService {
 
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        RemoteMessage.Notification notification = remoteMessage.getNotification();
-        sendNotification(notification.getTitle(),notification.getBody());
+//        RemoteMessage.Notification notification = remoteMessage.getNotification();
+//        sendNotification(notification.getTitle(),notification.getBody());
 
         String type = remoteMessage.getData().get("type");
+        System.out.println(type);
         if(type!=null){
-            if(type=="invitation"){
-                System.out.println("               123");
+            if(type.equals("invitation")){
                 Intent intent = new Intent(getApplicationContext(),VideoCallInComingActivity.class);
-                intent.putExtra("meetingType",remoteMessage.getData().get("meetingType"));
+                intent.putExtra("meetingType",remoteMessage.getData().get("meetinType"));
                 intent.putExtra("receiverName",remoteMessage.getData().get("receiverName"));
+                intent.putExtra(AllConstants.REMOTE_MSG_INVITER_TOKEN,
+                        remoteMessage.getData().get(AllConstants.REMOTE_MSG_INVITER_TOKEN));
+                intent.putExtra(AllConstants.REMOTE_MSG_MEETING_ROOM,
+                        remoteMessage.getData().get(AllConstants.REMOTE_MSG_MEETING_ROOM));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+            }else if(type.equals(AllConstants.REMOTE_MSG_INVITATION_RESPONSE)) {
+                    Intent intent=new Intent(AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
+                    intent.putExtra(AllConstants.REMOTE_MSG_INVITATION_RESPONSE,
+                            remoteMessage.getData().get(AllConstants.REMOTE_MSG_INVITATION_RESPONSE));
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
         }
     }

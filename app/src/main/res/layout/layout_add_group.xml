@@ -34,9 +34,9 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="280dp"
             android:backgroundTint="#237EE9"
-            android:text="Thêm"
+            android:text="+"
             android:textColor="@color/white"
-            android:textSize="12dp"
+            android:textSize="14dp"
             app:cornerRadius="20dp" />
         <Button
             android:id="@+id/btn_requested_addfr_gr"
@@ -46,9 +46,9 @@
             android:layout_marginStart="280dp"
             android:backgroundTint="#D9D9D9"
             android:visibility="gone"
-            android:text="Đã thêm"
+            android:text="-"
             android:textColor="@color/black"
-            android:textSize="12dp"
+            android:textSize="14dp"
             app:cornerRadius="20dp" />
 
     </RelativeLayout>

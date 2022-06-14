@@ -23,6 +23,7 @@ import java.util.List;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.AddFriendAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class AddFriendActivity extends AppCompatActivity {
     // firebaseAuth dùng để lấy ra những thông tin của user hiện tại
@@ -48,10 +49,12 @@ public class AddFriendActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Vì khi database thay đổi thì nó sẽ lấy lại dữ liệu vì vậy mình cần clear mảng đi
                 userList.clear();
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     User user = dsp.getValue(User.class);
-                    if(!user.getId().equals(firebaseAuth.getCurrentUser().getUid())){
+                    // Chỉ lấy các user không trong listfriend
+                    if(Util.currentUser.getListFriend().contains(user.getId())==false&&!Util.currentUser.getId().equals(user.getId())){
                         userList.add(user);
                     }
                 }
@@ -68,6 +71,7 @@ public class AddFriendActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(AddFriendActivity.this,MainActivity.class));
+                finish();
             }
         });
 
