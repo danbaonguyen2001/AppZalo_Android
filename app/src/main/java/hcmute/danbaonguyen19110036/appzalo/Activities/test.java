@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+
 import android.Manifest;
+
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,13 +24,22 @@ import org.jitsi.meet.sdk.JitsiMeetView;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.facebook.react.modules.core.PermissionListener;
+
+import org.jitsi.meet.sdk.JitsiMeetActivityDelegate;
+import org.jitsi.meet.sdk.JitsiMeetActivityInterface;
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
+import org.jitsi.meet.sdk.JitsiMeetView;
+
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.AllConstants;
+
 
 public class test extends FragmentActivity implements JitsiMeetActivityInterface {
     private JitsiMeetView view;
     EditText room;
     Button join;
+
     @Override
     protected void onActivityResult(
             int requestCode,
@@ -46,6 +58,7 @@ public class test extends FragmentActivity implements JitsiMeetActivityInterface
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         view = new JitsiMeetView(this);
         JitsiMeetConferenceOptions options = null;
         try {
@@ -58,14 +71,17 @@ public class test extends FragmentActivity implements JitsiMeetActivityInterface
             e.printStackTrace();
         }
         view.join(options);
+
         setContentView(view);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         view.dispose();
         view = null;
+
         JitsiMeetActivityDelegate.onHostDestroy(this);
     }
 
@@ -87,6 +103,7 @@ public class test extends FragmentActivity implements JitsiMeetActivityInterface
     @Override
     protected void onResume() {
         super.onResume();
+
         JitsiMeetActivityDelegate.onHostResume(this);
     }
 
@@ -99,5 +116,9 @@ public class test extends FragmentActivity implements JitsiMeetActivityInterface
     @Override
     public void requestPermissions(String[] strings, int i, PermissionListener permissionListener) {
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, AllConstants.CAMERA_PERMISSION_CODE);
+
+    }
+
+    public void onPointerCaptureChanged(boolean hasCapture) {
     }
 }

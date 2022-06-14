@@ -5,11 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
@@ -27,6 +32,7 @@ import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class SplashActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+    private static final String TAG=SplashActivity.class.getName();
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
     @Override
@@ -37,6 +43,7 @@ public class SplashActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_splash);
         initData();
+
 
         //test
 //        FirebaseFirestore database=FirebaseFirestore.getInstance();
@@ -59,6 +66,19 @@ public class SplashActivity extends AppCompatActivity {
 //                });
         //test
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if(!task.isSuccessful()){
+                            return;
+                        }
+                        Util.token=task.getResult();
+                        System.out.println("Token:"+Util.token);
+                    }
+                });
+
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -74,16 +94,12 @@ public class SplashActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                         @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
+                        public void onCancelled(@NonNull DatabaseError error) {}
                     });
-
                 }
                 else {
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                 }
-
             }
         },2000);
     }

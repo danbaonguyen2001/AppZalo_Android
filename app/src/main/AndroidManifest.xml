@@ -21,7 +21,6 @@
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,18 +28,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
+
         android:theme="@style/Theme.AppZalo">
         <activity
             android:name=".Activities.test"
             android:exported="false" />
         <activity
             android:name=".Activities.VideoCallOutGoingActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
+
+            android:exported="false" />
         <activity
             android:name=".Activities.VideoCallInComingActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:exported="false" />
         <activity
             android:name=".Activities.GroupActivity"
             android:exported="false" />
@@ -177,6 +176,7 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
     </application>

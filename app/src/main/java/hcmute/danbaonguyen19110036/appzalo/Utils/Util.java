@@ -11,12 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ import hcmute.danbaonguyen19110036.appzalo.Model.User;
 public class Util {
     public static int TITLE_REQUEST;
     public static User currentUser;
+    public static String token;
     public static List<User> groupListUser;
     public static List<User> getListGroupUser(){
         if(groupListUser==null){
@@ -63,5 +67,4 @@ public class Util {
             return readExStorage==PackageManager.PERMISSION_GRANTED;
         }
     }
-
 }

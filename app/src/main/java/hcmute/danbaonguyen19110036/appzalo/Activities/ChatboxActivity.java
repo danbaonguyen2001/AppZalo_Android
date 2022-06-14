@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -24,7 +26,6 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,6 +34,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.devlomi.record_view.OnRecordListener;
 import com.devlomi.record_view.RecordButton;
 import com.devlomi.record_view.RecordView;
@@ -47,26 +54,23 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.iid.FirebaseInstanceIdReceiver;
-import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import org.jitsi.meet.sdk.JitsiMeetActivity;
-import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ChatAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.Group;
 import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
@@ -74,11 +78,9 @@ import hcmute.danbaonguyen19110036.appzalo.Model.Message;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.AllConstants;
-import hcmute.danbaonguyen19110036.appzalo.Utils.PreferenceManager;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
-import hcmute.danbaonguyen19110036.appzalo.listeners.UsersListener;
 
-public class ChatboxActivity extends AppCompatActivity implements UsersListener {
+public class ChatboxActivity extends AppCompatActivity {
     // Khai báo cáo View để xử lý sự kiện
     private TextView username;
     private ImageView btnBack,selectImg,sendBtn,avatar,camera;
@@ -88,8 +90,6 @@ public class ChatboxActivity extends AppCompatActivity implements UsersListener 
     private ConstraintLayout containerChatbox;
     //Các biến thực thi chức năng call video
     private ImageView imageViewVideoCall;
-    private String receiver_name,receiver_uid,sender_uid,url,usertoken;
-    private PreferenceManager preferenceManager;
     Uri uri;
 
     // firebaseAuth dùng để lấy ra những thông tin của user hiện tại
@@ -104,14 +104,13 @@ public class ChatboxActivity extends AppCompatActivity implements UsersListener 
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
     private FirebaseFirestore firebaseFirestore;
-    private String imageToken,receiverId;
+    private String imageToken,receiverId,receiverToken;
     private RecordButton micro;
     private RecordView recordView;
     private MediaRecorder mediaRecorder;
     private String audioPath;
     private Group group;
     private User receiver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,11 +119,9 @@ public class ChatboxActivity extends AppCompatActivity implements UsersListener 
         getSupportActionBar().hide();
         setContentView(R.layout.activity_chatbox);
         initData();
-        preferenceManager=new PreferenceManager(getApplicationContext());
         // lấy giá trị trong intent lưu vào TextView
         setInformation();
         receiverId =getIntent().getStringExtra("receiverId");
-        System.out.println(receiverId);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(ChatboxActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(messageList,ChatboxActivity.this);
@@ -147,49 +144,37 @@ public class ChatboxActivity extends AppCompatActivity implements UsersListener 
         });
 
         //Video call giữa 2 user
-        String token1="d3Dg2VliTuKa8q2kwyhtWa:APA91bEFaJoubpmqsMA8XXwMfSCa7zHhprYpLdFqTcmj05ZFFwhMmL7tFaq3M9gTmVbqwKDh8yrxEIFeoHXv0TBCmsZiYtPnlNKbfJPeFiuQcSmS6-IH6oyoNYcX5miZfcRp32O5F1CI";
-        String token2="dNx9ak7SRNuXa_Jqip6BaG:APA91bG9SUHikYKEiMwb8guSCa3af95D-FmuXy29SXartRKVugTijWnPdoTCOSUuTwna7LvQTj4PoE-CwOOOXHGGuAP0iZZNXnIKCD0pSV-P3Hkoit6wZof82tx5u3bx_jp7EJaGyN_M";
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if(!task.isSuccessful()){
-                    System.out.println("Fetching ");
-                    return;
-                }
-                String token=task.getResult();
-                //sendFCMTokenToDatabase(token2);
-                System.out.println("Token:"+token);
-
-            }
-        });
-
-        Bundle bundle = getIntent().getExtras();
-        if(bundle!=null){
-            url=bundle.getString("u");
-            receiver_name=bundle.getString("n");
-            receiver_uid=bundle.getString("uid");
-        }else{
-            Toast.makeText(this, "user missing,", Toast.LENGTH_SHORT).show();
-        }
-
         imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),VideoCallOutGoingActivity.class);
+                Intent intent= new Intent(ChatboxActivity.this, test.class);
+
                 startActivity(intent);
+
+//                try {
+//                    JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
+//                            .setServerURL(new URL("https://meet.jit.si"))
+//                            .setRoom("test")
+//                            .setAudioMuted(false)
+//                            .setVideoMuted(false)
+//                            .setAudioOnly(false)
+//                            .build();
+//
+//                    JitsiMeetActivity.launch(ChatboxActivity.this,options);
+//                } catch (MalformedURLException e) {
+//                    e.printStackTrace();
+//                }
+
             }
         });
-
-
         //Chụp ảnh và gửi đi
-            //Yêu cầu cho phép camera
+        //Yêu cầu cho phép camera
         if(ContextCompat.checkSelfPermission(ChatboxActivity.this,Manifest.permission.CAMERA)!=
-        PackageManager.PERMISSION_GRANTED){
+                PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(ChatboxActivity.this,
                     new String[]{
-                Manifest.permission.CAMERA
-            },100);
+                            Manifest.permission.CAMERA
+                    },100);
         }
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,9 +184,6 @@ public class ChatboxActivity extends AppCompatActivity implements UsersListener 
                 startActivityForResult(intent,100);
             }
         });
-
-
-
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -316,6 +298,19 @@ public class ChatboxActivity extends AppCompatActivity implements UsersListener 
                 }
             }
         });
+
+        //Call video
+
+        imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(ChatboxActivity.this, test.class);
+                Util.currentUser.getToken();
+                startActivity(intent);
+            }
+        });
+
+
     }
     // Khởi tạo các giá trị ban đầu
     private void initData(){
@@ -338,44 +333,8 @@ public class ChatboxActivity extends AppCompatActivity implements UsersListener 
         micro.setRecordView(recordView);
         micro.setListenForRecord(false);
         messageList = new ArrayList<>();
+        receiverToken = getIntent().getStringExtra("token");
     }
-
-    //Video call
-
-    public void sendFCMTokenToDatabase(String token){
-        FirebaseFirestore database=FirebaseFirestore.getInstance();
-        DocumentReference documentReference =
-                database.collection(AllConstants.KEY_FCM_TOKEN).document(
-                    preferenceManager.getString(AllConstants.KEY_USER_ID)
-                );
-        documentReference.update(AllConstants.KEY_FCM_TOKEN,token)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(ChatboxActivity.this, "Token Updated", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ChatboxActivity.this, "Unable to send Token ", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
-
-    //Chụp ảnh
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
-        super.startActivityForResult(intent, requestCode, options);
-        if(requestCode==100){
-            imagepath=intent.getData();
-            System.out.println(123);
-            System.out.println(imagepath);
-            //sendImageMessage(imagepath);
-        }
-    }
-
     public void SendMessage(View view){
         DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
         String key = databaseReference.push().getKey();
@@ -394,6 +353,7 @@ public class ChatboxActivity extends AppCompatActivity implements UsersListener 
         databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
         databaseReference.setValue(message);
         arrangeGroupList(Util.currentUser);
+        sendNotification(text,receiverToken);
 //        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
 //        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
@@ -426,14 +386,63 @@ public class ChatboxActivity extends AppCompatActivity implements UsersListener 
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(user.getId());
         databaseReference.child("groupUserList").setValue(user.getGroupUserList());
     }
+    void sendNotification(String message, String token) {
+        try {
+            RequestQueue queue = Volley.newRequestQueue(this);
+            JSONObject data = new JSONObject();
+            data.put("title", Util.currentUser.getUserName());
+            data.put("body", message);
+            JSONObject notificationData = new JSONObject();
+            notificationData.put("notification", data);
+            notificationData.put("to", token);
+            JsonObjectRequest request = new JsonObjectRequest(AllConstants.NOTIFICATION_URL, notificationData,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(ChatboxActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(ChatboxActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "key=" + AllConstants.SERVER_KEY);
+                    map.put("Content-Type", "application/json");
+                    return map;
+                }
+            };
+            queue.add(request);
+        } catch (Exception ex) {
+
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==PICK_IMAGE && resultCode==RESULT_OK)
         {
             imagepath=data.getData();
+            System.out.println(imagepath);
             sendImageMessage(imagepath);
         }
+        if(requestCode==100){
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Uri tempUri = getImageUri(getApplicationContext(), photo);
+            imagepath = tempUri;
+            sendImageMessage(imagepath);
+            Toast.makeText(this, "Take photo complete", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
     public void sendImageMessage(Uri imagepath){
         String timeStamp = ""+System.currentTimeMillis();
@@ -576,14 +585,6 @@ public class ChatboxActivity extends AppCompatActivity implements UsersListener 
         }
     }
 
-    @Override
-    public void initiateVideoMeeting(User user) {
-        Intent intent = new Intent(getApplicationContext(),VideoCallOutGoingActivity.class);
-        startActivity(intent);
-    }
 
-    @Override
-    public void initiateAudioMeeting(User user) {
 
-    }
 }
