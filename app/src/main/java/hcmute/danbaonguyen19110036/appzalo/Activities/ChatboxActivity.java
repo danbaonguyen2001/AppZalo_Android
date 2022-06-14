@@ -287,8 +287,8 @@ public class ChatboxActivity extends AppCompatActivity {
         imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(ChatboxActivity.this, test.class);
-                Util.currentUser.getToken();
+                Intent intent= new Intent(ChatboxActivity.this, VideoCallOutGoingActivity.class);
+                intent.putExtra("receiver_token",receiverToken);
                 startActivity(intent);
             }
         });
