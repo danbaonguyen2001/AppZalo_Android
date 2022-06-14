@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,7 +52,6 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import org.jitsi.meet.sdk.JitsiMeetActivity;
-import org.jitsi.meet.sdk.JitsiMeetActivityInterface;
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 
 import java.io.ByteArrayOutputStream;
@@ -72,7 +72,7 @@ import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 public class ChatboxActivity extends AppCompatActivity {
     // Khai báo cáo View để xử lý sự kiện
     private TextView username;
-    private ImageView btnBack,selectImg,sendBtn,avatar;
+    private ImageView btnBack,selectImg,sendBtn,avatar,camera;
     private RecyclerView recyclerView;
     private EditText enterMessage;
 
@@ -101,6 +101,7 @@ public class ChatboxActivity extends AppCompatActivity {
     private String audioPath;
     private Group group;
     private User receiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,7 +154,7 @@ public class ChatboxActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent= new Intent(ChatboxActivity.this,VideoCallOutComingActivity.class);
+                Intent intent= new Intent(ChatboxActivity.this, test.class);
                 intent.putExtra("uid",receiver_uid);
 
                 startActivity(intent);
@@ -174,6 +175,26 @@ public class ChatboxActivity extends AppCompatActivity {
 
             }
         });
+
+
+        //Chụp ảnh và gửi đi
+            //Yêu cầu cho phép camera
+        if(ContextCompat.checkSelfPermission(ChatboxActivity.this,Manifest.permission.CAMERA)!=
+        PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(ChatboxActivity.this,
+                    new String[]{
+                Manifest.permission.CAMERA
+            },100);
+        }
+        camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Mở camera
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent,100);
+            }
+        });
+
 
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -304,6 +325,7 @@ public class ChatboxActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.chatbox_recycler_chat);
         enterMessage = findViewById(R.id.enterMessage);
         selectImg = findViewById(R.id.select_img);
+        camera=findViewById(R.id.camera);
         micro = findViewById(R.id.micro);
         recordView = findViewById(R.id.recordView);
         sendBtn = findViewById(R.id.sendBtn);
@@ -312,6 +334,16 @@ public class ChatboxActivity extends AppCompatActivity {
         micro.setListenForRecord(false);
         messageList = new ArrayList<>();
     }
+
+    //Chụp ảnh
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+        super.startActivityForResult(intent, requestCode, options);
+        if(requestCode==100){
+            Toast.makeText(this, "Take photo complete", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void SendMessage(View view){
         DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
         String key = databaseReference.push().getKey();
