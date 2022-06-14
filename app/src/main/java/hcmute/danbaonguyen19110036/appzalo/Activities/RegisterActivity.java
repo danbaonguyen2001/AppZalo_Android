@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
-public class RegisterUsernameActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String codeSend;
@@ -43,18 +43,18 @@ public class RegisterUsernameActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
-        setContentView(R.layout.activity_register_username);
+        setContentView(R.layout.activity_register);
         initData();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                Toast.makeText(RegisterUsernameActivity.this,"onVerificationCompleted:" + phoneAuthCredential,Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this,"onVerificationCompleted:" + phoneAuthCredential,Toast.LENGTH_SHORT).show();
                 signInWithPhoneAuthCredential(phoneAuthCredential);
             }
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
-                Toast.makeText(RegisterUsernameActivity.this,"Send Code Failed",Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this,"Send Code Failed",Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -62,7 +62,7 @@ public class RegisterUsernameActivity extends AppCompatActivity {
                 super.onCodeSent(s, forceResendingToken);
                 Toast.makeText(getApplicationContext(),"OTP is send",Toast.LENGTH_SHORT).show();
                 codeSend = s;
-                Intent intent = new Intent(RegisterUsernameActivity.this,AuthenticationPhoneNumberActivity.class);
+                Intent intent = new Intent(RegisterActivity.this,AuthenticationPhoneNumberActivity.class);
                 intent.putExtra("otp",codeSend);
                 intent.putExtra("Activity","Register");
                 startActivity(intent);
@@ -84,7 +84,7 @@ public class RegisterUsernameActivity extends AppCompatActivity {
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
-                                Toast.makeText(RegisterUsernameActivity.this,"Tài khoản không chính xác",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this,"Tài khoản không chính xác",Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -104,13 +104,13 @@ public class RegisterUsernameActivity extends AppCompatActivity {
                     }
                 }
                 if(KT==true){
-                    Toast.makeText(RegisterUsernameActivity.this,"Tài khoản đã tồn tại",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this,"Tài khoản đã tồn tại",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 PhoneAuthOptions options=PhoneAuthOptions.newBuilder(firebaseAuth)
                         .setPhoneNumber(phoneNumber)
                         .setTimeout(60L, TimeUnit.SECONDS)
-                        .setActivity(RegisterUsernameActivity.this)
+                        .setActivity(RegisterActivity.this)
                         .setCallbacks(mCallbacks)
                         .build();
                 PhoneAuthProvider.verifyPhoneNumber(options);
@@ -125,7 +125,7 @@ public class RegisterUsernameActivity extends AppCompatActivity {
 
     }
     public void OnClickBackHome(View view){
-        startActivity(new Intent(RegisterUsernameActivity.this,HomeActivity.class));
+        startActivity(new Intent(RegisterActivity.this,HomeActivity.class));
     }
     private void GotoOTPActivity(String phoneNumber) {
         Intent intent = new Intent(this,MainActivity.class);

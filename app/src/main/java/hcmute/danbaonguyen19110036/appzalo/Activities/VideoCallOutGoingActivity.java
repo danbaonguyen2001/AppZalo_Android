@@ -14,7 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import hcmute.danbaonguyen19110036.appzalo.R;
 
-public class VideoCallOutComingActivity extends AppCompatActivity {
+public class VideoCallOutGoingActivity extends AppCompatActivity {
     ImageView receiver_avt;
     TextView receiver_name;
     String receiver_url,receiver_token,receiver_uid,type;
@@ -24,7 +24,7 @@ public class VideoCallOutComingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video_call_out_coming);
+        setContentView(R.layout.activity_video_call_out_going);
 
 
 
