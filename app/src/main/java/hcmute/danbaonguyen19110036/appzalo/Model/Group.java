@@ -5,6 +5,7 @@ public class Group {
     public String typeGroup;
     public String groupName;
     public String imgUrl;
+    public Message message;
     public Group(){
 
     }
@@ -49,5 +50,13 @@ public class Group {
 
     public void setTypeGroup(String typeGroup) {
         this.typeGroup = typeGroup;
+    }
+
+    public Message getMessage() {
+        return message;
+    }
+
+    public void setMessage(Message message) {
+        this.message = message;
     }
 }

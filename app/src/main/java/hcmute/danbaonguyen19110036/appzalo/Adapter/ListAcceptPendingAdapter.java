@@ -19,6 +19,7 @@ import java.util.List;
 
 import hcmute.danbaonguyen19110036.appzalo.Model.Group;
 import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
+import hcmute.danbaonguyen19110036.appzalo.Model.Message;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
@@ -83,7 +84,6 @@ public class ListAcceptPendingAdapter extends BaseAdapter {
                 String key = databaseReference.push().getKey();
                 Group group = new Group(key,"private");
                 databaseReference.child(key).setValue(group);
-
                 // Cho 2 user join vào Group
                 databaseReference = firebaseDatabase.getReference("GroupUser");
                 String keyGroup = databaseReference.push().getKey();

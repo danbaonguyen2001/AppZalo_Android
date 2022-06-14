@@ -4,11 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,23 +25,20 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class RegisterInputInforActivity extends AppCompatActivity {
     private String imageToken,userName,birthDay,genDer;
@@ -119,6 +114,18 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         radioButtonNu = findViewById(R.id.radio_nu);
         selectBirthDay = findViewById(R.id.btn_selectBirthDay);
         radioGroup = findViewById(R.id.radio_group);
+        getInformation();
+    }
+    public void getInformation(){
+        if(!Util.currentUser.getUserName().isEmpty()){
+            Picasso.get().load(Util.currentUser.getImg()).into(imgProfile);
+            edtbirthDay.setText(Util.currentUser.getBirthDay());
+            edtuserName.setText(Util.currentUser.getUserName());
+            if(Util.currentUser.getGender().equals("Nam"))
+                radioButtonNam.setChecked(true);
+            else
+                radioButtonNu.setChecked(true);
+        }
     }
     private void sendImageToStore(){
         StorageReference imgref = storageReference.child("Images").child(firebaseAuth.getUid()).child("Profile Pic");;
@@ -160,7 +167,7 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(),"Image Not UPdloaded",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Image Not UP loaded",Toast.LENGTH_SHORT).show();
             }
         });
     }

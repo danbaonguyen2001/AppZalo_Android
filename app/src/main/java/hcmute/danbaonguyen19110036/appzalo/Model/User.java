@@ -1,9 +1,5 @@
 package hcmute.danbaonguyen19110036.appzalo.Model;
-
-import android.net.Uri;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class User {
