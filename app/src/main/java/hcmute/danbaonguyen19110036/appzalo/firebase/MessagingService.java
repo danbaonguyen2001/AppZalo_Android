@@ -1,4 +1,8 @@
 package hcmute.danbaonguyen19110036.appzalo.firebase;
+
+
+import android.content.Intent;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,6 +11,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -14,6 +19,8 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import hcmute.danbaonguyen19110036.appzalo.Activities.MainActivity;
 import hcmute.danbaonguyen19110036.appzalo.R;
+
+import hcmute.danbaonguyen19110036.appzalo.Activities.VideoCallInComingActivity;
 
 public class MessagingService extends FirebaseMessagingService {
     public static final String TAG = MessagingService.class.getName();
@@ -26,6 +33,7 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
     @Override
+
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         RemoteMessage.Notification notification = remoteMessage.getNotification();
@@ -58,6 +66,7 @@ public class MessagingService extends FirebaseMessagingService {
                     "Channel human readable title",
                     NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
+
         }
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());

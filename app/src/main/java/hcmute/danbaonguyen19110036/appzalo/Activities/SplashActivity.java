@@ -43,6 +43,29 @@ public class SplashActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_splash);
         initData();
+
+
+        //test
+//        FirebaseFirestore database=FirebaseFirestore.getInstance();
+//        HashMap<String,Object> nguoidung=new HashMap<>();
+//        nguoidung.put("name","Nguyen");
+//        nguoidung.put("img","img");
+//        database.collection("nguoidungs")
+//                .add(nguoidung)
+//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                    @Override
+//                    public void onSuccess(DocumentReference documentReference) {
+//
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//
+//                    }
+//                });
+        //test
+
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -54,6 +77,7 @@ public class SplashActivity extends AppCompatActivity {
                         System.out.println("Token:"+Util.token);
                     }
                 });
+
 
         new Handler().postDelayed(new Runnable() {
             @Override

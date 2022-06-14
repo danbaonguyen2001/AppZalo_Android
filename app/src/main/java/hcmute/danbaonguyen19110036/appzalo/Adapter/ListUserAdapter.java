@@ -24,6 +24,7 @@ import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
+import hcmute.danbaonguyen19110036.appzalo.listeners.UsersListener;
 
 public class ListUserAdapter extends BaseAdapter {
     private Context context;
@@ -33,6 +34,8 @@ public class ListUserAdapter extends BaseAdapter {
     private User user;
     public Group group;
     private String lastMessage="Hello there !",senderId="",typeMessage="",typeGroup="private",groupName="";
+
+
 
     public ListUserAdapter(Context context, List<GroupUser> groupUserList, int layout) {
         this.context = context;
