@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -32,6 +34,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.devlomi.record_view.OnRecordListener;
 import com.devlomi.record_view.RecordButton;
 import com.devlomi.record_view.RecordView;
@@ -51,22 +59,23 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import org.jitsi.meet.sdk.JitsiMeetActivity;
-import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import hcmute.danbaonguyen19110036.appzalo.Adapter.ChatAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.Group;
 import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
 import hcmute.danbaonguyen19110036.appzalo.Model.Message;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
+import hcmute.danbaonguyen19110036.appzalo.Utils.AllConstants;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class ChatboxActivity extends AppCompatActivity {
@@ -113,7 +122,6 @@ public class ChatboxActivity extends AppCompatActivity {
         // lấy giá trị trong intent lưu vào TextView
         setInformation();
         receiverId =getIntent().getStringExtra("receiverId");
-        System.out.println(receiverId);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(ChatboxActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(messageList,ChatboxActivity.this);
@@ -145,18 +153,13 @@ public class ChatboxActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "user missing,", Toast.LENGTH_SHORT).show();
         }
-
         FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
         sender_uid=user.getUid();
-
         imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-
                 Intent intent= new Intent(ChatboxActivity.this, test.class);
                 intent.putExtra("uid",receiver_uid);
-
                 startActivity(intent);
 
 //                try {
@@ -175,8 +178,6 @@ public class ChatboxActivity extends AppCompatActivity {
 
             }
         });
-
-
         //Chụp ảnh và gửi đi
             //Yêu cầu cho phép camera
         if(ContextCompat.checkSelfPermission(ChatboxActivity.this,Manifest.permission.CAMERA)!=
@@ -194,9 +195,6 @@ public class ChatboxActivity extends AppCompatActivity {
                 startActivityForResult(intent,100);
             }
         });
-
-
-
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -334,34 +332,25 @@ public class ChatboxActivity extends AppCompatActivity {
         micro.setListenForRecord(false);
         messageList = new ArrayList<>();
     }
-
-    //Chụp ảnh
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
-        super.startActivityForResult(intent, requestCode, options);
-        if(requestCode==100){
-            Toast.makeText(this, "Take photo complete", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void SendMessage(View view){
-        DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
-        String key = databaseReference.push().getKey();
-        String senderId = firebaseAuth.getCurrentUser().getUid();
+//        DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
+//        String key = databaseReference.push().getKey();
+//        String senderId = firebaseAuth.getCurrentUser().getUid();
         String text = enterMessage.getText().toString();
         if(text.isEmpty()){
             Toast.makeText(ChatboxActivity.this,"Vui lòng nhập tin nhắn",Toast.LENGTH_SHORT).show();
             return;
         }
-        Message message = new Message(key,groupId,senderId,text,"text","");
-        databaseReference.child(key).setValue(message);
-        messageList.add(message);
-        recyclerView.scrollToPosition(messageList.size()-1);
-        enterMessage.setText("");
-        chatAdapter.notifyDataSetChanged();
-        databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
-        databaseReference.setValue(message);
-        arrangeGroupList(Util.currentUser);
+//        Message message = new Message(key,groupId,senderId,text,"text","");
+//        databaseReference.child(key).setValue(message);
+//        messageList.add(message);
+//        recyclerView.scrollToPosition(messageList.size()-1);
+//        enterMessage.setText("");
+//        chatAdapter.notifyDataSetChanged();
+//        databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
+//        databaseReference.setValue(message);
+//        arrangeGroupList(Util.currentUser);
+        sendNotification(text,AllConstants.Token);
 //        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
 //        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
@@ -394,14 +383,63 @@ public class ChatboxActivity extends AppCompatActivity {
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(user.getId());
         databaseReference.child("groupUserList").setValue(user.getGroupUserList());
     }
+    void sendNotification(String message, String token) {
+        try {
+            RequestQueue queue = Volley.newRequestQueue(this);
+            JSONObject data = new JSONObject();
+            data.put("title", Util.currentUser.getUserName());
+            data.put("body", message);
+            JSONObject notificationData = new JSONObject();
+            notificationData.put("notification", data);
+            notificationData.put("to", token);
+            JsonObjectRequest request = new JsonObjectRequest(AllConstants.NOTIFICATION_URL, notificationData,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(ChatboxActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(ChatboxActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "key=" + AllConstants.SERVER_KEY);
+                    map.put("Content-Type", "application/json");
+                    return map;
+                }
+            };
+            queue.add(request);
+        } catch (Exception ex) {
+
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==PICK_IMAGE && resultCode==RESULT_OK)
         {
             imagepath=data.getData();
+            System.out.println(imagepath);
             sendImageMessage(imagepath);
         }
+        if(requestCode==100){
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Uri tempUri = getImageUri(getApplicationContext(), photo);
+            imagepath = tempUri;
+            sendImageMessage(imagepath);
+            Toast.makeText(this, "Take photo complete", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
     public void sendImageMessage(Uri imagepath){
         String timeStamp = ""+System.currentTimeMillis();
