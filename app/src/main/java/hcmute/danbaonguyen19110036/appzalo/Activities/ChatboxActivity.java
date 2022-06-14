@@ -95,7 +95,7 @@ public class ChatboxActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private List<Message> messageList;
     private ChatAdapter chatAdapter;
-    private String groupId;
+    private String groupId,audioPath;
     private static int PICK_IMAGE=123;
     private Uri imagepath;
     private StorageReference storageReference;
@@ -105,9 +105,7 @@ public class ChatboxActivity extends AppCompatActivity {
     private RecordButton micro;
     private RecordView recordView;
     private MediaRecorder mediaRecorder;
-    private String audioPath;
     private Group group;
-    private User receiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

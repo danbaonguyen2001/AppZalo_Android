@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -16,6 +18,9 @@ public class VideoCallInComingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_video_call_in_coming);
         btnDecline=findViewById(R.id.btn_decline_call);
         btnAccept=findViewById(R.id.btn_accept_call);
