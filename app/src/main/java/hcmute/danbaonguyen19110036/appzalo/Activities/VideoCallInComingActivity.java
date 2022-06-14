@@ -18,6 +18,11 @@ import android.view.Window;
 import android.view.WindowManager;
 
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jitsi.meet.sdk.JitsiMeetActivity;
@@ -27,6 +32,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.AllConstants;
@@ -74,16 +81,45 @@ public class VideoCallInComingActivity extends AppCompatActivity {
 
     private void sendInvitationResponse(String type, String receiverToken){
         try {
+            RequestQueue queue = Volley.newRequestQueue(this);
             JSONArray tokens=new JSONArray();
             tokens.put(receiverToken);
             JSONObject data= new JSONObject();
-            JSONObject body= new JSONObject();
+
             data.put(AllConstants.REMOTE_MSG_TYPE,AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
             data.put(AllConstants.REMOTE_MSG_INVITATION_RESPONSE,type);
-            body.put(AllConstants.REMOTE_MSG_DATA,data);
-            body.put(AllConstants.REMOTE_MSG_REGISTRATION_IDS,tokens);
 
-            sendRemoteMessage(body.toString(),type);
+            JSONObject notificationData = new JSONObject();
+            notificationData.put(AllConstants.REMOTE_MSG_DATA, data);
+            notificationData.put(AllConstants.REMOTE_MSG_REGISTRATION_IDS,tokens);
+
+            JsonObjectRequest request = new JsonObjectRequest(AllConstants.NOTIFICATION_URL, notificationData,
+                    new com.android.volley.Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            System.out.println("OK");
+                            System.out.println(notificationData);
+                            Toast.makeText(VideoCallInComingActivity.this, "Invitation Accepted", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+
+                    new com.android.volley.Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(VideoCallInComingActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "key=" + AllConstants.SERVER_KEY);
+                    map.put("Content-Type", "application/json");
+                    return map;
+                }
+            };
+            queue.add(request);
+
+
 
         }
         catch (Exception e){

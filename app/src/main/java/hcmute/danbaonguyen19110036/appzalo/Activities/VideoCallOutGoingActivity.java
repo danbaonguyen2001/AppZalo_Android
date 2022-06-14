@@ -118,13 +118,13 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
                             Toast.makeText(VideoCallOutGoingActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("Authorization", "key=" + AllConstants.SERVER_KEY);
-                    map.put("Content-Type", "application/json");
-                    return map;
-                }
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put("Authorization", "key=" + AllConstants.SERVER_KEY);
+                            map.put("Content-Type", "application/json");
+                            return map;
+                        }
             };
             queue.add(request);
         } catch (Exception ex) {
@@ -163,16 +163,42 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
 
     private void cancelInvitation(String receiverToken){
         try {
+            RequestQueue queue = Volley.newRequestQueue(this);
             JSONArray tokens=new JSONArray();
             tokens.put(receiverToken);
             JSONObject data= new JSONObject();
-            JSONObject body= new JSONObject();
             data.put(AllConstants.REMOTE_MSG_TYPE,AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
             data.put(AllConstants.REMOTE_MSG_INVITATION_RESPONSE,AllConstants.REMOTE_MSG_INVITATION_CANCELLED);
-            body.put(AllConstants.REMOTE_MSG_DATA,data);
-            body.put(AllConstants.REMOTE_MSG_REGISTRATION_IDS,tokens);
+            JSONObject notificationData = new JSONObject();
+            notificationData.put(AllConstants.REMOTE_MSG_DATA, data);
+            notificationData.put(AllConstants.REMOTE_MSG_REGISTRATION_IDS,tokens);
 
-            sendRemoteMessage(body.toString(),AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
+
+            JsonObjectRequest request = new JsonObjectRequest(AllConstants.NOTIFICATION_URL, notificationData,
+                    new com.android.volley.Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            System.out.println("OK");
+                            System.out.println(notificationData);
+                            Toast.makeText(VideoCallOutGoingActivity.this, "Invitation sent successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+
+                    new com.android.volley.Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(VideoCallOutGoingActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "key=" + AllConstants.SERVER_KEY);
+                    map.put("Content-Type", "application/json");
+                    return map;
+                }
+            };
+            queue.add(request);
 
         }
         catch (Exception e){
