@@ -62,6 +62,7 @@ public class TabChatFragment extends Fragment {
                         user = snapshot.getValue(User.class);
                         Intent intent=new Intent(getActivity(), ChatboxActivity.class);
                         intent.putExtra("username",user.getUserName());
+                        intent.putExtra("token",user.getToken());
                         intent.putExtra("imageUrl",user.getImg());
                         intent.putExtra("receiverId",groupUserList.get(i).getUserId());
                         intent.putExtra("roomId",groupUserList.get(i).groupId);

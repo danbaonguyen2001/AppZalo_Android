@@ -183,6 +183,7 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         user.put("userName",userName);
         user.put("address","BinhDuong");
         user.put("birthDay",birthDay);
+        user.put("token",Util.token);
         databaseReference.setValue(user);
     }
     public void OnClickSaveProfile(View view){

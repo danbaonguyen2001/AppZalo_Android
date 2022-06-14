@@ -96,11 +96,15 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
             }
         });
     }
+    public void OnClickBackHome(View view){
+        finish();
+    }
     private void createUser(){
         String id = firebaseAuth.getCurrentUser().getUid();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(id);
         String phoneNumber = firebaseAuth.getCurrentUser().getPhoneNumber();
-        User user = new User(id,phoneNumber,"","",null,"","");
+        User user = new User(id,phoneNumber,"","",null,"","",Util.token);
+        Util.currentUser = user;
         databaseReference.setValue(user);
     }
 }

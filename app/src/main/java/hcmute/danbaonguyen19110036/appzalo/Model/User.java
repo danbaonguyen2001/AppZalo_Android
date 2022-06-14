@@ -10,6 +10,7 @@ public class User {
     private String img;
     private String gender;
     private String address;
+    private String token;
     private List<String> listFriend;
     private List<String> listRequest;
     private List<String> listPendingAccept;
@@ -18,7 +19,7 @@ public class User {
 
     }
 
-    public User(String id, String phoneNumber, String userName, String birthDay, String img, String gender, String address) {
+    public User(String id, String phoneNumber, String userName, String birthDay, String img, String gender, String address,String token) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.userName = userName;
@@ -26,6 +27,7 @@ public class User {
         this.img = img;
         this.gender = gender;
         this.address = address;
+        this.token = token;
     }
 
     public String getId() {
@@ -82,6 +84,14 @@ public class User {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public List<String> getListFriend() {

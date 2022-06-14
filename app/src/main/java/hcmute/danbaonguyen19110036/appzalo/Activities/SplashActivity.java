@@ -47,37 +47,13 @@ public class SplashActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
                     public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                        if(!task.isSuccessful()){
                             return;
                         }
-                        // Get new FCM registration token
-                        String token = task.getResult();
-                        // Log and toast
-                        Log.e(TAG, token);
-                        Toast.makeText(SplashActivity.this, token, Toast.LENGTH_SHORT).show();
+                        Util.token=task.getResult();
+                        System.out.println("Token:"+Util.token);
                     }
                 });
-        //test
-//        FirebaseFirestore database=FirebaseFirestore.getInstance();
-//        HashMap<String,Object> nguoidung=new HashMap<>();
-//        nguoidung.put("name","Nguyen");
-//        nguoidung.put("img","img");
-//        database.collection("nguoidungs")
-//                .add(nguoidung)
-//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//
-//                    }
-//                });
-        //test
 
         new Handler().postDelayed(new Runnable() {
             @Override

@@ -103,14 +103,13 @@ public class ChatboxActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
     private FirebaseFirestore firebaseFirestore;
-    private String imageToken,receiverId;
+    private String imageToken,receiverId,receiverToken;
     private RecordButton micro;
     private RecordView recordView;
     private MediaRecorder mediaRecorder;
     private String audioPath;
     private Group group;
     private User receiver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -331,26 +330,27 @@ public class ChatboxActivity extends AppCompatActivity {
         micro.setRecordView(recordView);
         micro.setListenForRecord(false);
         messageList = new ArrayList<>();
+        receiverToken = getIntent().getStringExtra("token");
     }
     public void SendMessage(View view){
-//        DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
-//        String key = databaseReference.push().getKey();
-//        String senderId = firebaseAuth.getCurrentUser().getUid();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
+        String key = databaseReference.push().getKey();
+        String senderId = firebaseAuth.getCurrentUser().getUid();
         String text = enterMessage.getText().toString();
         if(text.isEmpty()){
             Toast.makeText(ChatboxActivity.this,"Vui lòng nhập tin nhắn",Toast.LENGTH_SHORT).show();
             return;
         }
-//        Message message = new Message(key,groupId,senderId,text,"text","");
-//        databaseReference.child(key).setValue(message);
-//        messageList.add(message);
-//        recyclerView.scrollToPosition(messageList.size()-1);
-//        enterMessage.setText("");
-//        chatAdapter.notifyDataSetChanged();
-//        databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
-//        databaseReference.setValue(message);
-//        arrangeGroupList(Util.currentUser);
-        sendNotification(text,AllConstants.Token);
+        Message message = new Message(key,groupId,senderId,text,"text","");
+        databaseReference.child(key).setValue(message);
+        messageList.add(message);
+        recyclerView.scrollToPosition(messageList.size()-1);
+        enterMessage.setText("");
+        chatAdapter.notifyDataSetChanged();
+        databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
+        databaseReference.setValue(message);
+        arrangeGroupList(Util.currentUser);
+        sendNotification(text,receiverToken);
 //        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
 //        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
