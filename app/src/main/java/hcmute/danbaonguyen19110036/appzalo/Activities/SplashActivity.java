@@ -39,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Util.currentUser = snapshot.getValue(User.class);
-                            Intent intent=new Intent(SplashActivity.this,MainActivity.class);
+                            Intent intent=new Intent(SplashActivity.this,test.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }

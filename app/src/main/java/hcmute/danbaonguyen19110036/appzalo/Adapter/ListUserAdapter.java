@@ -100,11 +100,10 @@ public class ListUserAdapter extends BaseAdapter {
                             Picasso.get().load(user.getImg()).into(holder.avatar);
                         }
                         else {
-                            user = snapshot.getValue(User.class);
                             holder.username.setText(groupName);
                             setLastMessage(holder,"");
+                            Picasso.get().load(group.getImgUrl()).into(holder.avatar);
                         }
-                        Picasso.get().load(user.getImg()).into(holder.avatar);
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {

@@ -72,7 +72,6 @@ public class TabChatFragment extends Fragment {
                 });
             }
         });
-        listUserAdapter.notifyDataSetChanged();
         newGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,9 +94,4 @@ public class TabChatFragment extends Fragment {
         listUserAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        listUserAdapter.notifyDataSetChanged();
-    }
 }
