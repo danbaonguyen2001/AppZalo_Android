@@ -43,10 +43,11 @@ public class MessagingService extends FirebaseMessagingService {
         String type = remoteMessage.getData().get("type");
         if(type!=null){
             if(type=="invitation"){
+                System.out.println("               123");
                 Intent intent = new Intent(getApplicationContext(),VideoCallInComingActivity.class);
-                intent.putExtra("meetingType",remoteMessage.getData().get("meetinType"));
+                intent.putExtra("meetingType",remoteMessage.getData().get("meetingType"));
                 intent.putExtra("receiverName",remoteMessage.getData().get("receiverName"));
-                intent.addFlags(Integer.parseInt("10000000"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         }

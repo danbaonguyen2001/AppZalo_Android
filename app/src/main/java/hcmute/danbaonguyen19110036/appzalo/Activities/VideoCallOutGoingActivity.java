@@ -3,6 +3,7 @@ package hcmute.danbaonguyen19110036.appzalo.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -53,10 +54,9 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
         receiver_name= findViewById(R.id.txt_username_receiver);
         btnEndCall= (FloatingActionButton) findViewById(R.id.btn_end_call);
         btnEndCall.setColorFilter(Color.WHITE);
-
-        receiver_token=getIntent().getStringExtra("receiver_token");
-
-        //initiateMeeting("dYwjeaCwRxOUPqUXwCbE3-:APA91bEXZpiHM5QQYCvv-d-p5uayRXM9kaGZeHZmtXHUuVAU6pfZwMZxQiyebkxhybcUc7sYdm2LBdebShsqoWynWm5CiHEAM06-mwljbUFTHTlk2RaY8TlDvG_M-llfoIsHHoOHsDN6");
+        receiver_token= getIntent().getStringExtra("receiver_token");
+        System.out.println("Token inviter:" + Util.currentUser.getToken());
+        System.out.println("Token Receiver:" + receiver_token);
 
         btnEndCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +65,8 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
             }
         });
 
-        if(meetingType!=null && user!=null){
-            initiateMeeting(meetingType,user.getToken());
+        if(meetingType!=null){
+            initiateMeeting(meetingType,receiver_token);
         }
     }
 
@@ -82,7 +82,7 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
             data.put("type",AllConstants.REMOTE_MSG_INVITATION);
             data.put("meetingType",meetingType);
             data.put("receiverName","userName");
-            data.put("inviterToken",inviter_token);
+            data.put("inviterToken",Util.currentUser.getToken());
 
             body.put("data",data);
             body.put(AllConstants.REMOTE_MSG_REGISTRATION_IDS,tokens);

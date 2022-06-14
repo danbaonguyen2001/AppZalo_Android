@@ -28,7 +28,7 @@ public class AllConstants {
         HashMap<String,String > headers= new HashMap<>();
         headers.put(
           AllConstants.REMOTE_MSG_AUTHORZATION,
-                "AAAAP4k_9rg:APA91bFXpofEUnVvKntLlgROkGMPEAT4gCteAzcW0hwvq6wUXGRL02wvc-UDWqUGENSLZfCDzOriPlU_plzANmXUAbz0JbFwGdz0h33CL2dIu8ICG3E6fec7yThRIfSAKHM8tZ9NDjOV"
+                SERVER_KEY
         );
         headers.put(AllConstants.REMOTE_MSG_CONTENT_TYPE,"application/json");
         return headers;
