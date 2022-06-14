@@ -24,6 +24,7 @@ import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
+import hcmute.danbaonguyen19110036.appzalo.listeners.UsersListener;
 
 public class ListUserAdapter extends BaseAdapter {
     private Context context;
@@ -89,35 +90,34 @@ public class ListUserAdapter extends BaseAdapter {
                     groupName = group.getGroupName();
                 }
                 // Lấy ra thông tin receiver trong room chat
-                DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(groupUserList.get(i).getUserId());
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        user = snapshot.getValue(User.class);
-                        if(typeGroup.equals("private")){
-                            holder.username.setText(user.getUserName());
-                            setLastMessage(holder,user.getUserName());
-                            Picasso.get().load(user.getImg()).into(holder.avatar);
-                        }
-                        else {
-                            holder.username.setText(groupName);
-                            setLastMessage(holder,"");
-                            Picasso.get().load(group.getImgUrl()).into(holder.avatar);
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+        databaseReference.keepSynced(true);
+        databaseReference = firebaseDatabase.getReference("Users").child(groupUserList.get(i).getUserId());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                user = snapshot.getValue(User.class);
+                if(typeGroup.equals("private")){
+                    holder.username.setText(user.getUserName());
+                    setLastMessage(holder,user.getUserName());
+                    Picasso.get().load(user.getImg()).into(holder.avatar);
+                }
+                else {
+                    holder.username.setText(groupName);
+                    setLastMessage(holder,"");
+                    Picasso.get().load(group.getImgUrl()).into(holder.avatar);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
         return view;
     }
     public void setLastMessage(ViewHolder holder,String receiverName) {

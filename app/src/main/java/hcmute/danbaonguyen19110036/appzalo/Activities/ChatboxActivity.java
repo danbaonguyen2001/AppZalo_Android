@@ -43,6 +43,7 @@ import com.android.volley.toolbox.Volley;
 import com.devlomi.record_view.OnRecordListener;
 import com.devlomi.record_view.RecordButton;
 import com.devlomi.record_view.RecordView;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -54,6 +55,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -149,13 +151,13 @@ public class ChatboxActivity extends AppCompatActivity {
             }
         });
         //Chụp ảnh và gửi đi
-            //Yêu cầu cho phép camera
+        //Yêu cầu cho phép camera
         if(ContextCompat.checkSelfPermission(ChatboxActivity.this,Manifest.permission.CAMERA)!=
-        PackageManager.PERMISSION_GRANTED){
+                PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(ChatboxActivity.this,
                     new String[]{
-                Manifest.permission.CAMERA
-            },100);
+                            Manifest.permission.CAMERA
+                    },100);
         }
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -279,6 +281,19 @@ public class ChatboxActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Call video
+
+        imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(ChatboxActivity.this, test.class);
+                Util.currentUser.getToken();
+                startActivity(intent);
+            }
+        });
+
+
     }
     // Khởi tạo các giá trị ban đầu
     private void initData(){
@@ -321,7 +336,10 @@ public class ChatboxActivity extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
         databaseReference.setValue(message);
         arrangeGroupList(Util.currentUser);
-        sendNotification(text,receiverToken);
+        // Vì nhóm em chưa làm kịp nên chỉ làm thông báo đến các Group private
+        if(message.getType().equals("private")){
+            sendNotification(text,receiverToken);
+        }
 //        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
 //        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
@@ -386,7 +404,7 @@ public class ChatboxActivity extends AppCompatActivity {
             };
             queue.add(request);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
     }
     @Override
@@ -395,7 +413,6 @@ public class ChatboxActivity extends AppCompatActivity {
         if(requestCode==PICK_IMAGE && resultCode==RESULT_OK)
         {
             imagepath=data.getData();
-            System.out.println(imagepath);
             sendImageMessage(imagepath);
         }
         if(requestCode==100){
@@ -552,5 +569,4 @@ public class ChatboxActivity extends AppCompatActivity {
             }
         }
     }
-
 }
