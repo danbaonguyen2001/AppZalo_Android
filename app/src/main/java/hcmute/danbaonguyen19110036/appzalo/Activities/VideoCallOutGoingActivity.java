@@ -2,7 +2,12 @@ package hcmute.danbaonguyen19110036.appzalo.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -21,9 +26,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.jitsi.meet.sdk.JitsiMeetActivity;
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +54,7 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
     private DatabaseReference reference;
 
     private String meetingType="video";
-
+    private String meetingRoom=null;
 
     private PreferenceManager preferenceManager;
 
@@ -71,6 +79,7 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
         btnEndCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cancelInvitation(receiver_token);
                 onBackPressed();
             }
         });
@@ -81,6 +90,7 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
 
     private void initiateMeeting(String meetingType,String receiverToken){
         try {
+            meetingRoom=Util.currentUser.getUserName()+"_"+Util.currentUser.getBirthDay();
             RequestQueue queue = Volley.newRequestQueue(this);
             JSONObject data = new JSONObject();
             JSONArray tokens= new JSONArray();
@@ -89,6 +99,7 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
             data.put("meetingType",meetingType);
             data.put("receiverName","TEST");
             data.put("inviterToken",Util.currentUser.getToken());
+            data.put(AllConstants.REMOTE_MSG_MEETING_ROOM,meetingRoom);
             JSONObject notificationData = new JSONObject();
             notificationData.put("data", data);
             notificationData.put("registration_ids",tokens);
@@ -125,21 +136,91 @@ public class VideoCallOutGoingActivity extends AppCompatActivity {
         ApiClient.getClient().create(ApiService.class).sendRemoteMessage(
                 AllConstants.getRemoteMessageHeaders(),remoteMessageBody)
                 .enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-               if(type.equals(AllConstants.REMOTE_MSG_INVITATION)){
-                   Toast.makeText(VideoCallOutGoingActivity.this, "Invitation sent successfully", Toast.LENGTH_SHORT).show();
-               }else{
-                   Toast.makeText(VideoCallOutGoingActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                   finish();
-               }
-            }
+                    @Override
+                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                        if(response.isSuccessful()){
+                            if(type.equals(AllConstants.REMOTE_MSG_INVITATION)){
+                                Toast.makeText(VideoCallOutGoingActivity.this,
+                                        "Invitation sent successfully", Toast.LENGTH_SHORT).show();
+                            }else if(type.equals(AllConstants.REMOTE_MSG_INVITATION_RESPONSE)){
+                                Toast.makeText(VideoCallOutGoingActivity.this, "Invitation Cancelled", Toast.LENGTH_SHORT).show();
+                            }
+                        }
 
-            @Override
-            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                Toast.makeText(VideoCallOutGoingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                finish();
+                        else{
+                            Toast.makeText(VideoCallOutGoingActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                        Toast.makeText(VideoCallOutGoingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+    }
+
+    private void cancelInvitation(String receiverToken){
+        try {
+            JSONArray tokens=new JSONArray();
+            tokens.put(receiverToken);
+            JSONObject data= new JSONObject();
+            JSONObject body= new JSONObject();
+            data.put(AllConstants.REMOTE_MSG_TYPE,AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
+            data.put(AllConstants.REMOTE_MSG_INVITATION_RESPONSE,AllConstants.REMOTE_MSG_INVITATION_CANCELLED);
+            body.put(AllConstants.REMOTE_MSG_DATA,data);
+            body.put(AllConstants.REMOTE_MSG_REGISTRATION_IDS,tokens);
+
+            sendRemoteMessage(body.toString(),AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
+
+        }
+        catch (Exception e){
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private BroadcastReceiver invitationResponseReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String  type= intent.getStringExtra(AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
+            if(type!=null){
+                if(type.equals(AllConstants.REMOTE_MSG_INVITATION_ACCEPTED)){
+                    try{
+                        URL serverURL=new URL("http://meet.jit.si");
+                        JitsiMeetConferenceOptions conferenceOptions=
+                                new JitsiMeetConferenceOptions.Builder()
+                                        .setServerURL(serverURL)
+                                        .setRoom("GIANG456")
+                                        .build();
+                        JitsiMeetActivity.launch(VideoCallOutGoingActivity.this,conferenceOptions);
+                        finish();
+                    }
+                    catch (Exception e){
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }else if(type.equals(AllConstants.REMOTE_MSG_INVITATION_REJECTED)){
+                    Toast.makeText(context, "Invitation Rejected", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
-        });
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
+                invitationResponseReceiver,
+                new IntentFilter(AllConstants.REMOTE_MSG_INVITATION_RESPONSE)
+        );
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(
+                invitationResponseReceiver
+        );
     }
 }
