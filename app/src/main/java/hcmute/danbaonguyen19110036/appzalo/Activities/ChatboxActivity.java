@@ -101,7 +101,8 @@ public class ChatboxActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
     private FirebaseFirestore firebaseFirestore;
-    private String imageToken,receiverId,receiverToken;
+    private String imageToken,receiverId;
+    private String receiverToken;           //lưu giá trị token người nhận cuộc gọi video
     private RecordButton micro;
     private RecordView recordView;
     private MediaRecorder mediaRecorder;
@@ -138,14 +139,6 @@ public class ChatboxActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
 
-        //Video call giữa 2 user
-        imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(ChatboxActivity.this, test.class);
-                startActivity(intent);
-            }
-        });
         //Chụp ảnh và gửi đi
         //Yêu cầu cho phép camera
         if(ContextCompat.checkSelfPermission(ChatboxActivity.this,Manifest.permission.CAMERA)!=
@@ -270,7 +263,7 @@ public class ChatboxActivity extends AppCompatActivity {
                 }
             }
         });
-        //Call video
+        //Xử lý sự kiện click vào hình gọi video trong khung chat
         imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

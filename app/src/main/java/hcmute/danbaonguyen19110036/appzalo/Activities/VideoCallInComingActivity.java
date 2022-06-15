@@ -37,6 +37,7 @@ import java.util.Map;
 
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.AllConstants;
+import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 import hcmute.danbaonguyen19110036.appzalo.network.ApiClient;
 import hcmute.danbaonguyen19110036.appzalo.network.ApiService;
 import retrofit2.Call;
@@ -45,7 +46,7 @@ import retrofit2.Response;
 
 public class VideoCallInComingActivity extends AppCompatActivity {
 
-    FloatingActionButton btnDecline,btnAccept;
+    FloatingActionButton btnDecline,btnAccept;  //lưu button chấp nhận và từ chối cuộc gọi video từ bạn bè để xử lý sự kiện click
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +57,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
         btnDecline=findViewById(R.id.btn_decline_call);
         btnAccept=findViewById(R.id.btn_accept_call);
 
+        //xử lý sự kiện click vào button từ chối cuộc gọi
         btnDecline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +69,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
             }
         });
 
+        //xử lý sự kiện click vào button chấp nhận cuộc gọi
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,30 +82,30 @@ public class VideoCallInComingActivity extends AppCompatActivity {
 
     }
 
+    //Gửi phản hồi cuộc gọi video lại cho người mời
     private void sendInvitationResponse(String type, String receiverToken){
         try {
             RequestQueue queue = Volley.newRequestQueue(this);
-            JSONArray tokens=new JSONArray();
+            JSONObject data = new JSONObject();
+            JSONArray tokens= new JSONArray();
             tokens.put(receiverToken);
-            JSONObject data= new JSONObject();
-
             data.put(AllConstants.REMOTE_MSG_TYPE,AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
             data.put(AllConstants.REMOTE_MSG_INVITATION_RESPONSE,type);
-
             JSONObject notificationData = new JSONObject();
             notificationData.put(AllConstants.REMOTE_MSG_DATA, data);
             notificationData.put(AllConstants.REMOTE_MSG_REGISTRATION_IDS,tokens);
-
             JsonObjectRequest request = new JsonObjectRequest(AllConstants.NOTIFICATION_URL, notificationData,
                     new com.android.volley.Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            System.out.println("OK");
-                            System.out.println(notificationData);
-                            Toast.makeText(VideoCallInComingActivity.this, "Invitation Accepted", Toast.LENGTH_SHORT).show();
+                            if(type.equals(AllConstants.REMOTE_MSG_INVITATION_ACCEPTED)){
+                                startActivity(new Intent(VideoCallInComingActivity.this,test.class));
+                            }else{
+                                Toast.makeText(VideoCallInComingActivity.this, "Invitation Rejected", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
                         }
                     },
-
                     new com.android.volley.Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
@@ -118,54 +121,12 @@ public class VideoCallInComingActivity extends AppCompatActivity {
                 }
             };
             queue.add(request);
-
-
-
-        }
-        catch (Exception e){
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
-    private void sendRemoteMessage(String remoteMessageBody,String type){
-        ApiClient.getClient().create(ApiService.class).sendRemoteMessage(
-                AllConstants.getRemoteMessageHeaders(),remoteMessageBody)
-                .enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                        if(response.isSuccessful()){
-                            if(type.equals(AllConstants.REMOTE_MSG_INVITATION_ACCEPTED)){
-                              try{
-                                URL serverURL=new URL("http://meet.jit.si");
-                                  JitsiMeetConferenceOptions conferenceOptions=
-                                          new JitsiMeetConferenceOptions.Builder()
-                                                  .setServerURL(serverURL)
-                                                  .setRoom("GIANG456")
-                                                  .build();
-                                  JitsiMeetActivity.launch(VideoCallInComingActivity.this,conferenceOptions);
-                                  finish();
-                              }
-                              catch (Exception e){
-                                  Toast.makeText(VideoCallInComingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }else{
-                                Toast.makeText(VideoCallInComingActivity.this, "Invitation Rejected", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        }else{
-                            Toast.makeText(VideoCallInComingActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                            finish();
-                          }
 
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                        Toast.makeText(VideoCallInComingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
-    }
-
+    //Gửi phản hồi đến người gửi khi người dùng từ chối yêu cầu gọi video
     private BroadcastReceiver invitationResponseReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -178,7 +139,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
             }
         }
     };
-
+    //Đăng ký sự kiện gửi phản hồi yêu cầu gọi video khi activity đang được onStart
     @Override
     protected void onStart() {
         super.onStart();
@@ -187,7 +148,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
                 new IntentFilter(AllConstants.REMOTE_MSG_INVITATION_RESPONSE)
         );
     }
-
+    //Huỷ đăng ký sự kiện gửi phản hồi yêu cầu gọi video khi activity rơi vào onStop
     @Override
     protected void onStop() {
         super.onStop();
