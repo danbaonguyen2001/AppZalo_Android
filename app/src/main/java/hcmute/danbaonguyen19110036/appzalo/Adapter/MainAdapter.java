@@ -19,7 +19,7 @@ public class MainAdapter extends FragmentStatePagerAdapter {
     public MainAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
     }
-
+    // Tùy vào position àm ta trả về Những Fragment khác nhau
     @NonNull
     @Override
     public Fragment getItem(int position) {

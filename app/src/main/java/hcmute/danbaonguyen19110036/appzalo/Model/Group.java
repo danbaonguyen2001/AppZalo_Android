@@ -1,10 +1,17 @@
 package hcmute.danbaonguyen19110036.appzalo.Model;
 
 public class Group {
+
+    //Có 2 dạng Group PRIVATE (chỉ 2 người nhắn với nhau , GROUP nhiều người nhắn với nhau)
+    // id để phân biệt giữa các Group
     public String id;
+    // dùng để phân biệt xem group này thuộc dạng nào , PRIVATE hay GROUP(nhiều người join)
     public String typeGroup;
+    // tên group nếu group này thuộc dang GROUP
     public String groupName;
+    // Ảnh group nếu group này thuộc dạng GROUP
     public String imgUrl;
+    // Lưu lại last message trong Room
     public Message message;
     public Group(){
 

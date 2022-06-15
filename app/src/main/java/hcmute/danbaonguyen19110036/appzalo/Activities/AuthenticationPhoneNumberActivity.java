@@ -28,9 +28,11 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
-    private EditText edtCode;
-    FirebaseAuth firebaseAuth;
-    FirebaseDatabase firebaseDatabase;
+    private EditText edtCode; // Editext nơi mà user sẽ nhập otp vào
+    // Khai báo các biến Firebase
+    private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase firebaseDatabase;
+    // dùng để lưu lại trạng thái được lấy ra từ intent
     public String activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,6 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_authentication_phone_number);
         initData();
-
     }
     // Khởi tạo các giá trị View và Firebase
     private void initData() {
@@ -97,12 +98,9 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
+                            public void onCancelled(@NonNull DatabaseError error) { }
                         });
                     }
-
                 }
                 else
                 {
@@ -117,6 +115,7 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
     public void OnClickBackHome(View view){
         finish();
     }
+    // Nếu user đến từ trang đăng ký thì tạo tài khoản cho User
     private void createUser(){
         // Tạo tài khoản cho user
         //Lấy ra id của user hiện tại

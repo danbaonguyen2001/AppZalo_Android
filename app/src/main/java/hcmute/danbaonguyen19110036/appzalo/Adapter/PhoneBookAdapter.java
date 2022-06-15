@@ -18,9 +18,9 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class PhoneBookAdapter extends BaseAdapter {
-    private List<User> userList;
-    private Context context;
-    private int layout;
+    private List<User> userList; // Dùng để lưu danh sách user
+    private Context context; // Activity của Adapter
+    private int layout; // layout item của adapter
 
     public PhoneBookAdapter(List<User> userList, Context context, int layout) {
         this.userList = userList;
@@ -28,6 +28,7 @@ public class PhoneBookAdapter extends BaseAdapter {
         this.layout = layout;
     }
     public class ViewHolder{
+        // Khai báo các View
         private ImageView avatar,phone,video;
         private TextView username;
     }
@@ -50,6 +51,7 @@ public class PhoneBookAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
         if(view==null){
+            // Ánh xạ các View
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layout,null);
@@ -62,6 +64,7 @@ public class PhoneBookAdapter extends BaseAdapter {
         else {
             viewHolder = (ViewHolder) view.getTag();
         }
+        // Load dữ liệu lên View
         User user = userList.get(i);
         viewHolder.username.setText(user.getUserName());
         Picasso.get().load(user.getImg()).into(viewHolder.avatar);

@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +39,9 @@ public class AddFriendActivity extends AppCompatActivity {
     // Lấy các View ra để xử lý sự kiện
     private ListView listView;
     private ImageView btnBack;
+    //  Edittext mà user đã nhập vào
+    EditText edtSearch;
+    private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +50,7 @@ public class AddFriendActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_add_friend);
         initData();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
+        databaseReference = firebaseDatabase.getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -76,7 +81,6 @@ public class AddFriendActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
     // Khởi tạo các giá trị ban đầu
     private void initData(){
@@ -85,5 +89,46 @@ public class AddFriendActivity extends AppCompatActivity {
         userList = new ArrayList<>();
         listView = findViewById(R.id.list_user_addfr);
         btnBack = findViewById(R.id.btn_back_addfr);
+        edtSearch = findViewById(R.id.search_add_fr);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Nếu data thay đổi cập nhật lại dapter
+        if(addFriendAdapter!=null){
+            addFriendAdapter.notifyDataSetChanged();
+        }
+    }
+    public void OnClickSearch(View view){
+        // Lấy ra key đã nhập vào ô tìm kiếm
+        String phoneKey = edtSearch.getText().toString();
+        if(phoneKey.isEmpty()){
+            Toast.makeText(this, "Vui lòng nhập số điện thoại mà bạn muốn tìm kiếm", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Vì khi database thay đổi thì nó sẽ lấy lại dữ liệu vì vậy mình cần clear mảng đi
+                userList.clear();
+                for (DataSnapshot dsp : snapshot.getChildren()) {
+                    User user = dsp.getValue(User.class);
+                    // Chỉ lấy các user không trong listfriend (chưa kết bạn)
+                    if(Util.currentUser.getListFriend().contains(user.getId())==false&&!Util.currentUser.getId().equals(user.getId())
+                        &&user.getPhoneNumber().contains(phoneKey)==true){
+                        userList.add(user);
+                    }
+                }
+                addFriendAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

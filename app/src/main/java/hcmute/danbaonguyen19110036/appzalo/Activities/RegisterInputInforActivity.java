@@ -116,17 +116,21 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         radioGroup = findViewById(R.id.radio_group);
         getInformation();
     }
+    // Nếu người dùng đã cập nhật thông tin trước đó rồi thì hiển thị lên cho
+    // người dùng xem
     public void getInformation(){
         if(!Util.currentUser.getUserName().isEmpty()){
             Picasso.get().load(Util.currentUser.getImg()).into(imgProfile);
             edtbirthDay.setText(Util.currentUser.getBirthDay());
             edtuserName.setText(Util.currentUser.getUserName());
+            genDer = Util.currentUser.getGender();
             if(Util.currentUser.getGender().equals("Nam"))
                 radioButtonNam.setChecked(true);
             else
                 radioButtonNu.setChecked(true);
         }
     }
+    // Save giá trị lên FireStore
     private void sendImageToStore(){
         StorageReference imgref = storageReference.child("Images").child(firebaseAuth.getUid()).child("Profile Pic");;
         Bitmap bitmap=null;
@@ -171,6 +175,7 @@ public class RegisterInputInforActivity extends AppCompatActivity {
             }
         });
     }
+    // Cập nhật thông tin của user
     private void sendDataToDatabase(){
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
         String id = firebaseAuth.getUid();
@@ -186,7 +191,9 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         user.put("token",Util.token);
         databaseReference.setValue(user);
     }
+    // Click button save
     public void OnClickSaveProfile(View view){
+        // Kiểm tra các giá trị đầu vào
         userName = edtuserName.getText().toString();
         birthDay = edtbirthDay.getText().toString();
         if(userName.isEmpty()){
@@ -204,6 +211,7 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         sendImageToStore();
         startActivity(new Intent(this,MainActivity.class));
     }
+    // Dùng để lấy ra path của hình ảnh sau khi user chọn hình ảnh
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode==PICK_IMAGE && resultCode==RESULT_OK)

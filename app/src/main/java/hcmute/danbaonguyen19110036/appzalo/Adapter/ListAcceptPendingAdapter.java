@@ -25,9 +25,10 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class ListAcceptPendingAdapter extends BaseAdapter {
-    private Context context;
-    private int layout;
-    private List<User> userList;
+    private Context context; // Activity của Adapter
+    private int layout; // layout item của adapter
+    private List<User> userList;// lưu trữ danh sách user
+    // Khai báo các Firebase để truy vấn tới database
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
     public ListAcceptPendingAdapter(Context context, int layout, List<User> userList) {
@@ -75,6 +76,7 @@ public class ListAcceptPendingAdapter extends BaseAdapter {
         User user = userList.get(i);
         viewHolder.username.setText(user.getUserName());
         Picasso.get().load(user.getImg()).into(viewHolder.avatar);
+        // Nếu user chấp nhận thì ta tiến hành cập nhật lại dữ liệu
         viewHolder.btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,6 +119,7 @@ public class ListAcceptPendingAdapter extends BaseAdapter {
         });
         return view;
     }
+    // Khơi tạo các View và Firebase
     public void initData(){
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();

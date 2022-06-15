@@ -12,7 +12,6 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,13 +28,15 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class TabChatFragment extends Fragment {
-    private FirebaseAuth firebaseAuth;
-    private ListView listView;
-    private FirebaseDatabase firebaseDatabase;
-    private ListUserAdapter listUserAdapter;
+    private ListView listView; // list view để render ra danh sách dữ liệu (set adapter)
+    private FirebaseDatabase firebaseDatabase; // Khai báo firebase để truy vấn dữ liệu
+    private ListUserAdapter listUserAdapter; // Adapter để lưu trữ dữ liệu
+    // Khai báo các View
     private EditText edtSearch;
     private ImageView newGroup;
-    public User user;
+    public User user;// dùng để lưu lại giá trị của 1 user cụ thể
+    public List<User> userList; // Dùng để lưu các user có trong group list
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,31 +48,52 @@ public class TabChatFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_tab_chat, container, false);
         initData(view);
-        List<GroupUser> groupUserList = Util.currentUser.getGroupUserList();
-        listUserAdapter = new ListUserAdapter(getActivity(),groupUserList,R.layout.layout_main_tab_chat_item);
-        listView.setAdapter(listUserAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        List<GroupUser> groupUserList = Util.currentUser.getGroupUserList(); // Lấy ra group list để render ra list view
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // Lưu giá trị vào intent để sang ChatboxAcitivy ta có thể lấy những giá trị này ra
-                String userId = groupUserList.get(i).getUserId();
-                DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(userId);
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        user = snapshot.getValue(User.class);
-                        Intent intent=new Intent(getActivity(), ChatboxActivity.class);
-                        intent.putExtra("username",user.getUserName());
-                        intent.putExtra("token",user.getToken());
-                        intent.putExtra("imageUrl",user.getImg());
-                        intent.putExtra("receiverId",groupUserList.get(i).getUserId());
-                        intent.putExtra("roomId",groupUserList.get(i).groupId);
-                        startActivity(intent);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userList.clear();
+                setUserListSize();
+                for (DataSnapshot dsp : snapshot.getChildren()) {
+                    User user = dsp.getValue(User.class); //Duyệt đến từng user nếu thỏa điều kiện và lưu vào user list
+                    for(int i=0;i<Util.currentUser.getGroupUserList().size();i++){
+                        if(Util.currentUser.getGroupUserList().get(i).getUserId().equals(user.getId())){
+                            userList.set(i,user);
+                            break;
+                        }
                     }
+                }
+                // khởi tạo adapter;
+                listUserAdapter = new ListUserAdapter(getActivity(),groupUserList,R.layout.layout_main_tab_chat_item,userList);
+                // set adapter vào listview
+                listView.setAdapter(listUserAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        // Lưu giá trị vào intent để sang ChatboxAcitivy ta có thể lấy những giá trị này ra
+                        String userId = groupUserList.get(i).getUserId();
+                        DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(userId);
+                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                user = snapshot.getValue(User.class);
+                                Intent intent=new Intent(getActivity(), ChatboxActivity.class);
+                                intent.putExtra("username",user.getUserName());
+                                intent.putExtra("token",user.getToken());
+                                intent.putExtra("imageUrl",user.getImg());
+                                intent.putExtra("receiverId",groupUserList.get(i).getUserId());
+                                intent.putExtra("roomId",groupUserList.get(i).groupId);
+                                startActivity(intent);
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {}
+                        });
+                    }
                 });
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
         newGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,15 +106,23 @@ public class TabChatFragment extends Fragment {
     public void initData(View view){
         // Khơi tạo các khai báo ban đầu
         firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
         listView= view.findViewById(R.id.listview_listuser);
         edtSearch = view.findViewById(R.id.edt_search);
         newGroup = view.findViewById(R.id.new_group);
+        userList = new ArrayList<>();
     }
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        listUserAdapter.notifyDataSetChanged();
-//    }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Cập nhật adapter khi mảng dữ liệu grouplist thay đổi
+        if(listUserAdapter!=null){
+            listUserAdapter.notifyDataSetChanged();
+        }
+    }
+    // Hàm này để em tạo 1 mảng với size cụ thể
+    public void setUserListSize(){
+        for (int i=0;i<=Util.currentUser.getGroupUserList().size();i++){
+            userList.add(new User());
+        }
+    }
 }

@@ -3,49 +3,45 @@ package hcmute.danbaonguyen19110036.appzalo.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import android.view.Window;
 import android.view.WindowManager;
-
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
-import org.jitsi.meet.sdk.JitsiMeetActivity;
-import org.jitsi.meet.sdk.JitsiMeetActivityInterface;
-import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.AllConstants;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
-import hcmute.danbaonguyen19110036.appzalo.network.ApiClient;
-import hcmute.danbaonguyen19110036.appzalo.network.ApiService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class VideoCallInComingActivity extends AppCompatActivity {
-
+    public String groupId;
+    private ImageView avatar;
+    private TextView userName;
+    private FirebaseDatabase firebaseDatabase;
     FloatingActionButton btnDecline,btnAccept;  //lưu button chấp nhận và từ chối cuộc gọi video từ bạn bè để xử lý sự kiện click
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +50,24 @@ public class VideoCallInComingActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_video_call_in_coming);
-        btnDecline=findViewById(R.id.btn_decline_call);
-        btnAccept=findViewById(R.id.btn_accept_call);
+        initData();
+        groupId = getIntent().getStringExtra(AllConstants.REMOTE_ROOM_ID);
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dsp : snapshot.getChildren()) {
+                    User user = dsp.getValue(User.class);
+                    if(user.getToken().equals(getIntent().getStringExtra(AllConstants.REMOTE_MSG_INVITER_TOKEN))){
+                        Picasso.get().load(user.getImg()).into(avatar);
+                        userName.setText(user.getUserName());
+                        break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
 
         //xử lý sự kiện click vào button từ chối cuộc gọi
         btnDecline.setOnClickListener(new View.OnClickListener() {
@@ -68,7 +80,6 @@ public class VideoCallInComingActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
         //xử lý sự kiện click vào button chấp nhận cuộc gọi
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,16 +90,23 @@ public class VideoCallInComingActivity extends AppCompatActivity {
                 );
             }
         });
-
     }
-
+    public void initData(){
+        avatar = findViewById(R.id.img_avatar_receiver);
+        userName = findViewById(R.id.txt_username_receiver);
+        btnDecline=findViewById(R.id.btn_decline_call);
+        btnAccept=findViewById(R.id.btn_accept_call);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+    }
     //Gửi phản hồi cuộc gọi video lại cho người mời
     private void sendInvitationResponse(String type, String receiverToken){
         try {
+            // Call API
             RequestQueue queue = Volley.newRequestQueue(this);
             JSONObject data = new JSONObject();
             JSONArray tokens= new JSONArray();
             tokens.put(receiverToken);
+            data.put(AllConstants.REMOTE_ROOM_ID,groupId);
             data.put(AllConstants.REMOTE_MSG_TYPE,AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
             data.put(AllConstants.REMOTE_MSG_INVITATION_RESPONSE,type);
             JSONObject notificationData = new JSONObject();
@@ -99,7 +117,16 @@ public class VideoCallInComingActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(JSONObject response) {
                             if(type.equals(AllConstants.REMOTE_MSG_INVITATION_ACCEPTED)){
-                                startActivity(new Intent(VideoCallInComingActivity.this,test.class));
+                                try{
+                                    Intent it = new Intent(VideoCallInComingActivity.this,JitsiMeetViewActivity.class);
+                                    Util.groupId=groupId;
+                                    startActivity(it);
+                                    finish();
+                                }
+                                catch (Exception e){
+                                    Toast.makeText(VideoCallInComingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                                startActivity(new Intent(VideoCallInComingActivity.this,JitsiMeetViewActivity.class));
                             }else{
                                 Toast.makeText(VideoCallInComingActivity.this, "Invitation Rejected", Toast.LENGTH_SHORT).show();
                                 finish();
@@ -130,7 +157,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
     private BroadcastReceiver invitationResponseReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String  type= intent.getStringExtra(AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
+            String type= intent.getStringExtra(AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
             if(type!=null){
                 if(type.equals(AllConstants.REMOTE_MSG_INVITATION_CANCELLED)){
                     Toast.makeText(context, "Invitation Cancelled", Toast.LENGTH_SHORT).show();

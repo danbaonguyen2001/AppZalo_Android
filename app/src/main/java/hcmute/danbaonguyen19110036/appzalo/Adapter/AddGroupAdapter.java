@@ -15,9 +15,9 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class AddGroupAdapter extends BaseAdapter {
-    private List<User> userList;
-    private int layout;
-    private Context context;
+    private List<User> userList; // Dùng để lưu trữ danh sách user
+    private int layout; // Layout item của adpater
+    private Context context;//Activity chứa Adapter
 
     public AddGroupAdapter(List<User> userList, int layout, Context context) {
         this.userList = userList;
@@ -25,10 +25,12 @@ public class AddGroupAdapter extends BaseAdapter {
         this.context = context;
     }
     public class ViewHolder{
+        // Khai báo các view trong layout item của adater
         public ImageView avatar;
         public Button add,added;
         public TextView username;
     }
+    // trả về số lượng độ lớn của userlist
     @Override
     public int getCount() {
         return userList.size();
@@ -49,6 +51,7 @@ public class AddGroupAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         initData();
         if(view==null){
+            // Ánh xạ các View
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layout,null);
@@ -64,6 +67,7 @@ public class AddGroupAdapter extends BaseAdapter {
         User user = userList.get(i);
         viewHolder.username.setText(user.getUserName());
         Picasso.get().load(user.getImg()).into(viewHolder.avatar);
+        // Nếu user nhấn vào buttonadd thì cập nhật lại listgroupuser
         viewHolder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

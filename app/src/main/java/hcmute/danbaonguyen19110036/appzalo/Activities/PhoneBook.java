@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -29,19 +28,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hcmute.danbaonguyen19110036.appzalo.Adapter.PhoneBookAdapter;
-import hcmute.danbaonguyen19110036.appzalo.Model.Contact;
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class
 PhoneBook extends AppCompatActivity {
-    private ListView listView;
-    private FirebaseDatabase firebaseDatabase;
-    private List<String> listContact;
-    private List<User> userList;
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-    private PhoneBookAdapter phoneBookAdapter;
+    private ListView listView;// Hiển thị danh sách user ứng với mỗi số điện thoại
+    private FirebaseDatabase firebaseDatabase; // Firebase
+    private List<String> listContact;// lưu lại số điện thoại user
+    private List<User> userList; // Dùng để lưu lại danh sách user
+    private PhoneBookAdapter phoneBookAdapter; // Adapter dùng để lưu giữ liệu userlist
     private Button totalFriend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +77,6 @@ PhoneBook extends AppCompatActivity {
             String name = cursor.getString(vitri);
             String phonenumber = cursor.getString(vitriphone);
             phonenumber = Util.convertToPhoneNumber(phonenumber);
-            System.out.println(phonenumber);
-            Contact contact = new Contact(name, phonenumber);
             listContact.add(phonenumber);
         }
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
@@ -120,11 +115,12 @@ PhoneBook extends AppCompatActivity {
             },121);
         }
     }
+    // Yêu cầu người dùng cho phép ứng dụng đọc danh bạ
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+        if (requestCode == 100) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
 
@@ -133,8 +129,9 @@ PhoneBook extends AppCompatActivity {
             }
         }
     }
+    // Quay lại trang trước đó
     public void OnClickBackHome(View view){
-        startActivity(new Intent(PhoneBook.this,MainActivity.class));
+        onBackPressed();
     }
 
 }

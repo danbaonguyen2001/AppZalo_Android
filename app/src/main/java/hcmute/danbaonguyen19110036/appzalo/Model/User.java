@@ -3,17 +3,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
+    // Id để phân biệt giữa các User
     private String id;
+    // Phone Number mà người dùng đã dùng để đăng ký
     private String phoneNumber;
+    // Tên user
     private String userName;
+    // Ngày sinh
     private String birthDay;
+    // avatar user
     private String img;
+    // Giới tính của User
     private String gender;
+    // Địa chỉ của User
     private String address;
+    // Token của điện thoại User
     private String token;
+    // Mảng lưu trữ userId của những User đã kết bạn
     private List<String> listFriend;
+    // Mảng lưu trữ userId của những User mà ta đã yêu cầu kết bạn trước đó
     private List<String> listRequest;
+    // Mảng lưu trữ userId của những User đang yêu cầu kết bạn
     private List<String> listPendingAccept;
+    // Mảng lưu trữ các GroupUser
     private List<GroupUser> groupUserList;
     public User(){
 

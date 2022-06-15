@@ -31,8 +31,7 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class SplashActivity extends AppCompatActivity {
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-    private static final String TAG=SplashActivity.class.getName();
+    // Các biến Firebase dùng để tương tác với dữ liệu trên Firebase
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
     @Override
@@ -43,7 +42,6 @@ public class SplashActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_splash);
         initData();
-
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -52,20 +50,20 @@ public class SplashActivity extends AppCompatActivity {
                             return;
                         }
                         Util.token=task.getResult();
-                        System.out.println("Token:"+task.getResult());
+                        // Lưu lại token để sau này dễ làm việc
                     }
                 });
-
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if(FirebaseAuth.getInstance().getCurrentUser()!=null)
                 {
+                    // Lấy ra thông tin user ứng với Id của nó
                     DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
                     databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // Lưu lại thông tin của user
                             Util.currentUser = snapshot.getValue(User.class);
                             Intent intent=new Intent(SplashActivity.this,MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);

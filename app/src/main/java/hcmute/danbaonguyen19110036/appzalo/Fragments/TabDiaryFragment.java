@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import hcmute.danbaonguyen19110036.appzalo.R;
 public class TabDiaryFragment extends Fragment {
-
+    // Fragment này nhóm chưa xử lý chỉ mới có giao diện
     public TabDiaryFragment() {
         // Required empty public constructor
     }

@@ -39,9 +39,9 @@ public class TabPhoneBookFragment extends Fragment {
     private ImageView addfractivity;
     private ConstraintLayout cstFriendRequest,cstPhonebook;
     private FirebaseDatabase firebaseDatabase;
-    private ListView listView;
-    private List<User> userList;
-    private ListFriendAdapter listFriendAdapter;
+    private ListView listView; // dùng để render ra danh sách dữ liệu
+    private List<User> userList; // dùng để lưu trữ danh sách user
+    private ListFriendAdapter listFriendAdapter; // adpater để set vào listview
     private Button btnTotal;
     public TabPhoneBookFragment() {
         // Required empty public constructor
@@ -81,7 +81,7 @@ public class TabPhoneBookFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userList.clear();
+                userList.clear();//Clear list đi vì khi data thay đổi thì hàm này sẽ được chạy
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     User user = dsp.getValue(User.class);
                     if(Util.currentUser.getListFriend().contains(user.getId())==true){
@@ -100,6 +100,7 @@ public class TabPhoneBookFragment extends Fragment {
         });
         return view;
     }
+    // Khơi tạo các View và Firebase
     public void initData(View view){
         btnTotal = view.findViewById(R.id.btnTotalFriend);
         addfractivity = view.findViewById(R.id.addfractivity);

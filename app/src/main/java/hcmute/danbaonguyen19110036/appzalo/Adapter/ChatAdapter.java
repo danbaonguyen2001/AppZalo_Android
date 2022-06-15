@@ -19,15 +19,16 @@ import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    public List<Message> messageList;
-    public Context context;
-    int ITEM_SEND=1;
-    int ITEM_RECIEVE=2;
+    public List<Message> messageList; // lưu trữ danh sách message
+    public Context context; // Activity của Adapter
+    int ITEM_SEND=1; // Người gửi
+    int ITEM_RECIEVE=2; // Người nhận
     public ChatAdapter(List<Message> messageList, Context context) {
         this.messageList = messageList;
         this.context = context;
     }
 
+    //Tùy vào View type mà trả về những Holder khác nhau
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,11 +41,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             return new RecieverViewHolder(view);
         }
     }
-
+    // Kiểm tra xem message thuộc Type nào từ đó set View tương ứng
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message messages  = messageList.get(position);
         if(holder.getClass()==SenderViewHolder.class){
+            // Đối với Sender
             SenderViewHolder viewHolder= (SenderViewHolder) holder;
             if(messages.getType().equals("text")){
                 viewHolder.imagemessage.setVisibility(View.GONE);
@@ -66,6 +68,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             }
         }
         else{
+            // Đối với Receiver
             RecieverViewHolder viewHolder= (RecieverViewHolder) holder;
             if(messages.getType().equals("text")){
                 viewHolder.imagemessage.setVisibility(View.GONE);
@@ -88,7 +91,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
     }
-
+    // Trả về độ lớn của messageList
     @Override
     public int getItemCount() {
         if(messageList!=null){
@@ -96,6 +99,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
         return 0;
     }
+    // Kiểm tra xem là tin nhắn này đang được nhận hay đang được gửi
     @Override
     public int getItemViewType(int position) {
         Message messages=messageList.get(position);
@@ -110,11 +114,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
     class SenderViewHolder extends RecyclerView.ViewHolder
     {
+        // Khai báo các View thuộc layout item sender
         TextView textViewmessaage;
         ImageView imagemessage;
         VoicePlayerView voicePlayerView;
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Ánh xạ các View
             textViewmessaage=itemView.findViewById(R.id.sendermessage);
             imagemessage = itemView.findViewById(R.id.image_message);
             voicePlayerView = itemView.findViewById(R.id.voicePlayerView);
@@ -123,11 +129,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     class RecieverViewHolder extends RecyclerView.ViewHolder
     {
+        // Khai báo các View thuộc layout item Receiver
         TextView textViewmessaage;
         ImageView imagemessage;
         VoicePlayerView voicePlayerView;
         public RecieverViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Ánh xạ các View
             textViewmessaage=itemView.findViewById(R.id.sendermessage);
             imagemessage = itemView.findViewById(R.id.image_message);
             voicePlayerView = itemView.findViewById(R.id.voicePlayerView);
