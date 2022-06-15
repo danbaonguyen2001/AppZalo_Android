@@ -8,18 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import hcmute.danbaonguyen19110036.appzalo.Model.User;
@@ -27,11 +18,9 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class AddFriendAdapter extends BaseAdapter {
-    private Context context;
-    private List<User> userList;
-    private int layout;
-    // firebaseAuth dùng để lấy ra những thông tin của user hiện tại
-    private FirebaseAuth firebaseAuth;
+    private Context context; // Activity chứa Adapter
+    private List<User> userList; // lưu trữ danh sách user
+    private int layout;// Layout item của adpater
     // firebaseDatabase dùng để lấy ra data trong database
     private FirebaseDatabase firebaseDatabase;
     public AddFriendAdapter(Context context, List<User> userList, int layout) {
@@ -40,6 +29,7 @@ public class AddFriendAdapter extends BaseAdapter {
         this.layout = layout;
     }
     public class ViewHolder{
+        // Khai báo các view trong layout item của adater
         public ImageView avatar;
         public TextView username;
         public Button btnAdd,btnRequested;
@@ -64,6 +54,7 @@ public class AddFriendAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         initData();
         if(view==null){
+            // Ánh xạ các View
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layout,null);
@@ -83,10 +74,13 @@ public class AddFriendAdapter extends BaseAdapter {
         }
         viewHolder.username.setText(user.getUserName());
         Picasso.get().load(user.getImg()).into(viewHolder.avatar);
+        // Nếu user click vào button addfriend thì ta listRequest của user hiên tại
+        // và listpendingaccept của Receiver sẽ được cập nhật lại
         viewHolder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
+                // Cập nhật dữ liệu lên Server
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(Util.currentUser.getId());
                 Util.currentUser.getListRequest().add(user.getId());
                 databaseReference.child("listRequest").setValue(Util.currentUser.getListRequest());
                 databaseReference = firebaseDatabase.getReference("Users").child(user.getId());
@@ -98,8 +92,8 @@ public class AddFriendAdapter extends BaseAdapter {
         });
         return view;
     }
+    // Khởi tạo các view và Firebase
     private void initData(){
-        firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
     }
 }

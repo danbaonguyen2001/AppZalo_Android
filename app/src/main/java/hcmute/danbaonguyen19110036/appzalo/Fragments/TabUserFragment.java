@@ -27,6 +27,7 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class TabUserFragment extends Fragment {
+    // Khai báo các View trong Fragment
     public ImageView avatar;
     public TextView username;
     public ConstraintLayout cstUser;
@@ -62,12 +63,15 @@ public class TabUserFragment extends Fragment {
         });
         return view;
     }
+    // Ánh xạ các View
     public void initData(View view){
         avatar=view.findViewById(R.id.avatar_tab_user);
         username = view.findViewById(R.id.username_tab_user);
         cstUser = view.findViewById(R.id.container_username_tab_user);
         btnLogout = view.findViewById(R.id.btnLogout);
     }
+    // Khởi tạo 1 dialog để in ra thông báo xác thực lại việc đăng nhập
+    // Nếu user nhấn vào "Xác nhận" ta tiến hành log out, nếu nhấn vào hủy bỏ ta tắt Dialog
     public void openDialog(int gravity){
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

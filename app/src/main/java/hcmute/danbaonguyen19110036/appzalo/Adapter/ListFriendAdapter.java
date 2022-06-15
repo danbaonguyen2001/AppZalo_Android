@@ -18,9 +18,9 @@ import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
 public class ListFriendAdapter extends BaseAdapter {
-    private Context context;
-    private List<User> userList;
-    private int layout;
+    private Context context; // Activity của Adapter
+    private List<User> userList; // Lưu trữ danh sách user
+    private int layout; // Layout item của user adapter
 
     public ListFriendAdapter(Context context, List<User> userList, int layout) {
         this.context = context;
@@ -28,9 +28,11 @@ public class ListFriendAdapter extends BaseAdapter {
         this.layout = layout;
     }
     public class ViewHolder{
+        // Khai báo các view của layout
         private ImageView avatar,phone,video;
         private TextView username;
     }
+    // trả về số lượng user có được
     @Override
     public int getCount() {
         return userList.size();
@@ -49,8 +51,8 @@ public class ListFriendAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
-        initData();
         if(view==null){
+            // Ánh xạ các View
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layout,null);
@@ -63,12 +65,10 @@ public class ListFriendAdapter extends BaseAdapter {
         else {
             viewHolder = (ViewHolder) view.getTag();
         }
+        // load dữ liệu vào các view
         User user = userList.get(i);
         viewHolder.username.setText(user.getUserName());
         Picasso.get().load(user.getImg()).into(viewHolder.avatar);
         return view;
-    }
-    public void initData(){
-
     }
 }

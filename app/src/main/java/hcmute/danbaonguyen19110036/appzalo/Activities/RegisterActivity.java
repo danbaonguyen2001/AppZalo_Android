@@ -49,6 +49,8 @@ public class RegisterActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_register);
         initData();
+        //Khi gọi PhoneAuthProvider.verifyPhoneNumber,ta phải cung cấp một instance của OnVerificationStateChangedCallbacks,\
+        // chứa triển khai các hàm callback xử lý kết quả của yêu cầu.
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
@@ -82,6 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         phoneNumber = findViewById(R.id.input_phone_rg);
     }
+    //Sau khi bạn nhận được Object PhoneAuthCredential hoàn tất quy trình đăng nhập bằng cách chuyển đối tượng PhoneAuthCredential tới FirebaseAuth.signInWithCredential
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -131,12 +134,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
-
-
     }
     public void OnClickBackHome(View view){
         startActivity(new Intent(RegisterActivity.this,HomeActivity.class));

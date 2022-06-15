@@ -147,7 +147,7 @@ public class ChatboxActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
         //Chụp ảnh và gửi đi
-        //Yêu cầu cho phép camera
+        //Yêu cầu cấp quền camera camera
         if(ContextCompat.checkSelfPermission(ChatboxActivity.this,Manifest.permission.CAMERA)!=
                 PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(ChatboxActivity.this,
@@ -160,7 +160,7 @@ public class ChatboxActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Mở camera
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent,100);
+                startActivityForResult(intent,CAPTURE_IMAGE);
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +192,7 @@ public class ChatboxActivity extends AppCompatActivity {
             }
             if(!Util.isPermissionGranted(ChatboxActivity.this)){
                 new AlertDialog.Builder(this)
-                        .setTitle("Allfilepermission")
+                        .setTitle("Cho phép Zalo truy cập vào quản lý của bạn")
                         .setMessage("Android 11")
                         .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
                             @Override
@@ -211,6 +211,7 @@ public class ChatboxActivity extends AppCompatActivity {
             }
         });
         recordView.setOnRecordListener(new OnRecordListener() {
+            // gọi đến hàm setup record trước khi chúng ta record
             @Override
             public void onStart() {
                 //Start Recording..
@@ -224,6 +225,7 @@ public class ChatboxActivity extends AppCompatActivity {
                 enterMessage.setVisibility(View.GONE);
                 recordView.setVisibility(View.VISIBLE);
             }
+            // Chúng ta cần xóa file audio sau khi user cancel recording
             @Override
             public void onCancel() {
                 //On Swipe To Cancel
@@ -235,6 +237,7 @@ public class ChatboxActivity extends AppCompatActivity {
                 recordView.setVisibility(View.GONE);
                 enterMessage.setVisibility(View.VISIBLE);
             }
+            // Nếu user hoàn thành record ,upload file lên firebase storage
             @Override
             public void onFinish(long recordTime) {
                 try {
@@ -247,11 +250,16 @@ public class ChatboxActivity extends AppCompatActivity {
                 enterMessage.setVisibility(View.VISIBLE);
                 sendRecordingMessage(audioPath);
             }
+            // hàm này sẽ được gọi khi thời gian recording ít hơn 1 giây
+            // và chúng ta cần xóa file đó
             @Override
             public void onLessThanSecond() {
-                //When the record time is less than One Second
+                File file = new File(audioPath);
+                if (file.exists())
+                    file.delete();
                 mediaRecorder.reset();
                 mediaRecorder.release();
+
                 recordView.setVisibility(View.GONE);
             }
         });
@@ -270,7 +278,7 @@ public class ChatboxActivity extends AppCompatActivity {
                 }
             }
         });
-        //Call video
+        //Xử lý sự kiện click vào hình gọi video trong khung chat
         imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,6 +287,7 @@ public class ChatboxActivity extends AppCompatActivity {
                 intent.putExtra("receiver_token",receiverToken);
                 // lưu lại groupId để cho 2 user call nhau join vào room
                 intent.putExtra("groupId",groupId);
+                intent.putExtra("receiverId",receiverId);
                 startActivity(intent);
             }
         });
@@ -306,45 +315,48 @@ public class ChatboxActivity extends AppCompatActivity {
         messageList = new ArrayList<>();
         receiverToken = getIntent().getStringExtra("token");
     }
+    // Dùng để gửi tin nhắn dạng text
     public void SendMessage(View view){
         DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
         String key = databaseReference.push().getKey();
         String senderId = firebaseAuth.getCurrentUser().getUid();
         String text = enterMessage.getText().toString();
+        // Kiểm tra xem người dùng đã nhập tin nhắn hay chưa
         if(text.isEmpty()){
             Toast.makeText(ChatboxActivity.this,"Vui lòng nhập tin nhắn",Toast.LENGTH_SHORT).show();
             return;
         }
+        // Nếu tin nhắn được gửi vào room có dạng là group thì thêm tên người gửi vào đằng
+        // trước để phân biệt
+        if(group.getTypeGroup().equals("group")){
+            text = Util.currentUser.getUserName()+": "+text;
+        }
+        // Lưu tin nhắn này lên FirebaseDatabase
         Message message = new Message(key,groupId,senderId,text,"text","");
         databaseReference.child(key).setValue(message);
+        // Thêm tinh nhắn vào listMessage
         messageList.add(message);
+        // Cuộn xuống tin nhắn mới nhất
         recyclerView.scrollToPosition(messageList.size()-1);
         enterMessage.setText("");
+        // Cập nhật lại adapter
         chatAdapter.notifyDataSetChanged();
+        // Lưu lại last message trong Room
         databaseReference = firebaseDatabase.getReference("Group").child(groupId).child("message");
         databaseReference.setValue(message);
+
         arrangeGroupList(Util.currentUser);
         // Vì nhóm em chưa làm kịp nên chỉ làm thông báo đến các Group private
         if(group.getTypeGroup().equals("private")){
             sendNotification(text,receiverToken);
         }
-//        databaseReference = firebaseDatabase.getReference("Users").child(receiverId);
-//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                receiver = snapshot.getValue(User.class);
-//                arrangeGroupList(receiver);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
     }
+    // Sắp xếp lại thứ tự tin nhắn ví dụ người nhắn tin gần nhất sẽ
+    // đươc đưa lên đầu
     public void arrangeGroupList(User user){
         user.getGroupUserList().add(new GroupUser());
         GroupUser groupUser = new GroupUser();
+        // Sắp xếp lại mảng
         for(int i=0;i<user.getGroupUserList().size();i++){
             if(user.getGroupUserList().get(i).getGroupId().equals(groupId)){
                 groupUser = user.getGroupUserList().get(i);
@@ -357,9 +369,13 @@ public class ChatboxActivity extends AppCompatActivity {
         };
         user.getGroupUserList().set(0,groupUser);
         user.setGroupUserList(user.getGroupUserList());
+        // Cập nhật giá trị này lên database
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users").child(user.getId());
         databaseReference.child("groupUserList").setValue(user.getGroupUserList());
     }
+    // Sử dụng dịch vụ Message của Firebase và notification để thông báo
+    // đến Receiver khi có tin nhắn mới. Để sử dụng dịch vụ Message của Firease
+    // ta call đến API với URL
     void sendNotification(String message, String token) {
         try {
             RequestQueue queue = Volley.newRequestQueue(this);
@@ -395,14 +411,17 @@ public class ChatboxActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
     }
+    // Đây là hàm sẽ được chạy khi có có lệnh gọi đến startActivityForResult
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // Nếu là PICK_IMAGE người dùng chọn ảnh từ trong điện thoại
         if(requestCode==PICK_IMAGE && resultCode==RESULT_OK)
         {
             imagepath=data.getData();
             sendImageMessage(imagepath);
         }
+        // Nếu là PICK_IMAGE người dùng chụp ảnh
         if(requestCode==CAPTURE_IMAGE){
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             Uri tempUri = getImageUri(getApplicationContext(), photo);
@@ -411,12 +430,14 @@ public class ChatboxActivity extends AppCompatActivity {
             Toast.makeText(this, "Take photo complete", Toast.LENGTH_SHORT).show();
         }
     }
+    // Xử lý và lấy ra Uri của tấm ảnh vừa chụp được
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
+    // Gửi tin nhắn dạng Image
     public void sendImageMessage(Uri imagepath){
         String timeStamp = ""+System.currentTimeMillis();
         String fillNamepath = "ChatImages/"+"post_"+timeStamp;
@@ -442,9 +463,10 @@ public class ChatboxActivity extends AppCompatActivity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 imgref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
+                    // Nếu thành công upload thì lấy ra uri của tấm ảnh
+                    // và lưu Message lên firebase Database
                     public void onSuccess(Uri uri) {
                         imageToken=uri.toString();
-                        Toast.makeText(getApplicationContext(),"URI get sucess",Toast.LENGTH_SHORT).show();
                         DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
                         String key = databaseReference.push().getKey();
                         String senderId = firebaseAuth.getCurrentUser().getUid();
@@ -457,6 +479,7 @@ public class ChatboxActivity extends AppCompatActivity {
                         recyclerView.scrollToPosition(messageList.size()-1);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
+                    // Nếu thất bại thì in ra câu thông báo
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getApplicationContext(),"URI get Failed",Toast.LENGTH_SHORT).show();
@@ -471,8 +494,8 @@ public class ChatboxActivity extends AppCompatActivity {
             }
         });
     }
+    // Đối với các Android phiên bản 10+ thì yêu cầu truy cập đến các file của hệ thống
     public void takePermission(){
-        // Đối với các Android phiên bản 10+ thì yêu cầu truy cập đến các file của hệ thống
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R){
             try {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
@@ -493,6 +516,7 @@ public class ChatboxActivity extends AppCompatActivity {
             },101);
         }
     }
+    // set up trước khi bắt đầu recording
     public void setUpRecording(){
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -504,6 +528,7 @@ public class ChatboxActivity extends AppCompatActivity {
         audioPath = file.getAbsolutePath() + File.separator + System.currentTimeMillis() + ".3gp";
         mediaRecorder.setOutputFile(audioPath);
     }
+    // Sau khi đã record xong tin nhắn dạng voice lưu tin nhắn này lên Database
     public void sendRecordingMessage(String audioPath){
         StorageReference storageReference = firebaseStorage.getReference(  "Media/Recording/" + Util.currentUser.getId() + "/" + System.currentTimeMillis());
         Uri audioFile = Uri.fromFile(new File(audioPath));
@@ -511,6 +536,7 @@ public class ChatboxActivity extends AppCompatActivity {
             Task<Uri> audioUrl = success.getStorage().getDownloadUrl();
             audioUrl.addOnCompleteListener(path->{
                 if(path.isSuccessful()){
+                    // Lưu giữ liệu lên Database
                     String url = path.getResult().toString();
                     DatabaseReference databaseReference = firebaseDatabase.getReference("Messages").child(groupId);
                     String key = databaseReference.push().getKey();
@@ -524,9 +550,9 @@ public class ChatboxActivity extends AppCompatActivity {
             });
         });
     }
+    // Lấy ra thông tin của Group để xem group đó là private hay group
+    // tuy vào type group mà sẽ set thông tin khác nhau
     public void setInformation(){
-        // Lấy ra thông tin của Group để xem group đó là private hay group
-        // tuy vào type group mà sẽ set thông tin khác nhau
         groupId= getIntent().getStringExtra("roomId");
         // Lấy ra group ứng với groupId đã được lưu trong Intent trong Activity trước
         DatabaseReference databaseReference = firebaseDatabase.getReference("Group").child(groupId);
@@ -548,6 +574,7 @@ public class ChatboxActivity extends AppCompatActivity {
         });
     }
 
+    // Kiểm tra việc yêu cầu cấp quyền có thành công hay không
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

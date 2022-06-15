@@ -31,14 +31,11 @@ import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class FriendPendingAcceptFragment extends Fragment {
     // Lấy ra các view để xử lý sự kiện
-    private ListView lvfriendpd;
-    // Khai báo các biến Firebase
+    // Khai báo các biến Firebase dùng để truy vấn
     private FirebaseDatabase firebaseDatabase;
-    private FirebaseAuth firebaseAuth;
-    //
-    private ListAcceptPendingAdapter listAcceptPendingAdapter;
-    private List<User> userList;
-    private ListView listViewpd;
+    private ListAcceptPendingAdapter listAcceptPendingAdapter; // Adapter để xử lý với listvew
+    private List<User> userList; // dùng để lưu lại danh sách user
+    private ListView listViewpd;// Lưu trữ và render các danh sách
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,43 +46,38 @@ public class FriendPendingAcceptFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend_pending_accept, container, false);
         initData(view);
-        List<String> listUserAcceptPending = Util.currentUser.getListPendingAccept();
+        List<String> listUserAcceptPending = Util.currentUser.getListPendingAccept(); // lấy ra danh dách userId đang lưu được chờ để chấp nhận kết bạn
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userList.clear();
+                userList.clear();// Clear list đi vì khi data thay đổi thì hàm này sẽ được chạy
                 for (DataSnapshot dsp : snapshot.getChildren()) {
-                    User user = dsp.getValue(User.class);
+                    User user = dsp.getValue(User.class); // Duyệt qua từng user và xem user đó có nằm trong listAcceptpending hay không
                     if(listUserAcceptPending.contains(user.getId())==true){
                         userList.add(user);
                     }
                 }
                 listAcceptPendingAdapter = new ListAcceptPendingAdapter(getActivity(),R.layout.layout_user_pending_request,userList);
                 listViewpd.setAdapter(listAcceptPendingAdapter);
-                listViewpd.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        // Lưu giá trị vào intent để sang ChatboxAcitivy ta có thể lấy những giá trị này ra
-                        Intent intent=new Intent(getActivity(), ChatboxActivity.class);
-                        intent.putExtra("username",userList.get(i).getUserName());
-                        intent.putExtra("receiverId",userList.get(i).getId());
-                        startActivity(intent);
-                    }
-                });
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
         return view;
     }
+    // Khơi tạo các khai báo ban đầu bao gồm View và Firebase
     public void initData(View view){
-        // Khơi tạo các khai báo ban đầu
         listViewpd = view.findViewById(R.id.lv_pending_accept);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
         userList = new ArrayList<>();
+    }
+    // Cập nhật lại adapter khi dữ liệu thay đổi
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(listAcceptPendingAdapter!=null){
+            listAcceptPendingAdapter.notifyDataSetChanged();
+        }
     }
 }

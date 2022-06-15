@@ -1,11 +1,18 @@
 package hcmute.danbaonguyen19110036.appzalo.Model;
 
 public class Message {
+    // id để phân biệt giữa các tin nhắn
     private String id;
+    // groupId để phân biệt xem tin nhắn nằm trong group(room) nào
     private String groupId;
+    // senderId dùng để lưu trữ Id của người gửi
     private String senderId;
+    // message sẽ được gửi đi
     private String message;
+    // type message dùng để phân biệt xem message được gửi đi dưới dạng nào
+    // hình ảnh ,text, audio
     private String type;
+    // Nếu là ảnh thì lưu trữ vào biến imgUrl
     private String imgUrl;
     public Message(){
 

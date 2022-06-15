@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
 public class TabDiscoverFragment extends Fragment {
+    // Fragment này nhóm chưa xử lý chỉ mới có giao diện
     public TabDiscoverFragment(){
 
     }

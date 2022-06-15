@@ -20,10 +20,10 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class ListRequestAdapter extends BaseAdapter {
-    private Context context;
-    private int layout;
-    private List<User> userList;
-    private FirebaseDatabase firebaseDatabase;
+    private Context context; // Activity của adapter
+    private int layout;// Layout item của adapter
+    private List<User> userList; // lưu trư danh sách user
+    private FirebaseDatabase firebaseDatabase;// Truy vấn dữ liệu trên database
     public ListRequestAdapter(Context context,List<User> userList,int layout) {
         this.context = context;
         this.layout = layout;

@@ -36,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
         initData();
+        //Khi gọi PhoneAuthProvider.verifyPhoneNumber,ta phải cung cấp một instance của OnVerificationStateChangedCallbacks,\
+        // chứa triển khai các hàm callback xử lý kết quả của yêu cầu.
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
@@ -70,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
     public void OnClickBackHome(View view){
         startActivity(new Intent(LoginActivity.this,HomeActivity.class));
     }
+    //Sau khi bạn nhận được Object PhoneAuthCredential hoàn tất quy trình đăng nhập bằng cách chuyển đối tượng PhoneAuthCredential tới FirebaseAuth.signInWithCredential
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

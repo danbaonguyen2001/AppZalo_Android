@@ -12,6 +12,7 @@ import android.widget.Button;
 import hcmute.danbaonguyen19110036.appzalo.R;
 
 public class HomeActivity extends AppCompatActivity {
+    // Khai báo các View
     private Button btnLogin,btnRegister;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,12 +23,14 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
+        // Chuyển qua màn hình đăng nhập nếu user click button đăng nhập
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(HomeActivity.this,LoginActivity.class));
             }
         });
+        // Chuyển qua màn hình đăng ký nếu user chuyển qua màn hình đăng ký
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

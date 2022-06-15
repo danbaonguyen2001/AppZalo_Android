@@ -13,6 +13,7 @@ public class FriendRequestAdapter extends FragmentStatePagerAdapter {
     public FriendRequestAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
     }
+    // Tùy vào postion mà trả về page tương ứng
     @NonNull
     @Override
     public Fragment getItem(int position) {
@@ -24,11 +25,12 @@ public class FriendRequestAdapter extends FragmentStatePagerAdapter {
         }
     }
 
+    // Số page cần khởi tạo
     @Override
     public int getCount() {
         return 2;
     }
-
+    // Set title cho page
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
@@ -36,11 +38,9 @@ public class FriendRequestAdapter extends FragmentStatePagerAdapter {
         switch (position){
             case 0:
                 title="Đã nhận";
-                Util.TITLE_REQUEST=1;
                 break;
             case 1:
                 title="Đã gửi";
-                Util.TITLE_REQUEST=2;
                 break;
         }
         return title;

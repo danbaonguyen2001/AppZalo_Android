@@ -3,7 +3,6 @@ package hcmute.danbaonguyen19110036.appzalo.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -16,10 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,15 +26,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import hcmute.danbaonguyen19110036.appzalo.Adapter.AddFriendAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Adapter.AddGroupAdapter;
 import hcmute.danbaonguyen19110036.appzalo.Model.Group;
 import hcmute.danbaonguyen19110036.appzalo.Model.GroupUser;
@@ -46,18 +38,18 @@ import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
 public class GroupActivity extends AppCompatActivity {
-    private static int PICK_IMAGE=123;
-    private Uri imagepath;
-    private ImageView imgGroup;
+    private static int PICK_IMAGE=123; // request code
+    private Uri imagepath; // đường dẫn của hình ảnh sau khi hình ảnh được chọn
+    private ImageView imgGroup; //
     private FirebaseDatabase firebaseDatabase;
     private FirebaseStorage firebaseStorage;
-    private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
-    private FirebaseFirestore firebaseFirestore;
-    private AddGroupAdapter addGroupAdapter;
-    private List<User> userList;
-    private ListView listView;
-    private EditText edtGroup;
+    private FirebaseFirestore firebaseFirestore; // Firestore để lưu hình ảnh
+    private AddGroupAdapter addGroupAdapter; // Adapter dùng để set dữ liệu
+    private List<User> userList; // Dùng để lưu trữ danh sách user
+    private ListView listView; // ListView dùng để set adapter
+    private EditText edtGroup; // Tên group
+    // Dùng để lưu Url của hình ảnh sau khi được lưu lên FireStore
     private String imageToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +59,7 @@ public class GroupActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_group);
         initData();
+        // Cho phép user chọn ảnh từ điện thoại
         imgGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,9 +71,11 @@ public class GroupActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Vì khi database thay đổi thì nó sẽ lấy lại dữ liệu vì vậy mình cần clear mảng đi
                 userList.clear();
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     User user = dsp.getValue(User.class);
+                    // Chỉ cho phép thêm những user nằm trong list friend vào nhóm
                     if(Util.currentUser.getListFriend().contains(user.getId())){
                         userList.add(user);
                     }
@@ -90,14 +85,12 @@ public class GroupActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
+    // Khơi tạo các giá trị View và Firebase
     public void initData(){
         firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference=firebaseStorage.getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -106,6 +99,7 @@ public class GroupActivity extends AppCompatActivity {
         listView = findViewById(R.id.list_item_group);
         edtGroup = findViewById(R.id.edtGroupName);
     }
+    // Lưu hình ảnh lên Firestore
     private void sendImageToStore(){
         StorageReference imgref = storageReference.child("Images").child("GroupImage").child(edtGroup.getText().toString()).child("ProfilePic");
         Bitmap bitmap=null;
@@ -149,8 +143,9 @@ public class GroupActivity extends AppCompatActivity {
             }
         });
     }
+    // Lưu dữ liệu lên Firebase Database
     private void sendDataToDatabase(){
-        // Tạo Room để 2 người có thể nhắn tin
+        // Tạo Room để mọi người có thể nhắn tin
         DatabaseReference databaseReference = firebaseDatabase.getReference("Group");
         // tạo 1 key ngẫu nhiên làm groupId
         String key = databaseReference.push().getKey();
@@ -175,15 +170,18 @@ public class GroupActivity extends AppCompatActivity {
             databaseReference.setValue(user.getGroupUserList());
         }
     }
+    // Hàm click vào nút tạo nhóm
     public void OnClickCreateGroup(View view){
+        // Kiểm tra các thông tin
         if(edtGroup.getText().toString().isEmpty()){
             Toast.makeText(GroupActivity.this,"Vui lòng nhập tên Group",Toast.LENGTH_SHORT).show();
             return;
         }
+        // Gửi dữ liệu lên server
         sendImageToStore();
-//        startActivity(new Intent(GroupActivity.this,HomeActivity.class));
         finish();
     }
+    // Dùng để lấy ra imgaepath sau khi người dùng chọn ảnh từ điện thoại
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode==PICK_IMAGE && resultCode==RESULT_OK)

@@ -1,8 +1,13 @@
 package hcmute.danbaonguyen19110036.appzalo.Model;
 
 public class GroupUser {
+    // mỗi user sẽ có nhiều group
+    // Dùng để lưu xem user này đang ở trong những group nào
+    // id để phân biệt với mỗi groupuser khác
     public String id;
+    // Dùng để lưu trữ userid
     public String userId;
+    //Dùng để lưu trữ groupId
     public String groupId;
     public GroupUser(){
 
