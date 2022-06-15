@@ -86,21 +86,31 @@ public class ChatboxActivity extends AppCompatActivity {
     private ImageView btnBack,selectImg,sendBtn,avatar,camera;
     private RecyclerView recyclerView;
     private EditText enterMessage;
-    private ConstraintLayout containerChatbox;
     //Các biến thực thi chức năng call video
     private ImageView imageViewVideoCall;
     // firebaseAuth dùng để lấy ra những thông tin của user hiện tại
     private FirebaseAuth firebaseAuth;
     // firebaseDatabase dùng để lấy ra data trong database
     private FirebaseDatabase firebaseDatabase;
-    private List<Message> messageList;
-    private ChatAdapter chatAdapter;
-    private String groupId,audioPath;
-    private static int PICK_IMAGE=123;
-    private Uri imagepath;
+    //
     private StorageReference storageReference;
+    // FirebaseStorage dùng để lưu hình ảnh lên firebase
     private FirebaseStorage firebaseStorage;
     private FirebaseFirestore firebaseFirestore;
+    // khai báo list message để lưu trữ đoạn chat của User
+    private List<Message> messageList;
+    // Khai báo Adapter để set vào Recycle View
+    private ChatAdapter chatAdapter;
+    // groupId dùng để lưu trữ groupId trong Intent đã lưu ở Activity trước
+    // audioPath để khi record , file record sẽ được vào file trong máy điện thoại
+    private String groupId,audioPath;
+    // request_code để lúc chọn hình ảnh mình có thể check xem là chọn hình ảnh hay chụp hình ảnh
+    // PICK_IMAGE chọn hình ảnh , CAPTURE_IMAGE chụp hình
+    private static int PICK_IMAGE=123,CAPTURE_IMAGE=100;
+    // Dùng để lưu path khi user chọn ảnh từ folder
+    private Uri imagepath;
+    // Sau khi xử lý hình ảnh và upload lên server dùng biến imageToken để lưu lại URL
+    // receiverToken dùng để lưu lại Token của người nhận được lưu trong intent
     private String imageToken,receiverId,receiverToken;
     private RecordButton micro;
     private RecordView recordView;
@@ -133,18 +143,8 @@ public class ChatboxActivity extends AppCompatActivity {
                 }
                 recyclerView.scrollToPosition(messageList.size()-1);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
-        });
-
-        //Video call giữa 2 user
-        imageViewVideoCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(ChatboxActivity.this, test.class);
-                startActivity(intent);
-            }
         });
         //Chụp ảnh và gửi đi
         //Yêu cầu cho phép camera
@@ -275,12 +275,15 @@ public class ChatboxActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(ChatboxActivity.this, VideoCallOutGoingActivity.class);
+                // lưu lại thông tin token của user được chọn
                 intent.putExtra("receiver_token",receiverToken);
+                // lưu lại groupId để cho 2 user call nhau join vào room
+                intent.putExtra("groupId",groupId);
                 startActivity(intent);
             }
         });
     }
-    // Khởi tạo các giá trị ban đầu
+    // Khởi tạo các giá trị View và Firebase ban đầu
     private void initData(){
         imageViewVideoCall=findViewById(R.id.img_video_call);
         username = findViewById(R.id.chatbox_username);
@@ -370,7 +373,6 @@ public class ChatboxActivity extends AppCompatActivity {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            System.out.println(notificationData);
                             Toast.makeText(ChatboxActivity.this, "Success", Toast.LENGTH_SHORT).show();
                         }
                     },
@@ -401,7 +403,7 @@ public class ChatboxActivity extends AppCompatActivity {
             imagepath=data.getData();
             sendImageMessage(imagepath);
         }
-        if(requestCode==100){
+        if(requestCode==CAPTURE_IMAGE){
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             Uri tempUri = getImageUri(getApplicationContext(), photo);
             imagepath = tempUri;
@@ -461,7 +463,6 @@ public class ChatboxActivity extends AppCompatActivity {
                     }
                 });
                 Toast.makeText(getApplicationContext(),"Image is uploaded",Toast.LENGTH_SHORT).show();
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -471,6 +472,7 @@ public class ChatboxActivity extends AppCompatActivity {
         });
     }
     public void takePermission(){
+        // Đối với các Android phiên bản 10+ thì yêu cầu truy cập đến các file của hệ thống
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R){
             try {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
@@ -523,7 +525,10 @@ public class ChatboxActivity extends AppCompatActivity {
         });
     }
     public void setInformation(){
+        // Lấy ra thông tin của Group để xem group đó là private hay group
+        // tuy vào type group mà sẽ set thông tin khác nhau
         groupId= getIntent().getStringExtra("roomId");
+        // Lấy ra group ứng với groupId đã được lưu trong Intent trong Activity trước
         DatabaseReference databaseReference = firebaseDatabase.getReference("Group").child(groupId);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

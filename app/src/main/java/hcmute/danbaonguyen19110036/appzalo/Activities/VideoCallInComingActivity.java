@@ -1,51 +1,30 @@
 package hcmute.danbaonguyen19110036.appzalo.Activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-
 import android.widget.Toast;
-
 import android.view.Window;
 import android.view.WindowManager;
-
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.jitsi.meet.sdk.JitsiMeetActivity;
-import org.jitsi.meet.sdk.JitsiMeetActivityInterface;
-import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.AllConstants;
-import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
-import hcmute.danbaonguyen19110036.appzalo.network.ApiClient;
-import hcmute.danbaonguyen19110036.appzalo.network.ApiService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class VideoCallInComingActivity extends AppCompatActivity {
-
+    private String groupId;
     FloatingActionButton btnDecline,btnAccept;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +35,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_call_in_coming);
         btnDecline=findViewById(R.id.btn_decline_call);
         btnAccept=findViewById(R.id.btn_accept_call);
-
+        groupId = getIntent().getStringExtra("groupId");
         btnDecline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +46,6 @@ public class VideoCallInComingActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +55,6 @@ public class VideoCallInComingActivity extends AppCompatActivity {
                 );
             }
         });
-
     }
 
     private void sendInvitationResponse(String type, String receiverToken){
@@ -97,13 +74,9 @@ public class VideoCallInComingActivity extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
                             if(type.equals(AllConstants.REMOTE_MSG_INVITATION_ACCEPTED)){
                                 try{
-                                    URL serverURL=new URL("http://meet.jit.si");
-                                    JitsiMeetConferenceOptions conferenceOptions=
-                                            new JitsiMeetConferenceOptions.Builder()
-                                                    .setServerURL(serverURL)
-                                                    .setRoom("GIANG456")
-                                                    .build();
-                                    JitsiMeetActivity.launch(VideoCallInComingActivity.this,conferenceOptions);
+                                    Intent it = new Intent(VideoCallInComingActivity.this,test.class);
+                                    it.putExtra("groupId",groupId);
+                                    startActivity(it);
                                     finish();
                                 }
                                 catch (Exception e){
@@ -137,7 +110,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
     private BroadcastReceiver invitationResponseReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String  type= intent.getStringExtra(AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
+            String type= intent.getStringExtra(AllConstants.REMOTE_MSG_INVITATION_RESPONSE);
             if(type!=null){
                 if(type.equals(AllConstants.REMOTE_MSG_INVITATION_CANCELLED)){
                     Toast.makeText(context, "Invitation Cancelled", Toast.LENGTH_SHORT).show();

@@ -2,26 +2,21 @@ package hcmute.danbaonguyen19110036.appzalo.firebase;
 
 
 import android.content.Intent;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import hcmute.danbaonguyen19110036.appzalo.Activities.MainActivity;
 import hcmute.danbaonguyen19110036.appzalo.R;
-
 import hcmute.danbaonguyen19110036.appzalo.Activities.VideoCallInComingActivity;
 import hcmute.danbaonguyen19110036.appzalo.Utils.AllConstants;
 
@@ -81,7 +76,6 @@ public class MessagingService extends FirebaseMessagingService {
                         .setContentIntent(pendingIntent);
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,

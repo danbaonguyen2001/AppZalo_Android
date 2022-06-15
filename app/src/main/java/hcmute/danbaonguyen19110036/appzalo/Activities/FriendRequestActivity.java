@@ -38,8 +38,6 @@ public class FriendRequestActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ImageView btnBack;
     private FriendRequestFragment friendRequestFragment;
-    private View view;
-    private ListView listView;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private List<User> userList;

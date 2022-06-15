@@ -86,4 +86,10 @@ public class AddFriendActivity extends AppCompatActivity {
         listView = findViewById(R.id.list_user_addfr);
         btnBack = findViewById(R.id.btn_back_addfr);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        addFriendAdapter.notifyDataSetChanged();
+    }
 }
