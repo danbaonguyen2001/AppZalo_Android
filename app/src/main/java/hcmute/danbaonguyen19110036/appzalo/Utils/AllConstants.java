@@ -11,7 +11,7 @@ public class AllConstants {
     public  static final String KEY_USER_ID="user_id";
     public static final String TOKEN_NGUYEN="d3Dg2VliTuKa8q2kwyhtWa:APA91bEFaJoubpmqsMA8XXwMfSCa7zHhprYpLdFqTcmj05ZFFwhMmL7tFaq3M9gTmVbqwKDh8yrxEIFeoHXv0TBCmsZiYtPnlNKbfJPeFiuQcSmS6-IH6oyoNYcX5miZfcRp32O5F1CI";
 
-    //Nguyen
+    //Các hằng số thực hiện call video
     public static final String REMOTE_MSG_TYPE="type";
     public static final String REMOTE_MSG_AUTHORZATION="Authorization";
     public static final String REMOTE_MSG_CONTENT_TYPE="Content_Type";

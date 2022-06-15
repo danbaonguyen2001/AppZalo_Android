@@ -46,7 +46,7 @@ import retrofit2.Response;
 
 public class VideoCallInComingActivity extends AppCompatActivity {
 
-    FloatingActionButton btnDecline,btnAccept;
+    FloatingActionButton btnDecline,btnAccept;  //lưu button chấp nhận và từ chối cuộc gọi video từ bạn bè để xử lý sự kiện click
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +57,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
         btnDecline=findViewById(R.id.btn_decline_call);
         btnAccept=findViewById(R.id.btn_accept_call);
 
+        //xử lý sự kiện click vào button từ chối cuộc gọi
         btnDecline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +69,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
             }
         });
 
+        //xử lý sự kiện click vào button chấp nhận cuộc gọi
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +82,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
 
     }
 
+    //Gửi phản hồi cuộc gọi video lại cho người mời
     private void sendInvitationResponse(String type, String receiverToken){
         try {
             RequestQueue queue = Volley.newRequestQueue(this);
@@ -96,19 +99,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(JSONObject response) {
                             if(type.equals(AllConstants.REMOTE_MSG_INVITATION_ACCEPTED)){
-                                try{
-                                    URL serverURL=new URL("http://meet.jit.si");
-                                    JitsiMeetConferenceOptions conferenceOptions=
-                                            new JitsiMeetConferenceOptions.Builder()
-                                                    .setServerURL(serverURL)
-                                                    .setRoom("GIANG456")
-                                                    .build();
-                                    JitsiMeetActivity.launch(VideoCallInComingActivity.this,conferenceOptions);
-                                    finish();
-                                }
-                                catch (Exception e){
-                                    Toast.makeText(VideoCallInComingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                                startActivity(new Intent(VideoCallInComingActivity.this,test.class));
                             }else{
                                 Toast.makeText(VideoCallInComingActivity.this, "Invitation Rejected", Toast.LENGTH_SHORT).show();
                                 finish();
@@ -134,6 +125,8 @@ public class VideoCallInComingActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
     }
+
+    //Gửi phản hồi đến người gửi khi người dùng từ chối yêu cầu gọi video
     private BroadcastReceiver invitationResponseReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -146,7 +139,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
             }
         }
     };
-
+    //Đăng ký sự kiện gửi phản hồi yêu cầu gọi video khi activity đang được onStart
     @Override
     protected void onStart() {
         super.onStart();
@@ -155,7 +148,7 @@ public class VideoCallInComingActivity extends AppCompatActivity {
                 new IntentFilter(AllConstants.REMOTE_MSG_INVITATION_RESPONSE)
         );
     }
-
+    //Huỷ đăng ký sự kiện gửi phản hồi yêu cầu gọi video khi activity rơi vào onStop
     @Override
     protected void onStop() {
         super.onStop();
