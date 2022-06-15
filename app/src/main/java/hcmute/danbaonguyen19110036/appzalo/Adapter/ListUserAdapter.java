@@ -83,10 +83,12 @@ public class ListUserAdapter extends BaseAdapter {
                 // Lấy ra thông tin của group( Room)
                 group = snapshot.getValue(Group.class);
                 // lưu lại các giá trị của Message vào các biến
-                if(group.getMessage()!=null){
-                    lastMessage = group.getMessage().getMessage();
-                    typeMessage = group.getMessage().getType();
-                    senderId = group.getMessage().getSenderId();
+                if(group!=null){
+                    if(group.getMessage()!=null){
+                        lastMessage = group.getMessage().getMessage();
+                        typeMessage = group.getMessage().getType();
+                        senderId = group.getMessage().getSenderId();
+                    }
                     typeGroup = group.getTypeGroup();
                     groupName = group.getGroupName();
                     user = userList.get(i);

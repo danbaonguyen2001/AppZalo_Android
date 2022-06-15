@@ -92,7 +92,6 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = task.getResult().getUser();
-                            GotoOTPActivity(user.getPhoneNumber());
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
@@ -108,41 +107,15 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this,"Vui lòng nhập số điện thoại",Toast.LENGTH_SHORT).show();
             return;
         }
-        DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dsp : snapshot.getChildren()) {
-                    User user = dsp.getValue(User.class);
-                    // Nếu số điên thoại đã tồn tài rồi thì thông báo cho người dùng
-                    if(user.getPhoneNumber().equals(phoneNumber)){
-                        KT=true;
-                        break;
-                    }
-                }
-                if(KT==true){
-                    Toast.makeText(RegisterActivity.this,"Tài khoản đã tồn tại",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                PhoneAuthOptions options=PhoneAuthOptions.newBuilder(firebaseAuth)
-                        .setPhoneNumber(phoneNumber.getText().toString())//Số điện thoại để xác minh
-                        .setTimeout(60L, TimeUnit.SECONDS)//Thời gian chờ
-                        .setActivity(RegisterActivity.this)//Activity
-                        .setCallbacks(mCallbacks)// xác minh trạng thái
-                        .build();
-                PhoneAuthProvider.verifyPhoneNumber(options);// verifyPhoneNumber sẽ gửi SMS tới số điện thoại đã set
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
-        });
+        PhoneAuthOptions options=PhoneAuthOptions.newBuilder(firebaseAuth)
+                .setPhoneNumber(phoneNumber.getText().toString())//Số điện thoại để xác minh
+                .setTimeout(60L, TimeUnit.SECONDS)//Thời gian chờ
+                .setActivity(RegisterActivity.this)//Activity
+                .setCallbacks(mCallbacks)// xác minh trạng thái
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);// verifyPhoneNumber sẽ gửi SMS tới số điện thoại đã set
     }
     public void OnClickBackHome(View view){
         startActivity(new Intent(RegisterActivity.this,HomeActivity.class));
-    }
-    private void GotoOTPActivity(String phoneNumber) {
-        Intent intent = new Intent(this,MainActivity.class);
-        intent.putExtra("phoneNumber",phoneNumber);
-        startActivity(intent);
     }
 }

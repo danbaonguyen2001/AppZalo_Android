@@ -222,6 +222,6 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
     public void OnClickBackHome(View view){
-        startActivity(new Intent(this,HomeActivity.class));
+        onBackPressed();
     }
 }
