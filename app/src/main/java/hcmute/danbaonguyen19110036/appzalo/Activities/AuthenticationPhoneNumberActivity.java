@@ -81,7 +81,6 @@ public class AuthenticationPhoneNumberActivity extends AppCompatActivity {
                         createUser();
                         Intent intent=new Intent(AuthenticationPhoneNumberActivity.this,RegisterInputInforActivity.class);
                         startActivity(intent);
-                        finish();
                     }
                     else
                     {

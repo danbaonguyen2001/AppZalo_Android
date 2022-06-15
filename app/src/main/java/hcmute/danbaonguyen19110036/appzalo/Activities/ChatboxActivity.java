@@ -139,9 +139,9 @@ public class ChatboxActivity extends AppCompatActivity {
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     Message message = dsp.getValue(Message.class);
                     messageList.add(message);
-                    chatAdapter.notifyDataSetChanged();
                 }
                 recyclerView.scrollToPosition(messageList.size()-1);
+                chatAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
