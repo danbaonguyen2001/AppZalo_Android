@@ -37,6 +37,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import hcmute.danbaonguyen19110036.appzalo.Model.User;
 import hcmute.danbaonguyen19110036.appzalo.R;
 import hcmute.danbaonguyen19110036.appzalo.Utils.Util;
 
@@ -190,6 +192,8 @@ public class RegisterInputInforActivity extends AppCompatActivity {
         user.put("birthDay",birthDay);
         user.put("token",Util.token);
         databaseReference.setValue(user);
+        User temp = new User(id,phoneNumber,userName,birthDay,imageToken,genDer,"Binh Duong",Util.token);
+        Util.currentUser = temp;
     }
     // Click button save
     public void OnClickSaveProfile(View view){

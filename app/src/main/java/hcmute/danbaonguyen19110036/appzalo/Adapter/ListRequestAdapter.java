@@ -83,7 +83,7 @@ public class ListRequestAdapter extends BaseAdapter {
                 // Xóa userid trong listacceptpending trong user đã được chọn
                 user.getListPendingAccept().remove(Util.currentUser.getId());
                 // Cập nhật lại dữ liệu trên firebase với hàng dữ liệu được lấy ra
-                databaseReference.child("listPendingAccept").setValue(Util.currentUser.getListRequest());
+                databaseReference.child("listPendingAccept").setValue(user.getListPendingAccept());
                 // Cập nhật lại ListView
                 userList.remove(i);
                 notifyDataSetChanged();
